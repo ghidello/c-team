@@ -14,8 +14,9 @@ The long-term product should make it easy to understand:
 - the parent/child agent hierarchy;
 - each agent's role and nickname;
 - the requested and effective model;
+- the current Codex model catalog and capabilities;
 - reasoning effort and service tier where available;
-- token usage and cache reuse;
+- token usage, cache reuse, and quota/rate-limit identity where observable;
 - lifecycle and wall-clock timing;
 - plan progress;
 - tool, command, file-change and review activity;
@@ -44,6 +45,24 @@ C-Team owns:
 - history;
 - comparison and analysis;
 - later, possibly control and steering.
+
+## Model strategy
+
+C-Team must treat models as a **dynamic Codex capability**, not as a fixed enum or a permanent Sol/Terra/Luna taxonomy.
+
+The first spike intentionally uses a controlled baseline:
+
+```text
+Hannibal   → Sol
+Murdock    → Sol
+Face       → Luna
+B.A.       → Terra
+Reviewer   → Sol
+```
+
+Those assignments are a dogfooding/routing policy only. C-Team's core model, protocol adapters, future persistence, UI, and analytics must remain generic enough to represent any model the current Codex installation/account exposes, including models such as GPT-5.5, GPT-5.3-Codex-Spark, legacy/API-key-only models, and future models.
+
+See `MODELS.md` for the detailed policy, CQ11, and future comparison experiments.
 
 ## Product direction
 
@@ -102,7 +121,7 @@ The A-Team-inspired names are UI/personality labels. Technical roles remain expl
 
 ### Hannibal — Planner / Thinker
 
-Model: Sol.
+Initial model policy: Sol.
 
 Owns:
 
@@ -115,7 +134,7 @@ Owns:
 
 ### Murdock — Challenger / Lateral Thinker
 
-Model: Sol.
+Initial model policy: Sol.
 
 Used only for complex or consequential analysis.
 
@@ -131,7 +150,7 @@ Murdock is not a normal code reviewer.
 
 ### Face — Explorer / Investigator
 
-Model: Luna.
+Initial model policy: Luna.
 
 Purpose:
 
@@ -146,7 +165,7 @@ Prefer read-only behavior.
 
 ### B.A. — Implementer
 
-Model: Terra.
+Initial model policy: Terra.
 
 Purpose:
 
@@ -159,7 +178,7 @@ Purpose:
 
 ### Reviewer — Independent reviewer
 
-Model: Sol.
+Initial model policy: Sol.
 
 This is intentionally distinct from Hannibal.
 
