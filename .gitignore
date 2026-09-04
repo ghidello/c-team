@@ -1,0 +1,12 @@
+# C-Team spike recordings may contain sensitive Codex/session data
+.cteam/
+
+# .NET
+bin/
+obj/
+
+# editor/user files
+.vs/
+.idea/
+*.user
+*.suo
