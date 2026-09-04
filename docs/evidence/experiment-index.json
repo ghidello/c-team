@@ -1,0 +1,604 @@
+[
+  {
+    "recording": "capabilities.jsonl",
+    "sha256": "c4e34ce5cd9ce2590d5363631b523257274a03585af4ea7bbfa0a340e1afd945",
+    "records": 10,
+    "methods": {
+      "response": 4,
+      "remoteControl/status/changed": 1
+    },
+    "completedItems": {},
+    "turnOutcomes": {},
+    "threadsWithUsage": 0,
+    "threadSnapshots": [],
+    "commands": [],
+    "fileChanges": [],
+    "rpcErrors": []
+  },
+  {
+    "recording": "desktop-read.jsonl",
+    "sha256": "4f42afe2150d971e6d40e450500e5417db8cb6fed9bdbb3bcc64f6e1c6afda89",
+    "records": 17,
+    "methods": {
+      "response": 7,
+      "remoteControl/status/changed": 1,
+      "deprecationNotice": 1
+    },
+    "completedItems": {},
+    "turnOutcomes": {},
+    "threadsWithUsage": 0,
+    "threadSnapshots": [
+      {
+        "role": null,
+        "model": "gpt-6-astra",
+        "sessionMatchesThread": true
+      }
+    ],
+    "commands": [],
+    "fileChanges": [],
+    "rpcErrors": []
+  },
+  {
+    "recording": "desktop-discovery.jsonl",
+    "sha256": "8b108439d0830a993727e25ea25c05dfac394a8a0bba5e9b4a7b1610dcf1873b",
+    "records": 12,
+    "methods": {
+      "response": 5,
+      "remoteControl/status/changed": 1
+    },
+    "completedItems": {},
+    "turnOutcomes": {},
+    "threadsWithUsage": 0,
+    "threadSnapshots": [],
+    "commands": [],
+    "fileChanges": [],
+    "rpcErrors": []
+  },
+  {
+    "recording": "run-1.jsonl",
+    "sha256": "53f9d8d6befded9855f2632bfc37da86142a13d99fa90eead8c2ec0cd04b9dd6",
+    "records": 583,
+    "methods": {
+      "response": 4,
+      "remoteControl/status/changed": 1,
+      "thread/started": 1,
+      "mcpServer/startupStatus/updated": 14,
+      "thread/status/changed": 13,
+      "turn/started": 5,
+      "item/started": 65,
+      "item/completed": 65,
+      "skills/changed": 3,
+      "item/agentMessage/delta": 304,
+      "thread/tokenUsage/updated": 38,
+      "account/rateLimits/updated": 38,
+      "turn/completed": 5
+    },
+    "completedItems": {
+      "userMessage": 1,
+      "reasoning": 32,
+      "agentMessage": 12,
+      "subAgentActivity": 11,
+      "mcpToolCall": 2,
+      "collabAgentToolCall": 7
+    },
+    "turnOutcomes": {
+      "completed": 5
+    },
+    "threadsWithUsage": 4,
+    "threadSnapshots": [
+      {
+        "role": null,
+        "model": "gpt-5.6-sol",
+        "sessionMatchesThread": true
+      }
+    ],
+    "commands": [],
+    "fileChanges": [],
+    "rpcErrors": [
+      {
+        "code": -32600,
+        "message": "paginated threads do not support detached review"
+      }
+    ]
+  },
+  {
+    "recording": "run-2.jsonl",
+    "sha256": "1cb2a709658080530ac197b77aeaaccaac02a2db19167cf08740bbb3b9bf60d1",
+    "records": 6,
+    "methods": {
+      "response": 2,
+      "remoteControl/status/changed": 1
+    },
+    "completedItems": {},
+    "turnOutcomes": {},
+    "threadsWithUsage": 0,
+    "threadSnapshots": [],
+    "commands": [],
+    "fileChanges": [],
+    "rpcErrors": [
+      {
+        "code": -32600,
+        "message": "thread/start.historyMode requires experimentalApi capability"
+      }
+    ]
+  },
+  {
+    "recording": "run-2b.jsonl",
+    "sha256": "22c2308cffa00245d9d851cd19ea71ee9d5044072d2554f2419a7b31da4d1195",
+    "records": 6421,
+    "methods": {
+      "response": 4,
+      "remoteControl/status/changed": 1,
+      "thread/started": 2,
+      "mcpServer/startupStatus/updated": 18,
+      "thread/settings/updated": 1,
+      "thread/status/changed": 13,
+      "turn/started": 5,
+      "item/started": 72,
+      "item/completed": 72,
+      "item/agentMessage/delta": 1136,
+      "skills/changed": 7,
+      "thread/tokenUsage/updated": 27,
+      "account/rateLimits/updated": 27,
+      "item/commandExecution/outputDelta": 4994,
+      "turn/completed": 5
+    },
+    "completedItems": {
+      "userMessage": 2,
+      "reasoning": 19,
+      "agentMessage": 14,
+      "subAgentActivity": 6,
+      "commandExecution": 27,
+      "collabAgentToolCall": 3,
+      "fileChange": 1
+    },
+    "turnOutcomes": {
+      "completed": 5
+    },
+    "threadsWithUsage": 5,
+    "threadSnapshots": [
+      {
+        "role": null,
+        "model": "gpt-5.6-sol",
+        "sessionMatchesThread": true
+      }
+    ],
+    "commands": [
+      {
+        "status": "completed",
+        "exitCode": 0,
+        "durationMs": 107
+      },
+      {
+        "status": "completed",
+        "exitCode": 0,
+        "durationMs": 178
+      },
+      {
+        "status": "completed",
+        "exitCode": 0,
+        "durationMs": 154
+      },
+      {
+        "status": "completed",
+        "exitCode": 0,
+        "durationMs": 187
+      },
+      {
+        "status": "completed",
+        "exitCode": 0,
+        "durationMs": 202
+      },
+      {
+        "status": "completed",
+        "exitCode": 0,
+        "durationMs": 283
+      },
+      {
+        "status": "completed",
+        "exitCode": 0,
+        "durationMs": 0
+      },
+      {
+        "status": "completed",
+        "exitCode": 0,
+        "durationMs": 0
+      },
+      {
+        "status": "completed",
+        "exitCode": 0,
+        "durationMs": 221
+      },
+      {
+        "status": "completed",
+        "exitCode": 0,
+        "durationMs": 257
+      },
+      {
+        "status": "completed",
+        "exitCode": 0,
+        "durationMs": 208
+      },
+      {
+        "status": "completed",
+        "exitCode": 0,
+        "durationMs": 0
+      },
+      {
+        "status": "completed",
+        "exitCode": 0,
+        "durationMs": 209
+      },
+      {
+        "status": "completed",
+        "exitCode": 0,
+        "durationMs": 241
+      },
+      {
+        "status": "completed",
+        "exitCode": 0,
+        "durationMs": 236
+      },
+      {
+        "status": "completed",
+        "exitCode": 0,
+        "durationMs": 236
+      },
+      {
+        "status": "failed",
+        "exitCode": 1,
+        "durationMs": 11940
+      },
+      {
+        "status": "completed",
+        "exitCode": 0,
+        "durationMs": 226
+      },
+      {
+        "status": "completed",
+        "exitCode": 0,
+        "durationMs": 1896
+      },
+      {
+        "status": "completed",
+        "exitCode": 0,
+        "durationMs": 108
+      },
+      {
+        "status": "completed",
+        "exitCode": 0,
+        "durationMs": 240
+      },
+      {
+        "status": "completed",
+        "exitCode": 0,
+        "durationMs": 238
+      },
+      {
+        "status": "completed",
+        "exitCode": 0,
+        "durationMs": 754
+      },
+      {
+        "status": "completed",
+        "exitCode": 0,
+        "durationMs": 524
+      },
+      {
+        "status": "completed",
+        "exitCode": 0,
+        "durationMs": 471
+      },
+      {
+        "status": "completed",
+        "exitCode": 0,
+        "durationMs": 702
+      },
+      {
+        "status": "completed",
+        "exitCode": 0,
+        "durationMs": 277
+      }
+    ],
+    "fileChanges": [
+      {
+        "status": "failed",
+        "files": 1
+      }
+    ],
+    "rpcErrors": []
+  },
+  {
+    "recording": "run-3.jsonl",
+    "sha256": "3bf540bf63678e804a1adb35485e7855e3467ae141dd841bab2a47ad030fd029",
+    "records": 8,
+    "methods": {
+      "response": 2,
+      "configWarning": 1,
+      "remoteControl/status/changed": 1
+    },
+    "completedItems": {},
+    "turnOutcomes": {},
+    "threadsWithUsage": 0,
+    "threadSnapshots": [],
+    "commands": [],
+    "fileChanges": [],
+    "rpcErrors": [
+      {
+        "code": -32600,
+        "message": "thread/start.runtimeWorkspaceRoots requires experimentalApi capability"
+      }
+    ]
+  },
+  {
+    "recording": "run-3b.jsonl",
+    "sha256": "957f3f615c6c392be45368421aa6cf108b702703bc64358403e0c4d61782f061",
+    "records": 437,
+    "methods": {
+      "response": 6,
+      "configWarning": 1,
+      "remoteControl/status/changed": 1,
+      "thread/started": 1,
+      "mcpServer/startupStatus/updated": 12,
+      "thread/settings/updated": 1,
+      "thread/status/changed": 11,
+      "turn/started": 4,
+      "item/started": 32,
+      "item/completed": 32,
+      "item/agentMessage/delta": 261,
+      "thread/tokenUsage/updated": 15,
+      "account/rateLimits/updated": 15,
+      "item/commandExecution/outputDelta": 24,
+      "turn/completed": 4,
+      "skills/changed": 2
+    },
+    "completedItems": {
+      "userMessage": 1,
+      "reasoning": 9,
+      "agentMessage": 9,
+      "subAgentActivity": 6,
+      "commandExecution": 3,
+      "collabAgentToolCall": 3,
+      "fileChange": 1
+    },
+    "turnOutcomes": {
+      "completed": 4
+    },
+    "threadsWithUsage": 4,
+    "threadSnapshots": [
+      {
+        "role": null,
+        "model": "gpt-5.6-sol",
+        "sessionMatchesThread": true
+      },
+      {
+        "role": "face",
+        "model": "gpt-5.6-luna",
+        "sessionMatchesThread": false
+      },
+      {
+        "role": "ba",
+        "model": "gpt-5.6-terra",
+        "sessionMatchesThread": false
+      },
+      {
+        "role": "reviewer",
+        "model": "gpt-5.6-sol",
+        "sessionMatchesThread": false
+      }
+    ],
+    "commands": [
+      {
+        "status": "completed",
+        "exitCode": 0,
+        "durationMs": 90
+      },
+      {
+        "status": "completed",
+        "exitCode": 0,
+        "durationMs": 83
+      },
+      {
+        "status": "completed",
+        "exitCode": 0,
+        "durationMs": 82
+      }
+    ],
+    "fileChanges": [
+      {
+        "status": "failed",
+        "files": 1
+      }
+    ],
+    "rpcErrors": []
+  },
+  {
+    "recording": "run-4.jsonl",
+    "sha256": "99bd99927b216fafd686da6f0685b4677fa919355a8862c46aaf77bcc9328a1d",
+    "records": 345,
+    "methods": {
+      "response": 5,
+      "configWarning": 1,
+      "remoteControl/status/changed": 1,
+      "thread/started": 1,
+      "mcpServer/startupStatus/updated": 10,
+      "thread/settings/updated": 1,
+      "thread/status/changed": 8,
+      "turn/started": 3,
+      "item/started": 28,
+      "item/completed": 28,
+      "item/agentMessage/delta": 190,
+      "thread/tokenUsage/updated": 13,
+      "account/rateLimits/updated": 13,
+      "item/commandExecution/outputDelta": 26,
+      "turn/completed": 3
+    },
+    "completedItems": {
+      "userMessage": 1,
+      "reasoning": 10,
+      "agentMessage": 6,
+      "subAgentActivity": 4,
+      "commandExecution": 4,
+      "collabAgentToolCall": 2,
+      "fileChange": 1
+    },
+    "turnOutcomes": {
+      "completed": 3
+    },
+    "threadsWithUsage": 3,
+    "threadSnapshots": [
+      {
+        "role": null,
+        "model": "gpt-5.6-sol",
+        "sessionMatchesThread": true
+      },
+      {
+        "role": "face",
+        "model": "gpt-5.6-luna",
+        "sessionMatchesThread": false
+      },
+      {
+        "role": "ba",
+        "model": "gpt-5.6-terra",
+        "sessionMatchesThread": false
+      }
+    ],
+    "commands": [
+      {
+        "status": "completed",
+        "exitCode": 0,
+        "durationMs": 83
+      },
+      {
+        "status": "failed",
+        "exitCode": 1,
+        "durationMs": 545
+      },
+      {
+        "status": "completed",
+        "exitCode": 0,
+        "durationMs": 108
+      },
+      {
+        "status": "failed",
+        "exitCode": 1,
+        "durationMs": 172
+      }
+    ],
+    "fileChanges": [
+      {
+        "status": "failed",
+        "files": 1
+      }
+    ],
+    "rpcErrors": []
+  },
+  {
+    "recording": "architecture-control.jsonl",
+    "sha256": "d7d78cc60d5bc67c4c71e6d4b7c8498a9349f7d1743cf313a5b47ab846dcba2a",
+    "records": 168,
+    "methods": {
+      "response": 5,
+      "remoteControl/status/changed": 1,
+      "thread/started": 1,
+      "mcpServer/startupStatus/updated": 10,
+      "thread/settings/updated": 1,
+      "thread/status/changed": 8,
+      "turn/started": 3,
+      "item/started": 13,
+      "item/completed": 13,
+      "item/agentMessage/delta": 85,
+      "thread/tokenUsage/updated": 7,
+      "account/rateLimits/updated": 7,
+      "turn/completed": 3
+    },
+    "completedItems": {
+      "userMessage": 1,
+      "agentMessage": 5,
+      "subAgentActivity": 4,
+      "reasoning": 1,
+      "collabAgentToolCall": 2
+    },
+    "turnOutcomes": {
+      "completed": 3
+    },
+    "threadsWithUsage": 3,
+    "threadSnapshots": [
+      {
+        "role": null,
+        "model": "gpt-5.6-sol",
+        "sessionMatchesThread": true
+      },
+      {
+        "role": "murdock",
+        "model": "gpt-5.6-sol",
+        "sessionMatchesThread": false
+      },
+      {
+        "role": "default",
+        "model": "gpt-5.6-sol",
+        "sessionMatchesThread": false
+      }
+    ],
+    "commands": [],
+    "fileChanges": [],
+    "rpcErrors": []
+  },
+  {
+    "recording": "plugin-invocation.jsonl",
+    "sha256": "8272387705ba430c56f5525768ce2faa1b73f6a7a9bde6ff1f98afe0c4d7d693",
+    "records": 90,
+    "methods": {
+      "response": 3,
+      "remoteControl/status/changed": 1,
+      "thread/started": 1,
+      "mcpServer/startupStatus/updated": 8,
+      "thread/settings/updated": 1,
+      "thread/status/changed": 2,
+      "turn/started": 1,
+      "item/started": 9,
+      "item/completed": 9,
+      "item/agentMessage/delta": 29,
+      "item/commandExecution/outputDelta": 8,
+      "thread/tokenUsage/updated": 4,
+      "account/rateLimits/updated": 4,
+      "turn/completed": 1
+    },
+    "completedItems": {
+      "userMessage": 1,
+      "agentMessage": 2,
+      "reasoning": 3,
+      "commandExecution": 3
+    },
+    "turnOutcomes": {
+      "completed": 1
+    },
+    "threadsWithUsage": 1,
+    "threadSnapshots": [
+      {
+        "role": null,
+        "model": "gpt-5.6-sol",
+        "sessionMatchesThread": true
+      }
+    ],
+    "commands": [
+      {
+        "status": "completed",
+        "exitCode": 0,
+        "durationMs": 94
+      },
+      {
+        "status": "failed",
+        "exitCode": 1,
+        "durationMs": 72
+      },
+      {
+        "status": "completed",
+        "exitCode": 0,
+        "durationMs": 116
+      }
+    ],
+    "fileChanges": [],
+    "rpcErrors": []
+  }
+]

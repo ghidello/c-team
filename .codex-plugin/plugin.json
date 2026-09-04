@@ -1,0 +1,18 @@
+{
+  "name": "c-team",
+  "version": "0.1.0",
+  "description": "Inspect local C-Team observability spike recordings and replay evidence.",
+  "author": {
+    "name": "Local developer"
+  },
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "C-Team",
+    "shortDescription": "Replay a local Codex observability recording.",
+    "longDescription": "Development-only console spike for inspecting agent hierarchy, usage, and protocol evidence.",
+    "developerName": "Local developer",
+    "category": "Productivity",
+    "capabilities": [],
+    "defaultPrompt": "Inspect a C-Team recording."
+  }
+}

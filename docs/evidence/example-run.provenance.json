@@ -1,0 +1,6 @@
+{
+  "sourceSha256": "957f3f615c6c392be45368421aa6cf108b702703bc64358403e0c4d61782f061",
+  "derivativeSha256": "f4be120a4608cebdcb7a4a4edc5bc2ae7c3f17ee46d2f3b4e70a9c0320b0e154",
+  "records": 74,
+  "transform": "Allowlisted lossy derivative; IDs pseudonymized; paths, prompts, prose, tool output, code and unknown messages removed. Timestamps, counters, models and lifecycle retained. Review before sharing."
+}
