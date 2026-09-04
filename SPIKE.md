@@ -6,6 +6,8 @@ Validate whether C-Team can reliably observe native Codex multi-agent execution 
 
 The spike should be small, disposable where appropriate, and evidence-driven.
 
+Read `MODELS.md` as part of the spike brief. Sol/Terra/Luna are the controlled initial dogfooding policy, not a fixed C-Team model taxonomy.
+
 ## Critical questions
 
 ### CQ1 — Agent hierarchy
@@ -183,6 +185,33 @@ C-Team must launch Codex itself to obtain full fidelity.
 
 The spike must produce a clear conclusion for CQ10 even if the conclusion is “not currently supported.”
 
+### CQ11 — Model catalog and quota identity
+
+Can C-Team discover the models currently available to the signed-in Codex user/account and associate actual agent execution with the correct model and usage/rate-limit identity?
+
+Investigate and document:
+
+- how the current app-server exposes the model catalog;
+- model identifiers and display names;
+- supported reasoning-effort values and relevant capabilities;
+- whether the catalog reflects the actual signed-in account/product surface;
+- configured/requested model vs effective model per thread/turn;
+- inheritance, explicit overrides, rerouting, and fallback where observable;
+- model context-window information;
+- rate-limit/quota buckets and whether they can be associated with a model/model family;
+- whether models with separate limits, such as GPT-5.3-Codex-Spark when available, can be distinguished in account/rate-limit telemetry;
+- how additional models such as GPT-5.5, legacy/API-key-only models, and future models should be represented without code changes.
+
+Do not hard-code a fixed list of Codex models into the C-Team domain.
+
+Record CQ11 as one of:
+
+- **Full** — catalog, effective model, and quota identity are observable;
+- **Partial** — catalog/effective model are observable but quota identity is incomplete;
+- **Minimal** — only configured/requested model can be determined reliably.
+
+See `MODELS.md` for the broader model strategy and post-spike comparison ideas.
+
 ## Explicit non-goals
 
 Do not implement:
@@ -258,7 +287,7 @@ version: spike
 
 Enable experimental capabilities only when needed and record which experimental APIs were required.
 
-Record the Codex CLI/app-server version and model catalog during the run.
+Record the Codex CLI/app-server version and **complete current model catalog** during the run. Do not assume the model names configured in `.codex/agents/` are the only available models.
 
 ## Suggested structure
 
@@ -311,6 +340,8 @@ normalized C-Team state/events
 ```
 
 Codex protocol evolution must not leak through the whole codebase.
+
+The same rule applies to models: protocol-specific model catalog DTOs must not become a fixed C-Team model enum.
 
 ## Event recording
 
@@ -386,6 +417,8 @@ AgentState
   Children[]
 ```
 
+Model identifiers should be strings/value objects derived from Codex telemetry, not a fixed Sol/Terra/Luna enum.
+
 Change this model when protocol evidence requires it.
 
 ## Terminal output
@@ -429,7 +462,7 @@ Formatting is secondary to correctness.
 
 Use a very small fixture repository or a deliberately trivial part of C-Team itself.
 
-Configure:
+Configure the initial controlled baseline:
 
 ```text
 main session: Sol
@@ -462,6 +495,8 @@ Hannibal must then respond and explicitly keep, revise, or reject the challenge.
 
 Run the controlled experiment multiple times.
 
+Do not introduce Spark/GPT-5.5/etc. into the baseline merely to exercise them. Once telemetry correctness is established, model comparisons become a separate post-spike experiment described in `MODELS.md`.
+
 ## Dogfooding
 
 Use the same delegation setup to build the spike itself.
@@ -481,7 +516,9 @@ Murdock    → Sol    → adversarial/lateral analysis
 Reviewer   → Sol    → independent review
 ```
 
-Unexpected delegation behavior is product evidence. Record it.
+These are initial policy choices, not C-Team product constraints.
+
+Unexpected delegation/model behavior is product evidence. Record it.
 
 ## Minimal Codex plugin shell
 
@@ -570,6 +607,8 @@ Minimum technical acceptance:
 16. A minimal C-Team Codex plugin can be installed locally.
 17. A C-Team skill can be invoked from Codex.
 18. CQ10 has a definitive documented conclusion about observing ChatGPT Desktop-owned Codex sessions.
+19. The current model catalog is enumerated dynamically rather than assumed from configuration.
+20. CQ11 has a documented Full / Partial / Minimal conclusion for model catalog, effective model, and quota identity.
 
 ## Deliverables
 
@@ -587,7 +626,7 @@ tests
 minimal Codex plugin
 ```
 
-`docs/spike-findings.md` should use this structure for every critical question:
+`docs/spike-findings.md` should use this structure for every critical question, including CQ11:
 
 ```text
 Question
