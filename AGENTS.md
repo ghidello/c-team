@@ -2,7 +2,7 @@
 
 ## Mission
 
-Build the C-Team observability spike described in `PROJECT.md` and `SPIKE.md`.
+Build the C-Team observability spike described in `PROJECT.md`, `SPIKE.md`, and `MODELS.md`.
 
 The spike exists to answer architectural questions. Do not expand scope into the production product unless explicitly asked.
 
@@ -106,6 +106,26 @@ Reviewer should prioritize real defects over style preferences.
 
 Reviewer must not assume Hannibal or B.A. is correct.
 
+## Model policy
+
+The current custom-agent configuration intentionally uses:
+
+```text
+Hannibal   → Sol
+Murdock    → Sol
+Face       → Luna
+B.A.       → Terra
+Reviewer   → Sol
+```
+
+Treat this as the **initial controlled dogfooding policy only**.
+
+Do not encode these names/models as C-Team product assumptions. C-Team must dynamically observe the model catalog and actual model used by every agent where possible. See `MODELS.md` and CQ11 in `SPIKE.md`.
+
+Do not opportunistically switch Face/B.A./etc. to GPT-5.5, Spark, or another available model during the baseline spike. First prove telemetry correctness with a stable configuration. Later model comparison experiments should be deliberate and repeatable.
+
+If the effective model differs from the agent configuration, record that as evidence rather than silently normalizing it away.
+
 ## Preferred workflows
 
 ### Simple task
@@ -148,7 +168,8 @@ Reviewer
 - Parallelize only genuinely independent work.
 - Avoid having multiple agents edit the same files concurrently.
 - Give subagents narrow, testable objectives.
-- Prefer the cheapest model capable of completing the task reliably.
+- Prefer the cheapest model capable of completing the task reliably, **after** a routing policy has been deliberately chosen.
+- Do not confuse routing policy with C-Team's underlying model representation.
 - Preserve evidence from experiments rather than relying on impressions.
 - When protocol behavior is uncertain, test it.
 
@@ -171,6 +192,7 @@ Do not build these unless explicitly requested:
 - Prefer straightforward C# over clever abstractions.
 - Keep types cohesive and small.
 - Keep protocol DTOs separate from C-Team domain types.
+- Represent model identifiers generically; do not create a Sol/Terra/Luna enum.
 - Avoid dependency-injection ceremony unless it provides clear value.
 - Prefer long readable lines over aggressive wrapping; target approximately 150 characters where practical.
 - Do not use an `s_` prefix for static fields.
@@ -180,4 +202,4 @@ Do not build these unless explicitly requested:
 
 The work is not done merely because code compiles.
 
-The spike must answer the critical questions in `SPIKE.md` with recorded evidence and finish with a decision recommendation rather than silently continuing into production development.
+The spike must answer the critical questions in `SPIKE.md`, including CQ11, with recorded evidence and finish with a decision recommendation rather than silently continuing into production development.
