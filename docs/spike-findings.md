@@ -189,3 +189,9 @@ Structured live plan capture is unmet. Successful file modification and live dif
 Choose **Architecture B — Persisted-state observer** for any separately authorized next phase. Its trade-off is reduced real-time fidelity and dependence on version-sensitive stored history, in exchange for observing the user's existing Desktop workflow. Do not promise automatic active-task selection or exact effective-model/quota attribution. Architecture A lacks an attachment mechanism here; C would change runtime ownership; D would add a second product execution surface not justified by the current goal.
 
 Stop here. No production implementation or model-comparison experiment is authorized by this decision.
+
+## Follow-up decision: Desktop near-live observation
+
+The quota-sensitive persisted-state follow-up is complete. [Measured near-live evidence](near-live-observation.md) supports **D1 — Hybrid, persisted-first**: persisted record-to-observer latency was 1.404 ms median and 6.668 ms p95 across 131 independent-probe samples, with deterministic restart/reconciliation and zero live parse failures. Token updates were cumulative and attributable but arrived stepwise, with a 13.885-second median interval.
+
+Use filesystem notifications plus periodic length/prefix reconciliation. Do not rely on file modification timestamps, which remained unchanged while the rollout grew. Explicit thread selection is certain; cwd-only selection remains ambiguous. Automatic child-file hydration and live root failure/completion timing remain follow-up gaps. The optional PF1 NativeAOT probe stopped because the host lacks the Windows native linker; installing that prerequisite is the next bounded packaging experiment.

@@ -20,6 +20,23 @@ public static class Program
             if (options.Get("json") is { } json) await File.WriteAllTextAsync(json, state.ToJson());
             return 0;
         }
+        if (command == "watch")
+        {
+            var rollout = options.Get("file") ?? ResolveRollout(options);
+            var seconds = int.TryParse(options.Get("duration-seconds"), out var requestedSeconds) ? requestedSeconds : 30;
+            using var source = new PersistedDesktopSource(rollout, watch: true);
+            await source.InitializeAsync();
+            Renderer.Write(source.State);
+            await Task.Delay(TimeSpan.FromSeconds(seconds));
+            source.Dispose();
+            Renderer.Write(source.State);
+            if (options.Get("json") is { } resultFile)
+            {
+                Directory.CreateDirectory(Path.GetDirectoryName(Path.GetFullPath(resultFile))!);
+                await File.WriteAllTextAsync(resultFile, JsonSerializer.Serialize(source.Result(), new JsonSerializerOptions { WriteIndented = true }));
+            }
+            return 0;
+        }
         var codex = options.Required("codex"); var output = options.Required("output"); var serverCwd = command == "run" ? options.Required("cwd") : Environment.CurrentDirectory;
         await using var client = await AppServer.StartAsync(codex, output, serverCwd);
         var experimentalApi = command == "run";
@@ -50,7 +67,13 @@ public static class Program
         if (options.Get("json") is { } stateFile) await File.WriteAllTextAsync(stateFile, client.State.ToJson());
         return 0;
     }
-    static int Usage() { Console.Error.WriteLine("cteam capabilities --codex <path> --output <recording> | run --codex <path> --cwd <fixture> --prompt-file <file> --model <model> --output <recording> [--review detached] [--history-mode legacy|paginated] [--windows-sandbox unelevated] [--json <state>] | replay <recording> [--json <state>]"); return 2; }
+    static string ResolveRollout(Options options)
+    {
+        var thread = options.Required("thread"); var root = options.Get("sessions-root") ?? Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".codex", "sessions");
+        var candidates = Directory.EnumerateFiles(root, $"*{thread}*.jsonl", SearchOption.AllDirectories).OrderByDescending(File.GetLastWriteTimeUtc).ToArray();
+        return candidates.FirstOrDefault() ?? throw new FileNotFoundException($"No rollout found for thread {thread} under {root}.");
+    }
+    static int Usage() { Console.Error.WriteLine("cteam watch (--file <rollout> | --thread <id> [--sessions-root <root>]) [--duration-seconds <seconds>] [--json <private measurement>] | capabilities --codex <path> --output <recording> | run --codex <path> --cwd <fixture> --prompt-file <file> --model <model> --output <recording> | replay <recording> [--json <state>]"); return 2; }
 }
 
 public sealed class Options

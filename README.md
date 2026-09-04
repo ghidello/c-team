@@ -4,7 +4,7 @@ C-Team is an observability companion for Codex multi-agent execution.
 
 The first .NET 10 console spike validated app-server telemetry, persisted Desktop observation, recordings, replay, model catalog discovery, and a minimal Codex plugin shell. Its findings are documented under `docs/`.
 
-The next bounded experiment is the **Desktop near-live observation spike** in [`NEAR_LIVE_SPIKE.md`](NEAR_LIVE_SPIKE.md). Use [`NEAR_LIVE_KICKOFF.md`](NEAR_LIVE_KICKOFF.md) as the kickoff prompt.
+The **Desktop near-live observation spike** in [`NEAR_LIVE_SPIKE.md`](NEAR_LIVE_SPIKE.md) is complete and recommends D1 — Hybrid, persisted-first.
 
 Production runtime constraints are recorded in [`PRODUCTION_REQUIREMENTS.md`](PRODUCTION_REQUIREMENTS.md).
 
@@ -13,6 +13,7 @@ Production runtime constraints are recorded in [`PRODUCTION_REQUIREMENTS.md`](PR
 Read:
 
 - [`docs/spike-findings.md`](docs/spike-findings.md) — CQ1–CQ11 findings and decision gate;
+- [`docs/near-live-observation.md`](docs/near-live-observation.md) — NL1–NL9 measurements and D1 decision;
 - [`docs/codex-protocol.md`](docs/codex-protocol.md) — protocol evidence;
 - [`docs/desktop-observation.md`](docs/desktop-observation.md) — Desktop persisted-observation experiment.
 
@@ -24,9 +25,12 @@ The first spike was tested against installed Codex 0.153.1 on Windows.
 dotnet build CTeam.Spike.sln
 dotnet test CTeam.Spike.sln
 dotnet run --project src/CTeam.Spike -- replay docs/evidence/example-run.jsonl
+dotnet run --project src/CTeam.Spike -- watch --thread <desktop-thread-id> --duration-seconds 30 --json .cteam/near-live/watch.json
 ```
 
 `docs/evidence/example-run.jsonl` is an allowlisted, lossy derivative of a real run. Its provenance file describes removed fields; it is not synthetic success evidence. Complete private recordings stay under ignored `.cteam/recordings/`.
+
+`watch` reads persisted Desktop rollout JSONL only. It reconstructs current state, then combines filesystem notifications with one-second length/prefix reconciliation. Its JSON output contains private paths and thread identifiers and belongs under ignored `.cteam/`. Use `--file <rollout>` when the thread id is unavailable; cwd-only selection is deliberately not implemented because the measured candidate set was ambiguous.
 
 ## Reproduce first-spike live experiments
 
@@ -50,16 +54,12 @@ The production companion is expected to run as a normal per-user NativeAOT execu
 
 The repository root contains the minimal `c-team` plugin shell; its `inspect-codex-run` skill directs the local replay command. Manifest validation, local installation, discovery, invocation, and refresh are documented in [`docs/plugin-validation.md`](docs/plugin-validation.md). There is no production MCP server or UI yet.
 
-The preferred eventual deployment is for the plugin to bundle and launch `cteam.exe` in place. PF1 in `PRODUCTION_REQUIREMENTS.md` exists to validate that narrowly with a tiny NativeAOT executable before we commit to the packaging mechanism.
+The preferred eventual deployment is for the plugin to bundle and launch `cteam.exe` in place. The bounded PF1 attempt reached native linking, then stopped because this host lacks the Windows C++ linker workload. See the near-live findings for the immediate next packaging experiment.
 
 ## Current decision gate
 
 Do not proceed into the production system automatically.
 
-Run the near-live spike first and decide whether Desktop persisted observation should be:
+The near-live spike selected **D1 — Hybrid, persisted-first**. Persisted record-to-observer latency was Excellent, while periodic reconciliation was necessary because file modification timestamps remained frozen and one length change was caught by polling before a watcher notification.
 
-- **D1 — Hybrid, persisted-first**;
-- **D2 — Hybrid, after-action-first**;
-- **D3 — Owned-runtime-first**.
-
-SQLite history, production MCP, React/Apps SDK, analytics, steering, automatic routing, installer work, and production lifecycle management remain deferred until that decision is evidence-backed.
+SQLite history, production MCP, React/Apps SDK, analytics, steering, automatic routing, installer work, and production lifecycle management remain deferred pending separate authorization and design.

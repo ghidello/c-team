@@ -1,0 +1,93 @@
+{
+  "environment": {
+    "date": "2026-09-04",
+    "platform": "Windows 10.0.26220",
+    "desktopVersion": "26.901.4073.0",
+    "codexVersion": "0.153.1",
+    "primaryTurnContext": {
+      "configuredModel": "gpt-5.6-sol",
+      "reasoningEffort": "high",
+      "effectiveExecutionModelVerified": false
+    }
+  },
+  "independentFilesystemProbe": {
+    "durationSeconds": 599.695,
+    "pollIntervalMs": 100,
+    "observations": 292,
+    "watcherChangedNotifications": 290,
+    "pollDetectedLengthsIncludingInitial": 2,
+    "uniqueObservedLengths": 284,
+    "duplicateSameLengthNotifications": 8,
+    "lengthDecreases": 0,
+    "bytesGrowth": 889366,
+    "distinctLastWriteTimestamps": 1,
+    "relevantLatency": {
+      "sampleCount": 131,
+      "minimumMs": 0.574,
+      "medianMs": 1.404,
+      "maximumMs": 29.328,
+      "p95Ms": 6.668
+    },
+    "latencyByKind": {
+      "commandCompletion": { "sampleCount": 32, "minimumMs": 0.787, "medianMs": 1.192, "maximumMs": 7.839, "p95Ms": 6.668 },
+      "fileChange": { "sampleCount": 11, "minimumMs": 0.798, "medianMs": 1.121, "maximumMs": 9.017 },
+      "reasoningItem": { "sampleCount": 43, "minimumMs": 0.719, "medianMs": 1.496, "maximumMs": 29.328, "p95Ms": 8.108 },
+      "subagentCompletion": { "sampleCount": 2, "minimumMs": 0.798, "medianMs": 1.066, "maximumMs": 1.334 },
+      "tokenUsage": { "sampleCount": 36, "minimumMs": 0.574, "medianMs": 1.37, "maximumMs": 6.13, "p95Ms": 3.897 }
+    }
+  },
+  "cteamWatch": {
+    "durationSeconds": 180,
+    "watcherNotifications": 88,
+    "reconciliations": 180,
+    "bytesReadIncludingInitialReconstruction": 5438111,
+    "recordsObserved": 1592,
+    "fullReparses": 0,
+    "partialTrailingLineObservations": 0,
+    "parseFailures": 0,
+    "liveRelevantSamples": 36,
+    "liveDelayMedianMs": 1,
+    "liveDelayP95Ms": 2,
+    "liveDelayMaximumMs": 2,
+    "agentsReconstructedFromRootRollout": 7
+  },
+  "agentTree": {
+    "currentMissionChildSamples": 2,
+    "childSessionMetadataToParentStartRecordMs": [18, 19],
+    "childCompletionToParentCompletionRecordMs": [1, 1],
+    "roleNicknameAndParentAvailableInInitialChildMetadata": true,
+    "inheritedHistoryBoundaryObserved": true,
+    "automaticChildFileAttachmentImplemented": false
+  },
+  "tokens": {
+    "rootSamplesDuringProbe": 44,
+    "intervalMinimumMs": 3504,
+    "intervalMedianMs": 13885,
+    "intervalMaximumMs": 59525,
+    "cumulativeTotalsMonotonic": true,
+    "distinctTotals": 44,
+    "childFinalTotalBeforeCompletionMs": [14, 8],
+    "billingOrQuotaRelationshipClaimed": false
+  },
+  "discovery": {
+    "sameCwdCandidatesOnTestDay": 10,
+    "rootCandidates": 3,
+    "childCandidates": 7,
+    "explicitThreadId": "certain",
+    "cwdOnly": "ambiguous"
+  },
+  "restart": {
+    "realSnapshotRecords": 1645,
+    "realSnapshotBytes": 5550443,
+    "independentReconstructionStatesEqual": true,
+    "parseFailures": 0
+  },
+  "pf1": {
+    "status": "deferred-prerequisite",
+    "nativeAotRestoreSucceeded": true,
+    "nativeLinkSucceeded": false,
+    "blocker": "Windows platform linker and Desktop Development for C++ workload are not installed; installing them exceeds this spike's cheap-probe boundary.",
+    "classification": null
+  },
+  "privacy": "Allowlisted aggregate only. Raw paths, thread identifiers, prompts, source text, commands, tool output and account data are omitted. Private measurements remain under ignored .cteam/near-live/."
+}

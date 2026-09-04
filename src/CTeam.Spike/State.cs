@@ -1,4 +1,5 @@
 using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace CTeam.Spike;
 
@@ -11,6 +12,8 @@ public sealed class MissionState
     public string? AccountType { get; set; }
     public Dictionary<string, QuotaBucket> RateLimits { get; } = new();
     public List<string> ProtocolErrors { get; } = [];
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public string? RootThreadId { get; set; }
 
     public bool IsTurnCompleted(string threadId, string turnId)
     {
