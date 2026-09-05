@@ -1,0 +1,132 @@
+{
+  "environment": {
+    "date": "2026-09-05",
+    "platform": "Windows 10.0.26220",
+    "dotnetSdk": "10.0.400",
+    "codexCli": "0.153.4",
+    "plugin": "c-team@personal",
+    "finalLivePluginVersion": "0.1.0+codex.20260905214403",
+    "finalPackagedPluginVersion": "0.1.0+codex.20260905220449",
+    "postLiveRefinement": "Added declared output schemas, bounded rollout scanning, invalid-call containment, Roots error handling, configured-model naming, and redaction of identifier/pipe environment values; covered by tests and final package validation without another model invocation."
+  },
+  "package": {
+    "targetFramework": "net10.0",
+    "runtimeIdentifier": "win-x64",
+    "nativeAot": true,
+    "selfContained": true,
+    "mcpExecutableRelativePath": "bin/win-x64/cteam.exe",
+    "relativeCommand": "./bin/win-x64/cteam.exe",
+    "arguments": ["mcp-server"],
+    "wrapperUsed": false,
+    "pathInstallationUsed": false,
+    "windowsElevationRequired": false,
+    "publishedExecutableBytes": 2736640,
+    "publishedAndInstalledSha256Equal": true,
+    "sha256": "4FDD16E06E4CC24968BBA3220E9C15C38D1E3949BBC7F093EFAB728A01E2BFA8"
+  },
+  "initialize": {
+    "clientName": "codex-mcp-client",
+    "clientTitle": "Codex",
+    "clientVersion": "0.153.4",
+    "requestedProtocolVersion": "2025-06-18",
+    "returnedProtocolVersion": "2025-06-18",
+    "clientCapabilities": {
+      "elicitation": ["form", "url"],
+      "rootsDeclared": false
+    },
+    "rootsListRequested": false,
+    "initializeProjectOrThreadSignalPresent": false
+  },
+  "runtime": {
+    "automaticPluginMcpLaunch": true,
+    "cwdWasVersionedPluginCacheRoot": true,
+    "baseDirectoryWasBundledWinX64Directory": true,
+    "cwdIdentifiedProject": false,
+    "pluginRootEnvironmentProvided": false,
+    "pluginDataEnvironmentProvided": false,
+    "equivalentPluginOwnedDataEnvironmentObserved": false,
+    "supportedPluginOwnedDurableWriteAttempted": false,
+    "localAppDataFallbackUsed": false
+  },
+  "tools": {
+    "pingSucceeded": true,
+    "structuredContentSucceeded": true,
+    "experimentalUiSchemas": [
+      "cteam_get_current_mission",
+      "cteam_get_agent_tree",
+      "cteam_get_usage"
+    ],
+    "persistedMissionProbe": {
+      "succeededThroughInstalledPlugin": true,
+      "selectionSignal": "project_hint",
+      "confidence": "high-confidence",
+      "candidateCount": 1,
+      "status": "running",
+      "agentCount": 9,
+      "configuredModel": "gpt-5.6-sol",
+      "effort": "high",
+      "returnedSensitiveContent": false
+    },
+    "finalScanBounds": {
+      "searchWindowDays": 31,
+      "maximumFiles": 64,
+      "maximumBytesPerFile": 67108864,
+      "maximumTotalBytes": 268435456,
+      "truncationReportedInResult": true
+    },
+    "invalidToolCallContainedWithoutServerExit": true,
+    "rootsErrorResponseConsumed": true
+  },
+  "callMetadata": {
+    "extension": "_meta.x-codex-turn-metadata",
+    "sessionIdPresent": true,
+    "threadIdPresent": true,
+    "sessionAndThreadMatchedCallerThreadStarted": true,
+    "pluginIdPresent": true,
+    "workspaceEntriesByContext": [1, 0],
+    "adequateForExactCallerIdentity": true,
+    "adequateForProvenCrossProjectPersistedAttribution": false
+  },
+  "approvals": {
+    "firstSuccessfulRuntimeLaunchRequiredPrompt": false,
+    "subsequentRestartRequiredPrompt": false,
+    "persistedReadRequiredPrompt": false,
+    "simultaneousContextARequiredPrompt": false,
+    "simultaneousContextBRequiredPrompt": false,
+    "recurringRuntimeApprovalObserved": false
+  },
+  "multiProject": {
+    "simultaneousCodexContexts": 2,
+    "distinctMcpProcesses": 2,
+    "topologyProven": "one MCP child per tested Codex CLI client process",
+    "multipleConversationsInOneDesktopHostTested": false,
+    "processStartDeltaMillisecondsApproximate": 6,
+    "minimumObservedOverlapSeconds": 19.7,
+    "minimumObservedLifetimeSeconds": [19.7, 22.0],
+    "sharedProcessObserved": false,
+    "samePluginCacheCwd": true,
+    "distinctCallerThreadIds": true,
+    "lockOrProtocolErrors": false,
+    "pidsGoneAfterClientExit": true,
+    "processStopRecordFlushed": false,
+    "contextsWereEphemeral": true,
+    "metadataOnlyCrossProjectPersistedAttributionProven": false
+  },
+  "failedApproaches": [
+    {
+      "approach": "Hard-code an older MCP response protocol before inspecting initialize.",
+      "result": "Rejected as an assumption; the real client requested 2025-06-18 and the server was changed to match it."
+    },
+    {
+      "approach": "Attach the same JsonNode to multiple evidence envelopes.",
+      "result": "The first live handshake exited before sending initialize; cloning evidence nodes fixed it and a regression test covers the failure."
+    },
+    {
+      "approach": "Read active Desktop rollouts with File.ReadLines.",
+      "result": "The open writer handle prevented discovery; FileShare.ReadWrite | FileShare.Delete plus incomplete-line tolerance fixed the installed-plugin probe."
+    }
+  ],
+  "classification": "PF2-B — Viable with bounded host/context limitation",
+  "multiProjectClassification": "M2 — multiple instances work but caller/project identity is ambiguous",
+  "privacy": "Allowlisted facts only. User name, absolute paths, raw identifiers, prompts, commands and raw tool output are omitted; private evidence remains under ignored .cteam/experiment-005/."
+}

@@ -10,8 +10,10 @@ public static class PluginLayout
         var required = new[]
         {
             Path.Combine(root, ".codex-plugin", "plugin.json"),
+            Path.Combine(root, ".mcp.json"),
             Path.Combine(root, "skills", "pf1-native-companion", "SKILL.md"),
-            ExperimentPaths.ResolveCompanion(root)
+            ExperimentPaths.ResolveCompanion(root),
+            ExperimentPaths.ResolveMcpCompanion(root)
         };
         var issues = required.Where(path => !File.Exists(path)).Select(path => $"Missing required plugin file: {path}").ToArray();
         return new PluginLayoutValidation(issues.Length == 0, issues);
@@ -26,9 +28,14 @@ public static class PluginStager
         var destination = Path.GetFullPath(pluginRoot);
         CopyTree(Path.Combine(source, ".codex-plugin"), Path.Combine(destination, ".codex-plugin"));
         CopyTree(Path.Combine(source, "skills"), Path.Combine(destination, "skills"));
+        var mcpConfig = Path.Combine(source, ".mcp.json");
+        if (!File.Exists(mcpConfig)) throw new InvalidOperationException($"Required source file does not exist: {mcpConfig}");
+        Directory.CreateDirectory(destination);
+        File.Copy(mcpConfig, Path.Combine(destination, ".mcp.json"), true);
         var destinationCompanion = ExperimentPaths.ResolveCompanion(destination);
         Directory.CreateDirectory(Path.GetDirectoryName(destinationCompanion)!);
         File.Copy(Path.GetFullPath(companionPath), destinationCompanion, true);
+        File.Copy(Path.GetFullPath(companionPath), ExperimentPaths.ResolveMcpCompanion(destination), true);
         var validation = PluginLayout.Validate(destination);
         if (!validation.IsValid)
             throw new InvalidOperationException(string.Join(Environment.NewLine, validation.Issues));

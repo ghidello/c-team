@@ -6,7 +6,7 @@ public static class ExperimentProgram
     {
         if (args.Length == 0)
         {
-            await error.WriteLineAsync("Usage: cteam-pf1 <plugin-native-companion|resolve-companion|validate-plugin-layout|invoke-plugin-companion|stage-plugin> [options]");
+            await error.WriteLineAsync("Usage: cteam <plugin-native-companion|resolve-companion|validate-plugin-layout|invoke-plugin-companion|stage-plugin|mcp-server> [options]");
             return 2;
         }
 
@@ -19,6 +19,7 @@ public static class ExperimentProgram
                 "validate-plugin-layout" => await ValidateAsync(args[1..], output, error),
                 "invoke-plugin-companion" => await InvokeAsync(args[1..], output, error, cancellationToken),
                 "stage-plugin" => await StageAsync(args[1..], output),
+                "mcp-server" => await McpServer.RunAsync(Console.In, output, error, cancellationToken),
                 _ => throw new ArgumentException($"Unknown experiment command: {args[0]}")
             };
         }

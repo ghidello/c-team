@@ -30,8 +30,10 @@ public sealed class ExperimentHarnessTests : IDisposable
     public void Fake_plugin_layout_validates_required_relative_files()
     {
         Write(Path.Combine(scratch, ".codex-plugin", "plugin.json"), "{}");
+        Write(Path.Combine(scratch, ".mcp.json"), "{}");
         Write(Path.Combine(scratch, "skills", "pf1-native-companion", "SKILL.md"), "fixture");
         Write(ExperimentPaths.ResolveCompanion(scratch), "fixture");
+        Write(ExperimentPaths.ResolveMcpCompanion(scratch), "fixture");
         Assert.True(PluginLayout.Validate(scratch).IsValid);
     }
 
@@ -42,11 +44,13 @@ public sealed class ExperimentHarnessTests : IDisposable
         var destination = Path.Combine(scratch, "destination");
         var companion = Path.Combine(scratch, "built", "cteam-pf1.exe");
         Write(Path.Combine(source, ".codex-plugin", "plugin.json"), "{}");
+        Write(Path.Combine(source, ".mcp.json"), "{}");
         Write(Path.Combine(source, "skills", "pf1-native-companion", "SKILL.md"), "fixture");
         Write(companion, "native-fixture");
         PluginStager.Stage(source, destination, companion);
         Assert.True(PluginLayout.Validate(destination).IsValid);
         Assert.Equal("native-fixture", File.ReadAllText(ExperimentPaths.ResolveCompanion(destination)));
+        Assert.Equal("native-fixture", File.ReadAllText(ExperimentPaths.ResolveMcpCompanion(destination)));
     }
 
     [Fact]
