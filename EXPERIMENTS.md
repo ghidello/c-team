@@ -30,7 +30,7 @@ The purpose is to preserve **what was tested, how it was tested, what failed or 
 | 001 | Codex app-server observability | Passed | Structured telemetry, replay and model/quota discovery are viable when C-Team owns an app-server | app-server protocol/lifecycle materially changes |
 | 002 | Direct attach to ChatGPT Desktop app-server | Blocked | Tested Windows Desktop instance used a private stdio app-server; no supported shared subscription endpoint was found | shared endpoint, Windows daemon, thread subscription, or Desktop integration appears |
 | 003 | Persisted Desktop near-live observation | Passed | D1 persisted-first hybrid is viable; persisted records were observed in milliseconds, with watcher + reconciliation required | rollout/state format or Desktop persistence behavior changes |
-| 004 | Plugin-bundled NativeAOT companion | Partial | Standalone .NET 10 win-x64 NativeAOT EXE works when copied; plugin packaging/launch/approval behavior remains untested | execute now; repeat after plugin runtime/package changes |
+| 004 | Plugin-bundled NativeAOT companion | Passed (PF1-C) | Installed payload, relative launch, current-user execution and versioned refresh work; `%LOCALAPPDATA%` durable state required approval on both tested commands | plugin trust, sandbox writable roots, approval persistence or package cache changes |
 
 ## Required experiment folder contract
 
@@ -69,8 +69,6 @@ artifacts/
 
 Build output is not experiment evidence and must not be committed.
 
-## Current task
+## Current decision gate
 
-The immediate task is to archive experiments 001–003 from existing findings/evidence **without rerunning their Codex workloads**, establish the C# experiment harness, inspect `.cteam/` for unique evidence worth promoting, and execute the bounded remaining part of experiment 004.
-
-See `EXPERIMENT_ARCHIVE_PLAN.md` and `EXPERIMENT_ARCHIVE_KICKOFF.md`.
+The archive task is complete at PF1-C. The compatibility laboratory is ready for bounded retests when a trigger in the matrix occurs. Production implementation remains outside this experiment archive.

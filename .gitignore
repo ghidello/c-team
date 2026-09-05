@@ -1,5 +1,6 @@
 # C-Team spike recordings may contain sensitive Codex/session data
 .cteam/
+artifacts/
 
 # .NET
 bin/

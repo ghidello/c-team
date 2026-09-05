@@ -4,6 +4,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CTeam.Spike", "src\CTeam.Sp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CTeam.Spike.Tests", "tests\CTeam.Spike.Tests\CTeam.Spike.Tests.csproj", "{A79BD940-7D2B-4A5A-9C8C-B98D20EED376}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CTeam.Experiments", "experiments\CTeam.Experiments\CTeam.Experiments.csproj", "{B4B3F6D7-4639-4CF5-A8B5-69E1D2555707}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CTeam.Experiments.Tests", "tests\CTeam.Experiments.Tests\CTeam.Experiments.Tests.csproj", "{D6F6CD5A-13E9-4DBB-8790-8EA013B06B88}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,5 +22,13 @@ Global
 		{A79BD940-7D2B-4A5A-9C8C-B98D20EED376}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A79BD940-7D2B-4A5A-9C8C-B98D20EED376}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A79BD940-7D2B-4A5A-9C8C-B98D20EED376}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B4B3F6D7-4639-4CF5-A8B5-69E1D2555707}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B4B3F6D7-4639-4CF5-A8B5-69E1D2555707}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B4B3F6D7-4639-4CF5-A8B5-69E1D2555707}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B4B3F6D7-4639-4CF5-A8B5-69E1D2555707}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D6F6CD5A-13E9-4DBB-8790-8EA013B06B88}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D6F6CD5A-13E9-4DBB-8790-8EA013B06B88}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D6F6CD5A-13E9-4DBB-8790-8EA013B06B88}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D6F6CD5A-13E9-4DBB-8790-8EA013B06B88}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

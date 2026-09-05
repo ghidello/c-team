@@ -1,0 +1,71 @@
+{
+  "environment": {
+    "date": "2026-09-05",
+    "platform": "Windows 10.0.26220",
+    "dotnetSdk": "10.0.400",
+    "codexCli": "0.153.4",
+    "launchTestPluginVersion": "0.1.0+codex.20260905202737",
+    "finalRefreshedPluginVersion": "0.1.0+codex.20260905203506",
+    "approvalRoute": "automatic review (--approve-for-me)"
+  },
+  "package": {
+    "targetFramework": "net10.0",
+    "runtimeIdentifier": "win-x64",
+    "nativeAot": true,
+    "selfContained": true,
+    "publishedExecutableBytes": 2011136,
+    "installedRelativePath": "bin/win-x64/cteam-pf1.exe",
+    "installedPayloadPresent": true,
+    "publishedAndInstalledSha256Equal": true,
+    "sha256": "9DE9D0182F17AA414781ED6AE29FD9E62C22FB5A45BFB02C37BE986D10CA5568",
+    "pathLookupResolved": false,
+    "installedRootDerivedFromSkillPath": true,
+    "versionedCacheRefreshSelectedNewPayload": true,
+    "priorVersionCacheRetainedAfterRefresh": false,
+    "postTestRefinement": {
+      "purpose": "Report a denied optional marker write without an unhandled exception.",
+      "publishedExecutableBytes": 2012160,
+      "publishedAndInstalledSha256Equal": true,
+      "sha256": "7159F4F8772321B430A3845FB03A9C70E6D2817887B5402D8E1FEA7988D6F831",
+      "installedNoMarkerExitCode": 0,
+      "approvalBehaviorRerun": false
+    }
+  },
+  "launch": {
+    "firstSandboxed": {
+      "executableStarted": true,
+      "stableMarkerPrinted": true,
+      "perUserMarkerWrite": "denied",
+      "exitCode": 1
+    },
+    "firstApproved": {
+      "ranAsCurrentDesktopUser": true,
+      "windowsElevationRequired": false,
+      "perUserMarker": "%LOCALAPPDATA%/C-Team/experiments/004-plugin-native-companion/first.txt",
+      "exitCode": 0
+    },
+    "subsequentSandboxed": {
+      "executableStarted": true,
+      "stableMarkerPrinted": true,
+      "perUserMarkerWrite": "denied",
+      "exitCode": 1
+    },
+    "subsequentApproved": {
+      "ranAsCurrentDesktopUser": true,
+      "windowsElevationRequired": false,
+      "perUserMarker": "%LOCALAPPDATA%/C-Team/experiments/004-plugin-native-companion/second.txt",
+      "exitCode": 0
+    },
+    "approvalRequiredFirst": true,
+    "approvalRequiredAgain": true,
+    "approvalCarriedAcrossCommands": false
+  },
+  "layout": {
+    "tested": "bin/win-x64",
+    "obviousExtension": "bin/<runtime-identifier>",
+    "otherRuntimeIdentifiersTested": false
+  },
+  "classification": "PF1-C — Recurring approval",
+  "scope": "A real installed-plugin launch was tested through Codex CLI 0.153.4. The already-running Desktop task did not hot-reload the new skill.",
+  "privacy": "Allowlisted facts only. User name, absolute paths, identifiers, prompts and raw command output are omitted; raw evidence remains under ignored .cteam/experiment-004/."
+}

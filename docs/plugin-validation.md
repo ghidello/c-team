@@ -16,3 +16,7 @@ Verified with installed CLI 0.153.1:
 The installed validation copy remains available locally. Deleting `.cteam/plugin-market` would remove its reinstall source; the durable plugin source remains the repository root. New tasks pick up refreshed skills; this test did not assume an already-running task would hot-reload them.
 
 To reproduce packaging, use the current plugin-creator scaffold/validation scripts, copy the root manifest and skills into a local marketplace source, register that explicit marketplace, and install `c-team@<marketplace>`. Keep this separate from telemetry validation: a discovered skill does not prove Desktop live attachment.
+
+## PF1 follow-up
+
+On 2026-09-05, Codex CLI 0.153.4 installed the same marketplace fixture with `skills/pf1-native-companion/SKILL.md` and `bin/win-x64/cteam-pf1.exe`. The installed binary matched the published NativeAOT artifact, resolved relative to the cache-backed skill, and launched without PATH installation or elevation. Durable `%LOCALAPPDATA%` marker writes required separate approval for both tested commands, producing **PF1-C — Recurring approval**. Details and scope are in [experiment 004](../experiments/004-plugin-native-companion/README.md).

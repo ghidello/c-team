@@ -28,6 +28,13 @@ dotnet run --project src/CTeam.Spike -- replay docs/evidence/example-run.jsonl
 dotnet run --project src/CTeam.Spike -- watch --thread <desktop-thread-id> --duration-seconds 30 --json .cteam/near-live/watch.json
 ```
 
+The durable compatibility matrix is [`EXPERIMENTS.md`](EXPERIMENTS.md). Archived procedures and results live under `experiments/001-*` through `004-*`; reusable deterministic probes live in `experiments/CTeam.Experiments` and compile with the solution. NativeAOT publish output stays ignored inside the repository:
+
+```powershell
+dotnet run --project experiments/CTeam.Experiments -- validate-plugin-layout --plugin-root <staged-plugin-root>
+dotnet publish experiments/CTeam.Experiments/CTeam.Experiments.csproj -c Release -r win-x64 --self-contained true -p:PublishAot=true -o artifacts/pf1/win-x64
+```
+
 `docs/evidence/example-run.jsonl` is an allowlisted, lossy derivative of a real run. Its provenance file describes removed fields; it is not synthetic success evidence. Complete private recordings stay under ignored `.cteam/recordings/`.
 
 `watch` reads persisted Desktop rollout JSONL only. It reconstructs current state, then combines filesystem notifications with one-second length/prefix reconciliation. Its JSON output contains private paths and thread identifiers and belongs under ignored `.cteam/`. Use `--file <rollout>` when the thread id is unavailable; cwd-only selection is deliberately not implemented because the measured candidate set was ambiguous.
@@ -54,12 +61,12 @@ The production companion is expected to run as a normal per-user NativeAOT execu
 
 The repository root contains the minimal `c-team` plugin shell; its `inspect-codex-run` skill directs the local replay command. Manifest validation, local installation, discovery, invocation, and refresh are documented in [`docs/plugin-validation.md`](docs/plugin-validation.md). There is no production MCP server or UI yet.
 
-The preferred eventual deployment is for the plugin to bundle and launch `cteam.exe` in place. The bounded PF1 retry successfully built and ran a standalone .NET 10 win-x64 NativeAOT hello-world executable. Launch from an installed plugin bundle is still the immediate next packaging experiment, so PF1 is not yet classified A/B/C.
+The preferred eventual deployment is for the plugin to bundle and launch `cteam.exe` in place. Experiment 004 proved package inclusion, relative installed-root launch, current-user execution and versioned refresh. It classified the tested path **PF1-C — Recurring approval** because a durable `%LOCALAPPDATA%` write required a fresh approval on both tested commands. See [`experiments/004-plugin-native-companion/README.md`](experiments/004-plugin-native-companion/README.md).
 
 ## Current decision gate
 
 Do not proceed into the production system automatically.
 
-The near-live spike selected **D1 — Hybrid, persisted-first**. Persisted record-to-observer latency was Excellent, while periodic reconciliation was necessary because file modification timestamps remained frozen and one length change was caught by polling before a watcher notification.
+The near-live spike selected **D1 — Hybrid, persisted-first**. Persisted record-to-observer latency was Excellent, while periodic reconciliation was necessary because file modification timestamps remained frozen and one length change was caught by polling before a watcher notification. The experiment-archive/PF1 task stopped at **PF1-C**; it did not continue into production lifecycle or deployment work.
 
 SQLite history, production MCP, React/Apps SDK, analytics, steering, automatic routing, installer work, and production lifecycle management remain deferred pending separate authorization and design.

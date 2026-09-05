@@ -83,7 +83,7 @@
     "parseFailures": 0
   },
   "pf1": {
-    "status": "native-build-passed-plugin-launch-pending",
+    "status": "plugin-launch-complete",
     "retryDate": "2026-09-05",
     "targetFramework": "net10.0",
     "runtimeIdentifier": "win-x64",
@@ -94,8 +94,10 @@
     "standaloneRunExitCode": 0,
     "standaloneRunMarkerObserved": true,
     "standaloneExecutableSha256": "1AB60790F40C2C605E6101AEE6E1654479C587DC1FFD1E7313DE196B2C0E92EF",
-    "remainingQuestion": "Installed plugin bundle path resolution, in-place launch approval behavior, writable sidecar location, replacement on update and multi-platform layout remain untested.",
-    "classification": null
+    "archiveFollowUpDate": "2026-09-05",
+    "archiveFollowUpEvidence": "pf1-plugin-launch.json",
+    "remainingQuestion": null,
+    "classification": "PF1-C — Recurring approval"
   },
   "privacy": "Allowlisted aggregate only. Raw paths, thread identifiers, prompts, source text, commands, tool output and account data are omitted. Private measurements remain under ignored .cteam/near-live/."
 }
