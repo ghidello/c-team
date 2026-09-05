@@ -32,6 +32,7 @@ The purpose is to preserve **what was tested, how it was tested, what failed or 
 | 003 | Persisted Desktop near-live observation | Passed | D1 persisted-first hybrid is viable; persisted records were observed in milliseconds, with watcher + reconciliation required | rollout/state format or Desktop persistence behavior changes |
 | 004 | Plugin-bundled NativeAOT companion | Passed (PF1-C) | Installed payload, relative launch, current-user execution and versioned refresh work; `%LOCALAPPDATA%` durable state required approval on both tested commands | plugin trust, sandbox writable roots, approval persistence or package cache changes |
 | 005 | Plugin-bundled NativeAOT stdio MCP runtime | Partial (PF2-B, M2) | Plugin-managed NativeAOT stdio MCP, structured tools, persisted reads and concurrent independent MCP children work without recurring approval; Roots/plugin data are absent and cross-project attribution still needs explicit context | Roots/plugin data support or MCP caller/workspace metadata changes |
+| 006 | Caller-to-mission correlation | Pending | Test whether per-call `x-codex-turn-metadata.thread_id` maps exactly to persisted rollout/session identity, including multiple real persisted contexts | execute current experiment |
 
 ## Required experiment folder contract
 
@@ -65,15 +66,22 @@ Reusable experiment code should place generated build/publish output under a rep
 ```text
 artifacts/
   experiments/
-    005-plugin-mcp-runtime/
+    006-caller-mission-correlation/
 ```
 
 Build output is not experiment evidence and must not be committed.
 
 ## Current decision gate
 
-Experiment 005 reached its decision gate as **PF2-B** with multi-project result **M2**. The plugin's bundled NativeAOT executable works as an approval-free stdio MCP backend, while project-to-rollout attribution still needs explicit context or a bounded adapter around per-call Codex metadata.
+Experiment 005 established **PF2-B** with multi-project result **M2**: the plugin's bundled NativeAOT executable works as an approval-free stdio MCP backend, and every tested tool call carries an exact caller `thread_id`, but automatic project-to-persisted-rollout attribution was not yet proven.
 
-MCP defines `roots/list` only when the client declares the `roots` capability. The experiment must inspect the current Codex handshake rather than assume historical behavior still applies.
+The current mission is **Experiment 006**, described in `CALLER_MISSION_CORRELATION_SPIKE.md`. It must determine whether caller `thread_id` is itself the stable exact key for persisted mission lookup, with cwd/project hints relegated to fallback metadata.
 
-Production implementation remains outside the completed experiment.
+Finish Experiment 006 with exactly one classification:
+
+- **C1 — Exact**
+- **C2 — Exact with bounded adapter**
+- **C3 — Context-assisted**
+- **C4 — Insufficient**
+
+If C1 or C2 is proven, the local runtime/identity spike phase should be considered complete unless a new blocker appears. Production implementation remains a separate task.
