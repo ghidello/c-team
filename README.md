@@ -54,7 +54,7 @@ The production companion is expected to run as a normal per-user NativeAOT execu
 
 The repository root contains the minimal `c-team` plugin shell; its `inspect-codex-run` skill directs the local replay command. Manifest validation, local installation, discovery, invocation, and refresh are documented in [`docs/plugin-validation.md`](docs/plugin-validation.md). There is no production MCP server or UI yet.
 
-The preferred eventual deployment is for the plugin to bundle and launch `cteam.exe` in place. The bounded PF1 attempt reached native linking, then stopped because this host lacks the Windows C++ linker workload. See the near-live findings for the immediate next packaging experiment.
+The preferred eventual deployment is for the plugin to bundle and launch `cteam.exe` in place. The bounded PF1 retry successfully built and ran a standalone .NET 10 win-x64 NativeAOT hello-world executable. Launch from an installed plugin bundle is still the immediate next packaging experiment, so PF1 is not yet classified A/B/C.
 
 ## Current decision gate
 

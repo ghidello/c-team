@@ -74,7 +74,9 @@ The three-minute implemented run processed 5,438,111 bytes including its initial
 
 ## PF1 packaging feasibility
 
-The optional tiny NativeAOT probe stayed bounded. Restore succeeded and managed compilation began, but native linking failed because the Windows platform linker/Desktop Development for C++ workload is absent. Installing Visual Studio C++ tooling would be unrelated environment setup, so PF1 is not classified A/B/C. The immediate next PF1 experiment is to install that prerequisite on a packaging host, publish the hello-world binary, copy it into the local plugin fixture, refresh the cachebuster, and test in-place execution from the installed cache without PATH or elevation.
+The optional tiny NativeAOT probe stayed bounded. The initial attempt stopped at native linking because the Windows platform linker/Desktop Development for C++ workload was absent. After that prerequisite was installed, a 2026-09-05 retry of `dotnet publish .cteam/near-live/pf1-src/CTeam.Pf1.csproj -c Release -r win-x64 /p:PublishAot=true` succeeded. It produced a 934,400-byte `cteam-pf1.exe`. Copying that executable alone into an isolated directory and running it printed the expected marker and its new base directory, then exited with code 0. This establishes that the hello-world companion can be compiled as a standalone .NET 10 win-x64 NativeAOT executable and moved without a managed runtime payload.
+
+PF1 remains unclassified A/B/C because this retry tested the native executable only. Plugin package inclusion, installed-root discovery, relative in-place launch, recurring approval behavior, a writable sidecar location, update replacement and a multi-platform binary layout remain untested. The next bounded PF1 experiment is to copy the executable into the local plugin fixture, refresh the cachebuster, and test execution from the installed cache without PATH or elevation.
 
 ## Known limitations
 

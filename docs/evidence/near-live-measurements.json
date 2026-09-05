@@ -83,10 +83,18 @@
     "parseFailures": 0
   },
   "pf1": {
-    "status": "deferred-prerequisite",
+    "status": "native-build-passed-plugin-launch-pending",
+    "retryDate": "2026-09-05",
+    "targetFramework": "net10.0",
+    "runtimeIdentifier": "win-x64",
     "nativeAotRestoreSucceeded": true,
-    "nativeLinkSucceeded": false,
-    "blocker": "Windows platform linker and Desktop Development for C++ workload are not installed; installing them exceeds this spike's cheap-probe boundary.",
+    "nativeLinkSucceeded": true,
+    "standaloneExecutableBytes": 934400,
+    "standaloneDirectoryFileCount": 1,
+    "standaloneRunExitCode": 0,
+    "standaloneRunMarkerObserved": true,
+    "standaloneExecutableSha256": "1AB60790F40C2C605E6101AEE6E1654479C587DC1FFD1E7313DE196B2C0E92EF",
+    "remainingQuestion": "Installed plugin bundle path resolution, in-place launch approval behavior, writable sidecar location, replacement on update and multi-platform layout remain untested.",
     "classification": null
   },
   "privacy": "Allowlisted aggregate only. Raw paths, thread identifiers, prompts, source text, commands, tool output and account data are omitted. Private measurements remain under ignored .cteam/near-live/."
