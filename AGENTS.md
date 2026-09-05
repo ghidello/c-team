@@ -8,7 +8,7 @@ The first observability spike is described in `SPIKE.md`; the Desktop near-live 
 
 The experiment archive is tracked in `EXPERIMENTS.md`.
 
-The **current mission** is Experiment 005 — Plugin MCP Runtime, described in `MCP_RUNTIME_SPIKE.md`.
+The **current mission** is Experiment 006 — Caller-to-mission correlation, described in `CALLER_MISSION_CORRELATION_SPIKE.md`.
 
 Production runtime constraints are captured separately in `PRODUCTION_REQUIREMENTS.md`.
 
@@ -18,78 +18,37 @@ Do not expand a spike into the production product unless explicitly asked.
 
 The primary session is Hannibal.
 
-Hannibal owns:
+Hannibal owns understanding the mission, planning, architecture, cross-cutting decisions, resolving ambiguity, task decomposition, integrating delegated results, and final acceptance.
 
-- understanding the mission;
-- planning;
-- architecture;
-- cross-cutting decisions;
-- resolving ambiguity;
-- task decomposition;
-- integrating delegated results;
-- final acceptance.
+For Experiment 006, use **Sol with High reasoning** as the primary session unless explicitly changed.
 
-For Experiment 005, use **Sol with High reasoning** as the primary session unless explicitly changed.
-
-Keep the primary context from growing unnecessarily. Delegate bounded work when that reduces overall context cost, but do not create subagents merely for process compliance.
+Keep the primary context from growing unnecessarily. Delegate bounded work only when it materially reduces cost or context; do not create subagents merely for process compliance.
 
 ## Face — Explorer
 
 Use `face` for bounded repository/protocol discovery.
 
-Good tasks:
+Good tasks include locating persisted identity fields, tracing existing Experiment 005 MCP metadata handling, inspecting current Codex persistence layout, and collecting concrete evidence needed for the correlation decision.
 
-- locate relevant Codex protocol/plugin/MCP implementation details;
-- inspect current repository structure;
-- trace execution paths;
-- identify existing patterns;
-- inspect configuration and build output;
-- collect concrete evidence needed for a decision.
+Face should normally be read-only. Return concise findings with file paths, symbols, protocol fields, and evidence. Do not ask Face to make architecture decisions.
 
-Face should normally be read-only.
-
-Return concise findings with file paths, symbols, protocol fields, and evidence.
-
-Do not ask Face to make architecture decisions.
-
-For Experiment 005, use Face only if a bounded current-Codex MCP/plugin investigation materially reduces primary-context growth. Do not regenerate telemetry that already exists.
+For Experiment 006, use Face only if a bounded current-Codex persistence investigation materially reduces primary-context growth. Do not regenerate telemetry already captured by Experiments 003–005.
 
 ## B.A. — Implementer
 
-Use `ba` for normal implementation once the intended approach is clear.
+Use `ba` for bounded implementation once the intended approach is clear.
 
-Good tasks:
+Good tasks include extending the reusable C# experiment harness, implementing an exact persisted-mission resolver, adding focused xUnit v3 tests, and wiring the minimum live MCP probe needed for CM1–CM3.
 
-- implement protocol client/server pieces;
-- implement replay/state aggregation;
-- implement persisted Desktop observation pieces;
-- implement the reusable C# experiment harness;
-- add focused tests;
-- wire the bounded stdio MCP experiment.
-
-Give B.A. a bounded objective and sufficient context to work independently.
-
-If implementation reveals a material architectural ambiguity, B.A. should report it instead of silently choosing a substantially different design.
+Give B.A. a narrow, testable objective. If implementation reveals a material architectural ambiguity, B.A. should report it rather than silently choosing a substantially different design.
 
 ## Murdock — Challenger
 
-Use `murdock` only for complex or consequential analysis.
-
-Trigger Murdock when architecture is being chosen, a decision has significant trade-offs, requirements are ambiguous, a result is surprising, Hannibal has low confidence, or a choice may be hard to reverse.
-
-Murdock's job is not ordinary review. He should challenge hidden assumptions, reframe the problem, propose materially different approaches, identify risks/second-order effects, and push back on premature convergence.
-
-After Murdock responds, Hannibal must explicitly decide which challenges to accept, reject, or defer.
-
-For Experiment 005, Murdock should normally remain unused unless the MCP runtime exposes a genuinely consequential architectural surprise.
+Use `murdock` only for genuinely consequential or surprising analysis. Experiment 006 is intended to be narrow; Murdock should normally remain unused unless the direct caller-to-rollout identity assumption fails in a way that changes the architecture.
 
 ## Reviewer — Independent review
 
-Use `reviewer` after consequential implementation.
-
-Reviewer should prioritize real defects over style preferences and must not assume Hannibal or B.A. is correct.
-
-For Experiment 005, do not invoke Reviewer merely for process compliance.
+Use `reviewer` only if the implementation introduces consequential identity/protocol logic where an independent defect pass adds clear value. Do not invoke Reviewer merely for process compliance.
 
 ## Model policy
 
@@ -105,62 +64,22 @@ Reviewer   → Sol
 
 Treat this as the **initial controlled dogfooding policy only**.
 
-Do not encode these names/models as C-Team product assumptions. C-Team must dynamically observe the model catalog and actual model used by every agent where possible. See `MODELS.md` and CQ11 in `SPIKE.md`.
+Do not encode these names/models as C-Team product assumptions. C-Team must dynamically observe model identifiers. Do not opportunistically switch models during a controlled experiment; model comparison should be deliberate and repeatable.
 
-Do not opportunistically switch Face/B.A./etc. to GPT-5.5, Spark, Astra, or another available model during a controlled experiment. Model comparison experiments should be deliberate and repeatable.
-
-If the effective model differs from the agent configuration, record that as evidence rather than silently normalizing it away.
-
-## Preferred workflows
-
-### Simple task
-
-```text
-Hannibal → B.A.
-```
-
-### Discovery-heavy task
-
-```text
-Face → Hannibal → B.A.
-```
-
-### Consequential implementation
-
-```text
-Face (if useful) → Hannibal → B.A. → Reviewer
-```
-
-### Complex architecture
-
-```text
-Face (if useful)
-    ↓
-Hannibal proposal
-    ↓
-Murdock challenge
-    ↓
-Hannibal response / decision
-    ↓
-B.A.
-    ↓
-Reviewer
-```
-
-### Current Experiment 005
+## Current Experiment 006 workflow
 
 ```text
 Hannibal / Sol High
     ↓
-inspect current MCP/plugin behavior
+inspect existing caller metadata + persisted identity evidence
     ↓
-compiled C# stdio MCP probe
+compiled C# resolver + deterministic tests
     ↓
-minimal live plugin calls
+minimum real MCP calls needed for exact correlation
     ↓
-two-project/session lifecycle test
+optional second persisted context only if required
     ↓
-PF2 + M1/M2/M3/M4 classification
+C1 / C2 / C3 / C4 classification
 ```
 
 Do not create work merely to observe work.
@@ -169,9 +88,8 @@ Do not create work merely to observe work.
 
 - Do not delegate tiny tasks when coordination overhead exceeds the work.
 - Parallelize only genuinely independent work.
-- Avoid having multiple agents edit the same files concurrently.
+- Avoid multiple agents editing the same files concurrently.
 - Give subagents narrow, testable objectives.
-- Prefer the cheapest model capable of completing the task reliably, after a routing policy has been deliberately chosen.
 - Preserve evidence from experiments rather than relying on impressions.
 - When protocol behavior is uncertain, test it.
 - Before performing inference solely to generate telemetry, identify the unanswered acceptance criterion that requires it.
@@ -186,22 +104,16 @@ Key rules:
 - `.cteam/` is disposable/private scratch, not the durable experiment archive.
 - Preserve failed hypotheses when informative; do not preserve transient failed build directories.
 - New reusable probes/tests should be C#/.NET 10 and compiled in-repo.
-- Sanitized evidence belongs under `docs/evidence/`; deterministic fixtures belong under `tests/fixtures/`; experiment procedures/results belong under `experiments/<id>-<slug>/`.
+- Sanitized evidence belongs under `docs/evidence/`; deterministic fixtures under `tests/fixtures/`; durable experiment procedures/results under `experiments/<id>-<slug>/`.
 - Every durable experiment needs an explicit retest trigger.
 
 ## Production runtime constraints
 
 When production work begins, follow `PRODUCTION_REQUIREMENTS.md`.
 
-In particular, the production local companion is expected to:
+The current validated direction is a .NET 10 NativeAOT per-user executable launched by Codex as the plugin's stdio MCP server, with no Windows Service, no PATH install, no administrator requirement, no Python/PowerShell runtime dependency, no second custom localhost HTTP/WebSocket API, and no recurring approval for normal MCP tool calls on the tested Codex version.
 
-- be a .NET 10 NativeAOT per-user executable;
-- avoid administrator privileges for normal observability;
-- never require a Windows Service;
-- have no Python, PowerShell, or shell-script runtime dependency;
-- avoid recurring Codex sandbox escalation for normal read-only observation.
-
-Experiment 005 specifically tests whether this executable should be the plugin's stdio MCP server, with Codex owning its process lifecycle.
+Experiment 006 must not silently turn this spike into production code.
 
 ## Spike scope guardrails
 
@@ -216,32 +128,33 @@ Do not build these unless explicitly requested:
 - cloud backend;
 - production installer;
 - Windows Service;
-- a second custom localhost HTTP/WebSocket API.
+- a second custom localhost HTTP/WebSocket API;
+- a production persistence index.
 
 ## Code style
 
 - Prefer straightforward C# over clever abstractions.
 - Keep types cohesive and small.
-- Keep protocol DTOs separate from C-Team domain types.
+- Keep Codex/MCP transport metadata separate from C-Team domain types.
 - Represent model identifiers generically; do not create a Sol/Terra/Luna enum.
-- Keep production code NativeAOT-friendly from the beginning once the real companion is started.
+- Keep reusable code NativeAOT-friendly.
 - Avoid dependency-injection ceremony unless it provides clear value.
 - Prefer long readable lines over aggressive wrapping; target approximately 150 characters where practical.
 - Do not use an `s_` prefix for static fields.
-- Do not force constructors to appear before the public API simply because of a generic style convention; organize types for readability.
+- Organize types for readability rather than forcing constructors first.
 
 ## Definition of done for the current mission
 
-Experiment 005 is done only when:
+Experiment 006 is done only when:
 
-1. the real MCP initialize handshake/capabilities are captured;
-2. MCP Roots/project-context behavior is tested rather than assumed;
-3. the bundled NativeAOT stdio MCP server initializes and exposes at least one harmless tool;
-4. supported plugin-owned data behavior is tested if available;
-5. one bounded persisted-state mission read is tested from the MCP process;
-6. approval behavior is recorded for startup, repeated calls and any supported plugin-data write;
-7. two simultaneous project/session contexts are tested for process count, identity and isolation;
-8. the result is classified exactly PF2-A/B/C/D and M1/M2/M3/M4;
-9. `EXPERIMENTS.md` is updated with sanitized evidence and retest triggers.
+1. the exact persisted identity field(s) corresponding to MCP caller `thread_id` are identified;
+2. deterministic C# tests cover exact/not-found/ambiguous/child/missing-context behavior;
+3. at least one real persisted active context is resolved by caller `thread_id` alone;
+4. two real persisted contexts are tested if they can be exercised cheaply enough to answer CM3;
+5. cwd/recency/project hints are not mislabeled as exact identity;
+6. the exact lookup cost/boundedness is characterized without building production indexing;
+7. sanitized evidence and `experiments/006-caller-mission-correlation/README.md` are committed;
+8. `EXPERIMENTS.md` is updated;
+9. the result is classified exactly C1/C2/C3/C4 and child-to-root behavior is stated separately.
 
-Stop at that decision gate rather than silently continuing into production development.
+Stop at that decision gate. If C1 or C2 is proven, explicitly state whether the local runtime/identity spike phase is complete.
