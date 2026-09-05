@@ -6,7 +6,9 @@ Build C-Team through evidence-driven spikes before committing to production arch
 
 The first observability spike is described in `SPIKE.md`; the Desktop near-live follow-up is described in `NEAR_LIVE_SPIKE.md`; their findings live under `docs/`.
 
-The **current mission** is the experiment archive + PF1 task described in `EXPERIMENT_ARCHIVE_PLAN.md` and `EXPERIMENTS.md`.
+The experiment archive is tracked in `EXPERIMENTS.md`.
+
+The **current mission** is Experiment 005 — Plugin MCP Runtime, described in `MCP_RUNTIME_SPIKE.md`.
 
 Production runtime constraints are captured separately in `PRODUCTION_REQUIREMENTS.md`.
 
@@ -27,7 +29,7 @@ Hannibal owns:
 - integrating delegated results;
 - final acceptance.
 
-For the current archive/PF1 task, use **Sol with High reasoning** as the primary session unless explicitly changed.
+For Experiment 005, use **Sol with High reasoning** as the primary session unless explicitly changed.
 
 Keep the primary context from growing unnecessarily. Delegate bounded work when that reduces overall context cost, but do not create subagents merely for process compliance.
 
@@ -37,7 +39,7 @@ Use `face` for bounded repository/protocol discovery.
 
 Good tasks:
 
-- locate relevant Codex protocol schemas and event types;
+- locate relevant Codex protocol/plugin/MCP implementation details;
 - inspect current repository structure;
 - trace execution paths;
 - identify existing patterns;
@@ -50,7 +52,7 @@ Return concise findings with file paths, symbols, protocol fields, and evidence.
 
 Do not ask Face to make architecture decisions.
 
-For the current archive/PF1 task, use Face only if a bounded inventory or plugin-layout investigation materially reduces primary-context growth. Do not use Face to regenerate telemetry that already exists.
+For Experiment 005, use Face only if a bounded current-Codex MCP/plugin investigation materially reduces primary-context growth. Do not regenerate telemetry that already exists.
 
 ## B.A. — Implementer
 
@@ -58,13 +60,12 @@ Use `ba` for normal implementation once the intended approach is clear.
 
 Good tasks:
 
-- implement protocol client pieces;
+- implement protocol client/server pieces;
 - implement replay/state aggregation;
 - implement persisted Desktop observation pieces;
 - implement the reusable C# experiment harness;
 - add focused tests;
-- refactor code following an approved plan;
-- wire small integrations.
+- wire the bounded stdio MCP experiment.
 
 Give B.A. a bounded objective and sufficient context to work independently.
 
@@ -74,33 +75,21 @@ If implementation reveals a material architectural ambiguity, B.A. should report
 
 Use `murdock` only for complex or consequential analysis.
 
-Trigger Murdock when:
+Trigger Murdock when architecture is being chosen, a decision has significant trade-offs, requirements are ambiguous, a result is surprising, Hannibal has low confidence, or a choice may be hard to reverse.
 
-- architecture is being chosen;
-- a decision has significant trade-offs;
-- requirements are ambiguous;
-- a result is surprising;
-- the primary approach may be over-constrained by assumptions;
-- Hannibal has low confidence;
-- a choice may be hard to reverse.
-
-Murdock's job is not ordinary review.
-
-Murdock should challenge hidden assumptions, reframe the problem, propose materially different approaches, identify risks/second-order effects, and push back on premature convergence.
+Murdock's job is not ordinary review. He should challenge hidden assumptions, reframe the problem, propose materially different approaches, identify risks/second-order effects, and push back on premature convergence.
 
 After Murdock responds, Hannibal must explicitly decide which challenges to accept, reject, or defer.
 
-Do not invoke Murdock for trivial implementation choices. For the current archive/PF1 task, Murdock should normally remain unused unless plugin-native-companion behavior exposes a genuinely consequential architectural surprise.
+For Experiment 005, Murdock should normally remain unused unless the MCP runtime exposes a genuinely consequential architectural surprise.
 
 ## Reviewer — Independent review
 
 Use `reviewer` after consequential implementation.
 
-A review is normally required when a change affects architecture/protocol semantics, spans several components, changes lifecycle/concurrency/security behavior, contains non-trivial algorithms, fixes a subtle bug, or is large enough that an independent pass adds value.
-
 Reviewer should prioritize real defects over style preferences and must not assume Hannibal or B.A. is correct.
 
-For the current archive/PF1 task, do not invoke Reviewer merely for process compliance.
+For Experiment 005, do not invoke Reviewer merely for process compliance.
 
 ## Model policy
 
@@ -118,7 +107,7 @@ Treat this as the **initial controlled dogfooding policy only**.
 
 Do not encode these names/models as C-Team product assumptions. C-Team must dynamically observe the model catalog and actual model used by every agent where possible. See `MODELS.md` and CQ11 in `SPIKE.md`.
 
-Do not opportunistically switch Face/B.A./etc. to GPT-5.5, Spark, Astra, or another available model during a controlled baseline experiment. Model comparison experiments should be deliberate and repeatable.
+Do not opportunistically switch Face/B.A./etc. to GPT-5.5, Spark, Astra, or another available model during a controlled experiment. Model comparison experiments should be deliberate and repeatable.
 
 If the effective model differs from the agent configuration, record that as evidence rather than silently normalizing it away.
 
@@ -158,18 +147,20 @@ B.A.
 Reviewer
 ```
 
-### Current experiment archive + PF1 task
+### Current Experiment 005
 
 ```text
 Hannibal / Sol High
     ↓
-archive existing evidence without reruns
+inspect current MCP/plugin behavior
     ↓
-C# experiment harness + deterministic tests
+compiled C# stdio MCP probe
     ↓
-small real PF1 plugin launch test
+minimal live plugin calls
     ↓
-PF1 A/B/C/D classification
+two-project/session lifecycle test
+    ↓
+PF2 + M1/M2/M3/M4 classification
 ```
 
 Do not create work merely to observe work.
@@ -181,15 +172,14 @@ Do not create work merely to observe work.
 - Avoid having multiple agents edit the same files concurrently.
 - Give subagents narrow, testable objectives.
 - Prefer the cheapest model capable of completing the task reliably, after a routing policy has been deliberately chosen.
-- Do not confuse routing policy with C-Team's underlying model representation.
 - Preserve evidence from experiments rather than relying on impressions.
 - When protocol behavior is uncertain, test it.
 - Before performing inference solely to generate telemetry, identify the unanswered acceptance criterion that requires it.
-- For archival work, **reuse existing paid evidence; do not rerun it**.
+- Reuse existing paid evidence; do not rerun it.
 
 ## Experiment preservation
 
-Follow `EXPERIMENTS.md` and `EXPERIMENT_ARCHIVE_PLAN.md`.
+Follow `EXPERIMENTS.md`.
 
 Key rules:
 
@@ -197,7 +187,6 @@ Key rules:
 - Preserve failed hypotheses when informative; do not preserve transient failed build directories.
 - New reusable probes/tests should be C#/.NET 10 and compiled in-repo.
 - Sanitized evidence belongs under `docs/evidence/`; deterministic fixtures belong under `tests/fixtures/`; experiment procedures/results belong under `experiments/<id>-<slug>/`.
-- Do not delete the user's local `.cteam/` scratch during the archive task; produce a keep/discard audit.
 - Every durable experiment needs an explicit retest trigger.
 
 ## Production runtime constraints
@@ -210,26 +199,24 @@ In particular, the production local companion is expected to:
 - avoid administrator privileges for normal observability;
 - never require a Windows Service;
 - have no Python, PowerShell, or shell-script runtime dependency;
-- avoid recurring Codex sandbox escalation for normal read-only observation;
-- preferably be bundled and launched in place by the plugin if PF1 proves that deployment path viable.
+- avoid recurring Codex sandbox escalation for normal read-only observation.
 
-Development/historical reproduction scripts may remain in the repository when justified; they are not production runtime dependencies and are not the default for new experiments.
+Experiment 005 specifically tests whether this executable should be the plugin's stdio MCP server, with Codex owning its process lifecycle.
 
 ## Spike scope guardrails
 
 Do not build these unless explicitly requested:
 
-- SQLite history;
-- production MCP server;
-- React UI;
-- Apps SDK widget;
+- production SQLite history;
+- production Apps SDK UI;
 - analytics dashboard;
 - steering/cancel controls;
 - automatic model routing;
 - worktree manager;
 - cloud backend;
 - production installer;
-- Windows Service.
+- Windows Service;
+- a second custom localhost HTTP/WebSocket API.
 
 ## Code style
 
@@ -245,12 +232,16 @@ Do not build these unless explicitly requested:
 
 ## Definition of done for the current mission
 
-The archive/PF1 task is done only when:
+Experiment 005 is done only when:
 
-1. experiments 001–003 are durably documented from existing evidence without expensive reruns;
-2. `.cteam/` has a written keep/discard audit without deleting the user's scratch data;
-3. reusable experiment probes/tests are C# and compile in-repo;
-4. PF1 is tested with one bounded real plugin invocation and classified exactly A/B/C/D;
-5. `EXPERIMENTS.md` reflects the final status and retest triggers.
+1. the real MCP initialize handshake/capabilities are captured;
+2. MCP Roots/project-context behavior is tested rather than assumed;
+3. the bundled NativeAOT stdio MCP server initializes and exposes at least one harmless tool;
+4. supported plugin-owned data behavior is tested if available;
+5. one bounded persisted-state mission read is tested from the MCP process;
+6. approval behavior is recorded for startup, repeated calls and any supported plugin-data write;
+7. two simultaneous project/session contexts are tested for process count, identity and isolation;
+8. the result is classified exactly PF2-A/B/C/D and M1/M2/M3/M4;
+9. `EXPERIMENTS.md` is updated with sanitized evidence and retest triggers.
 
 Stop at that decision gate rather than silently continuing into production development.
