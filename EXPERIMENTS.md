@@ -31,6 +31,7 @@ The purpose is to preserve **what was tested, how it was tested, what failed or 
 | 002 | Direct attach to ChatGPT Desktop app-server | Blocked | Tested Windows Desktop instance used a private stdio app-server; no supported shared subscription endpoint was found | shared endpoint, Windows daemon, thread subscription, or Desktop integration appears |
 | 003 | Persisted Desktop near-live observation | Passed | D1 persisted-first hybrid is viable; persisted records were observed in milliseconds, with watcher + reconciliation required | rollout/state format or Desktop persistence behavior changes |
 | 004 | Plugin-bundled NativeAOT companion | Passed (PF1-C) | Installed payload, relative launch, current-user execution and versioned refresh work; `%LOCALAPPDATA%` durable state required approval on both tested commands | plugin trust, sandbox writable roots, approval persistence or package cache changes |
+| 005 | Plugin-bundled NativeAOT stdio MCP runtime | Pending | Test plugin-managed MCP lifecycle, MCP roots/project context, plugin-owned data, persisted-state reads, approvals and multi-project process semantics | current mission |
 
 ## Required experiment folder contract
 
@@ -64,11 +65,15 @@ Reusable experiment code should place generated build/publish output under a rep
 ```text
 artifacts/
   experiments/
-    004-plugin-native-companion/
+    005-plugin-mcp-runtime/
 ```
 
 Build output is not experiment evidence and must not be committed.
 
 ## Current decision gate
 
-The archive task is complete at PF1-C. The compatibility laboratory is ready for bounded retests when a trigger in the matrix occurs. Production implementation remains outside this experiment archive.
+Experiment 005 is the current bounded compatibility task. It must determine whether the plugin's bundled NativeAOT executable can act as the primary stdio MCP backend without recurring approval and how Codex exposes project/session identity across multiple simultaneous project/session contexts.
+
+MCP defines `roots/list` only when the client declares the `roots` capability. The experiment must inspect the current Codex handshake rather than assume historical behavior still applies.
+
+Stop after one PF2 A/B/C/D classification and one M1/M2/M3/M4 multi-project classification. Production implementation remains outside this experiment.
