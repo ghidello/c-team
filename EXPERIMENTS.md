@@ -32,7 +32,7 @@ The purpose is to preserve **what was tested, how it was tested, what failed or 
 | 003 | Persisted Desktop near-live observation | Passed | D1 persisted-first hybrid is viable; persisted records were observed in milliseconds, with watcher + reconciliation required | rollout/state format or Desktop persistence behavior changes |
 | 004 | Plugin-bundled NativeAOT companion | Passed (PF1-C) | Installed payload, relative launch, current-user execution and versioned refresh work; `%LOCALAPPDATA%` durable state required approval on both tested commands | plugin trust, sandbox writable roots, approval persistence or package cache changes |
 | 005 | Plugin-bundled NativeAOT stdio MCP runtime | Partial (PF2-B, M2) | Plugin-managed NativeAOT stdio MCP, structured tools, persisted reads and concurrent independent MCP children work without recurring approval; Roots/plugin data are absent and cross-project attribution still needs explicit context | Roots/plugin data support or MCP caller/workspace metadata changes |
-| 006 | Caller-to-mission correlation | Partial (C2) | Caller `thread_id` maps exactly through a bounded adapter and two Desktop roots remained distinct; direct updated Desktop-host invocation awaits one post-restart call | Desktop plugin reload, caller metadata, or rollout identity/layout changes |
+| 006 | Caller-to-mission correlation | Passed (C2) | Caller `thread_id` maps exactly through a bounded adapter; two Desktop roots remained distinct and a post-restart no-argument Desktop call resolved the active root exactly | Desktop plugin reload, caller metadata, or rollout identity/layout changes |
 | 007 | Plugin MCP process topology | Pending | Determine whether native subagents/roots/projects share or isolate the plugin MCP process and verify child-process cleanup | execute after 006; plugin/subagent lifecycle changes |
 | 008 | Project activation and MCP context footprint | Pending | Test a tiny stable globally installed MCP facade, `.cteam` activation, inactive-project dormancy and marker transition without MCP restart | execute after 007; repo-scoped activation/tool-refresh behavior changes |
 | 009 | C-Team project bootstrap and onboarding | Pending | Compare agent-first initialization with npx, .NET one-shot and bundled-runtime bootstrap paths while keeping one canonical project layout | execute after 008; package/runtime onboarding mechanisms change |
@@ -46,9 +46,9 @@ When executable code is worth keeping, prefer the shared compiled C# harness und
 
 ## Experiment order
 
-### Decision recorded: Experiment 006 — caller-to-mission correlation
+### Completed: Experiment 006 — caller-to-mission correlation
 
-Experiment 006 established caller `thread_id` as the stable exact key for persisted mission lookup on the tested Codex version. The dated rollout layout requires a bounded compatibility adapter. ChatGPT Desktop retained the old plugin payload during the run, so one post-restart no-argument Desktop call remains as the explicit runtime/identity completion check; see `experiments/006-caller-mission-correlation/`.
+Experiment 006 established caller `thread_id` as the stable exact key for persisted mission lookup on the tested Codex version. The dated rollout layout requires a bounded compatibility adapter. A post-restart no-argument Desktop call directly confirmed the final installed plugin and completed the local runtime/identity phase; see `experiments/006-caller-mission-correlation/`.
 
 ### Current: Experiment 007 — plugin MCP process topology
 

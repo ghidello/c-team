@@ -60,11 +60,25 @@
     "truncated": false,
     "processesStarted": 1,
     "processErrors": 0,
-    "desktopUpdatedPayloadHotLoaded": false,
-    "updatedDesktopHostCallDirectlyConfirmed": false,
-    "updatedDesktopHostCorrelationInferredFromEstablishedMetadataAndExactDesktopResolution": true,
+    "desktopUpdatedPayloadHotLoadedBeforeRestart": false,
+    "desktopUpdatedPayloadHotLoadedAfterRestart": true,
+    "updatedDesktopHostCallDirectlyConfirmed": true,
     "desktopObservedPayloadVersion": "0.1.0+codex.20260905220449",
-    "desktopResumeFromSecondWriterRejected": true
+    "desktopResumeFromSecondWriterRejected": true,
+    "postRestartDesktopCall": {
+      "loadedPluginVersion": "0.1.0+codex.20260906191756",
+      "explicitArgumentsUsed": false,
+      "outcome": "exact",
+      "selection": "caller-thread-id",
+      "callerKind": "root",
+      "rootKeyMatchedMissionKey": true,
+      "candidateCount": 1,
+      "candidateFilesRead": 1,
+      "directoryLocationsExamined": 32,
+      "directoryEntriesExamined": 21,
+      "bytesRead": 24576,
+      "truncated": false
+    }
   },
   "cm3": {
     "realPersistedDesktopRoots": 2,
@@ -119,7 +133,7 @@
     "realCandidateFilesPerSuccessfulLookup": 1,
     "observedBytesReadRange": [
       18639,
-      22638
+      24576
     ],
     "fileLimitTruncationTested": true,
     "productionIndexBuilt": false
@@ -141,7 +155,6 @@
   ],
   "classification": "C2 — Exact with bounded adapter",
   "childToRootBehavior": "Deterministic for the observed child/subagent persisted shape.",
-    "localRuntimeIdentitySpikePhaseComplete": false,
-    "remainingGate": "One updated no-argument MCP correlation call directly from ChatGPT Desktop after its plugin restart or reload boundary.",
+  "localRuntimeIdentitySpikePhaseComplete": true,
   "privacy": "Allowlisted aggregate facts only. Raw ids, paths, prompts, commands, rollout data, MCP envelopes and client output remain under ignored .cteam/experiment-006/."
 }

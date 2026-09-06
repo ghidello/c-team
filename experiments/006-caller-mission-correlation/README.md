@@ -20,6 +20,7 @@ The Codex-specific MCP field `_meta.x-codex-turn-metadata.thread_id` equals `ses
 4. Resolve two existing persisted Desktop roots by their real thread ids through the installed binary's stdio MCP path, storing the raw requests and responses only under ignored `.cteam/experiment-006/`.
 5. Exercise one fresh bounded Codex call to prove that actual per-call metadata reaches the updated server and resolves the actively written rollout.
 6. Resolve two naturally created child rollouts from this mission and verify their root derivation. No agent was created solely for telemetry.
+7. After restarting ChatGPT Desktop, repeat only the missing no-argument Desktop-hosted call against the final installed plugin.
 
 ## Success criteria
 
@@ -42,7 +43,9 @@ The updated resolver used the rollout filename suffix only to locate candidates,
 
 A fresh bounded Codex client loaded server `0.1.0-experiment-006`. Its real MCP call contained both caller ids, they matched one another and the client's `thread.started` id, and the no-argument mission probe resolved its actively written rollout exactly. It examined one candidate file and 18,639 bytes across the same 32 bounded directory locations, with no truncation or process error.
 
-The already-running ChatGPT Desktop host retained the pre-006 plugin cache path after plugin reinstall, including for a newly created Desktop task. Its old result schema therefore could not exercise the new resolver. Resuming that Desktop-owned context through a fresh CLI client was rejected because Desktop still held the rollout writer. These are plugin refresh and writer-ownership observations; neither contradicted the identity join. The updated installed binary separately resolved the active primary Desktop context and a second real persisted Desktop context exactly from their task ids.
+The already-running ChatGPT Desktop host initially retained the pre-006 plugin cache path after plugin reinstall, including for a newly created Desktop task. Its old result schema therefore could not exercise the new resolver. Resuming that Desktop-owned context through a fresh CLI client was rejected because Desktop still held the rollout writer. These are plugin refresh and writer-ownership observations; neither contradicted the identity join. The updated installed binary separately resolved the active primary Desktop context and a second real persisted Desktop context exactly from their task ids.
+
+After ChatGPT Desktop restarted, it loaded final plugin `0.1.0+codex.20260906191756`. A direct no-argument Desktop MCP call selected `caller-thread-id`, identified the caller as a root, and resolved exactly one candidate. The strictly bounded adapter examined one candidate file, 32 directory locations, 21 directory entries, and 24,576 bytes, with no truncation. This closes the previously unconfirmed Desktop-host boundary.
 
 ### CM3 — Two persisted contexts
 
@@ -64,7 +67,7 @@ The tested order is caller `thread_id`, explicit `mission_id`, explicit project 
 
 ### CM6 — Cost and bounded lookup
 
-The compatibility adapter checks the sessions root plus 31 UTC date directories, examines at most 4,096 directory entries, considers at most eight filename-suffix candidates, and reads at most 64 KiB from each candidate's first physical record, which must be `session_meta`. Every real exact root or child lookup examined one candidate file. Observed identity reads ranged from 18,639 to 22,638 bytes before the strict byte-reader refinement. Deterministic tests prove that the directory-entry, candidate-file, and identity-byte caps report truncation, and any truncated or unreadable candidate set is forbidden from returning exact.
+The compatibility adapter checks the sessions root plus 31 UTC date directories, examines at most 4,096 directory entries, considers at most eight filename-suffix candidates, and reads at most 64 KiB from each candidate's first physical record, which must be `session_meta`. Every real exact root or child lookup examined one candidate file. Observed identity reads ranged from 18,639 to 24,576 bytes; the post-restart Desktop call exercised the strict byte reader. Deterministic tests prove that the directory-entry, candidate-file, and identity-byte caps report truncation, and any truncated or unreadable candidate set is forbidden from returning exact.
 
 No cold/warm timing was needed to choose the direction: directory locations, entries, candidates, and bytes are all capped, and the successful path reads one small identity record. A future optional locator may reduce directory work, but no index or database is required for correctness at this gate.
 
@@ -72,7 +75,7 @@ No cold/warm timing was needed to choose the direction: directory locations, ent
 
 **C2 — Exact with bounded adapter.** Caller `thread_id` is a reliable exact persisted identity on the tested Codex version. Current persistence exposes that identity through dated rollout files, so a small bounded filename-and-`session_meta` compatibility adapter is required.
 
-The local runtime/identity spike phase is **not yet complete**. The identity contract and adapter are established, but one updated no-argument tool call must still be observed directly from ChatGPT Desktop after a Desktop/plugin restart boundary. That narrow retest must not repeat the correlation or concurrency workloads.
+The local runtime/identity spike phase is complete. The post-restart Desktop call directly confirmed the final installed plugin, caller metadata path, active-rollout join, and strict lookup bounds.
 
 ## Evidence references
 
@@ -84,8 +87,8 @@ The local runtime/identity spike phase is **not yet complete**. The identity con
 
 ## Known limitations
 
-The result is version-scoped to the current Windows Codex persistence and MCP extension. ChatGPT Desktop did not hot-load the reinstalled plugin during this session, so updated Desktop-hosted correlation is inferred by combining the already-proven Experiment 005 per-call metadata contract with exact live resolution of two Desktop-owned rollouts; a fresh Codex client provided the full updated end-to-end call. CM2 therefore remains unconfirmed specifically at the updated Desktop host boundary. Only naturally available subagent children were live-tested, not a separate review rollout. The adapter searches a 31-day window and reports truncation instead of guessing outside its bounds.
+The result is version-scoped to the current Windows Codex persistence and MCP extension. ChatGPT Desktop required a restart to load the reinstalled plugin; new tasks in the original Desktop process continued using the old cached payload. Only naturally available subagent children were live-tested, not a separate review rollout. The adapter searches a 31-day window and reports truncation instead of guessing outside its bounds.
 
 ## Retest trigger
 
-Immediate retest: after ChatGPT Desktop restarts or demonstrably reloads the installed plugin, make one no-argument mission call and confirm exact caller correlation. Otherwise retest when Codex changes `_meta.x-codex-turn-metadata`, the rollout filename convention, `session_meta` identity or parent fields, sessions storage location, active-writer sharing, plugin hot-reload behavior, or the bounded adapter reports not-found/truncation for a caller known to be persisted.
+Retest when Codex changes `_meta.x-codex-turn-metadata`, the rollout filename convention, `session_meta` identity or parent fields, sessions storage location, active-writer sharing, plugin hot-reload behavior, or the bounded adapter reports not-found/truncation for a caller known to be persisted.
