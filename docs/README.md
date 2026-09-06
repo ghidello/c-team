@@ -21,9 +21,8 @@
 
 ## Planned follow-ups
 
-- [`../CONTEXT_ACTIVATION_DB_SPIKE.md`](../CONTEXT_ACTIVATION_DB_SPIKE.md) — **Experiment 008B (current):** resolve exact caller `thread_id` through the installed Codex state DB to `cwd`/project metadata and close `.cteam` activation without relying on MCP Roots/workspaces.
-- [`../ONBOARDING_BOOTSTRAP_SPIKE.md`](../ONBOARDING_BOOTSTRAP_SPIKE.md) — Experiment 009: compare agent-first, `npx`, .NET one-shot and possible `cteam init` bootstrap paths after 008B establishes end-to-end activation.
-- [`../STATE_DB_LOCATOR_SPIKE.md`](../STATE_DB_LOCATOR_SPIKE.md) — Experiment 010: broader optional `state_N.sqlite` mission-location optimization; re-evaluate after 008B because it may be partly subsumed.
+- [`../AGENT_ONBOARDING_VALIDATION_SPIKE.md`](../AGENT_ONBOARDING_VALIDATION_SPIKE.md) — **Experiment 009B (current):** validate real installed-skill discovery, approval, bundled initializer execution, immediate MCP activation, and post-init session guidance.
+- [`../STATE_DB_LOCATOR_SPIKE.md`](../STATE_DB_LOCATOR_SPIKE.md) — Experiment 010: broader optional `state_N.sqlite` mission-location optimization; run only if later profiling or compatibility evidence justifies it.
 
 Completed experiment plans remain at the repository root and their durable results live under `experiments/`.
 
