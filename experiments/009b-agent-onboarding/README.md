@@ -62,11 +62,25 @@ The task's final response consequently recommended a fresh task for both new `AG
 
 The natural initialization request was sent again in the same task. The bundled initializer returned `already_initialized`; the file hashes were unchanged and repository marketplace metadata remained absent.
 
+## Desktop restart retest — 2026-09-07
+
+After ChatGPT Desktop restarted, its active skill catalog exposed `c-team:initialize-c-team` from installed package `0.1.0+codex.20260906220726`. One new Sol/high task was created in another disposable projectless directory with no `.cteam/` marker and received only the natural initialization request.
+
+The first assistant update explicitly selected the `initialize-c-team` skill, then read its already resolved installed `SKILL.md` path. The task did not enumerate plugin versions, search cache directories, or fall back to repository experiment files. This is normal installed-skill discovery.
+
+The task inspected the empty target and stopped with the required concrete explanation: it named `.cteam/config.json` and the managed root `AGENTS.md` section, excluded plugin installation, marketplace changes, and outside-repository writes, and requested approval. After one approval, it invoked that installed package's bundled NativeAOT initializer. The initializer returned `initialized`.
+
+Both generated files matched the Experiment 009 golden files byte-for-byte. No repository marketplace file appeared, and the local marketplace manifest hash stayed unchanged. The user's configuration matched the post-restart baseline byte-for-byte before the host-appended trust record for the disposable task; that 114-byte task-registration entry was the only global configuration delta and was not written by the initializer.
+
+In the same task and MCP lifetime, the stable `cteam(action=status)` call completed and returned `project_enabled`. The response recommended a fresh task only to load the new `AGENTS.md` guidance from the beginning, with no backend-restart claim.
+
+The same natural initialization request was then sent again. The task returned the human-facing equivalent of `already_initialized`, called status again, and made no filesystem command. Both project files retained their original initialization timestamps and canonical hashes. Experiment 009's deterministic tests remain the authoritative proof of the initializer's exact machine-readable `already_initialized` value; this retest did not force a second write-capable invocation after the one approved mutation.
+
 ## Decision
 
-**O4 — More evidence needed.** The skill's approval language, canonical invocation, output, and repeat safety worked, and a new standalone app-server discovered its small catalog entry. The tested Desktop host did not refresh its plugin snapshot for a task created after reinstall, so ordinary installed-skill selection and same-process activation were not proven. Manual cache discovery cannot be promoted to agent-first success.
+**O1 — Agent-first + portable bootstrap packages.** After the required Desktop restart, normal installed-skill discovery, one-approval UX, bundled initialization, canonical output, same-MCP activation, guidance-only fresh-session advice, and safe natural repetition all worked in one disposable task. Experiment 009 already established equivalent offline npx and local `dnx` entry points.
 
-The minimum retest is one fresh Desktop application lifecycle after plugin installation, followed by the same natural request in a new disposable project. Do not repeat package or activation architecture experiments. Foundational onboarding validation is not yet complete, and production/MVP implementation planning is not unblocked by this run.
+Foundational onboarding validation is complete. The next work should be production/MVP architecture and implementation planning rather than more onboarding experiments.
 
 Experiment 010 remains optional and unrelated to this result.
 
@@ -78,4 +92,4 @@ Experiment 010 remains optional and unrelated to this result.
 
 ## Retest triggers
 
-Retest after a full Desktop restart with the already installed package, or when Codex plugin skill/catalog hot-reload behavior changes. Retest if the C-Team initializer schema or skill discovery mechanism changes materially.
+Retest when Codex plugin skill/catalog loading changes materially, when a reliable hot-reload mechanism is introduced, or when the C-Team initializer schema or skill discovery mechanism changes.

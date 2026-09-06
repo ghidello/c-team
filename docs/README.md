@@ -16,7 +16,7 @@
 - [`near-live-observation.md`](near-live-observation.md) — measured near-live persistence behavior and watcher strategy.
 - [`codex-protocol.md`](codex-protocol.md) — protocol observations and schemas used by the experiments.
 - [`plugin-validation.md`](plugin-validation.md) — plugin packaging/runtime validation notes.
-- [`../experiments/009b-agent-onboarding/README.md`](../experiments/009b-agent-onboarding/README.md) — real agent-first onboarding validation and Desktop plugin-refresh finding.
+- [`../experiments/009b-agent-onboarding/README.md`](../experiments/009b-agent-onboarding/README.md) — real agent-first onboarding validation, Desktop restart boundary, and completed onboarding decision.
 - [`cteam-scratch-audit.md`](cteam-scratch-audit.md) — audit of private experiment scratch and durable evidence.
 - [`evidence/`](evidence/) — sanitized evidence artifacts supporting experiment conclusions.
 

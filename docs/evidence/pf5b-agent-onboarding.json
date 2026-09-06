@@ -1,26 +1,19 @@
 {
   "environment": {
-    "date": "2026-09-07",
+    "initialRunDate": "2026-09-07",
+    "restartRetestDate": "2026-09-07",
     "host": "ChatGPT Desktop",
     "codexCli": "0.153.4",
     "configuredModel": "gpt-5.6-sol",
     "configuredReasoning": "high",
-    "freshTaskCount": 1,
-    "realTaskTurns": 3,
+    "freshDesktopTasks": 2,
+    "restartRetestFreshTasks": 1,
     "namedAgentsUsed": 0
   },
-  "precondition": {
-    "plugin": "c-team@personal",
+  "plugin": {
+    "id": "c-team@personal",
     "installedVersion": "0.1.0+codex.20260906220726",
-    "desktopLoadedVersion": "0.1.0+codex.20260906191756",
     "installedExecutableMatchedPublished": true,
-    "disposableProjectInitiallyEnabled": false
-  },
-  "catalog": {
-    "standaloneAppServerOrdinaryDiscovery": true,
-    "desktopFreshTaskOrdinaryDiscovery": false,
-    "desktopFallbackWasManualCacheDiscovery": true,
-    "cteamSkillCount": 1,
     "skillName": "c-team:initialize-c-team",
     "nameDescriptionCatalogChars": 129,
     "nameDescriptionCatalogUtf8Bytes": 129,
@@ -28,8 +21,19 @@
     "descriptionChars": 104,
     "descriptionUtf8Bytes": 104
   },
-  "flow": {
+  "initialRun": {
+    "desktopLoadedVersion": "0.1.0+codex.20260906191756",
+    "ordinarySkillDiscovery": false,
+    "manualCacheDiscoveryOccurred": true,
+    "sameDesktopMcpProjectEnabled": false,
+    "finding": "A new task retained the running Desktop host's pre-install plugin snapshot."
+  },
+  "restartRetest": {
+    "desktopLoadedVersion": "0.1.0+codex.20260906220726",
+    "disposableProjectInitiallyEnabled": false,
     "naturalRequestUsed": true,
+    "ordinaryInstalledSkillSelected": true,
+    "manualPluginCacheSearch": false,
     "canonicalFilesExplainedBeforeMutation": true,
     "explicitApprovalRequested": true,
     "approvalCount": 1,
@@ -39,17 +43,20 @@
     "canonicalConfigMatched": true,
     "canonicalAgentsMatched": true,
     "repositoryMarketplaceCreated": false,
+    "marketplaceManifestHashUnchanged": true,
     "pluginConfigurationChangedByInitializer": false,
+    "globalConfigBaselinePrefixUnchanged": true,
     "hostAddedDisposableProjectTrustEntry": true,
+    "hostTrustEntryBytes": 114,
+    "sameDesktopMcpProjectEnabled": true,
+    "toolCatalogRefreshAfterMarkerRequired": false,
+    "freshTaskAdviceLimitedToProjectGuidance": true,
     "repeatNaturalRequestSent": true,
-    "repeatStatus": "already_initialized",
-    "repeatFileHashesUnchanged": true
-  },
-  "activation": {
-    "sameDesktopMcpLifetimeProjectEnabled": false,
-    "reason": "The fresh task inherited the running Desktop host's older C-Team plugin and MCP catalog.",
-    "experiment008bImmediateActivationRepeated": false,
-    "guidanceAndBackendRestartAdviceCleanlySeparated": false
+    "repeatResult": "already_initialized-equivalent",
+    "repeatFilesystemCommandIssued": false,
+    "repeatFileHashesUnchanged": true,
+    "repeatFileTimestampsUnchanged": true,
+    "exactInitializerRepeatStatusReusedFromExperiment009": "already_initialized"
   },
   "tooling": {
     "pluginValidatorStarted": false,
@@ -58,7 +65,10 @@
     "realPluginInstallSucceeded": true,
     "realSkillsListSucceeded": true
   },
-  "classification": "O4 — More evidence needed",
+  "classification": "O1 — Agent-first + portable bootstrap packages",
+  "foundationalOnboardingValidationComplete": true,
+  "nextWork": "Production/MVP architecture and implementation planning",
+  "experiment010": "optional unless later profiling or compatibility evidence justifies it",
   "rawEvidenceLocation": ".cteam/experiment-009b/",
   "sanitization": "Only the fixed experiment prompt phrase and aggregate outcomes are committed; task ids, user-specific paths, full transcripts, command lines, configuration contents, and protocol payloads remain private."
 }

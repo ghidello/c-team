@@ -37,7 +37,7 @@ The purpose is to preserve **what was tested, how it was tested, what failed or 
 | 008 | Project activation and MCP context footprint | Partial (A4) | One 292-byte tool and zero global C-Team skills keep context small; MCP startup is eager but dormant, while missing CLI workspace/Roots data prevents reliable marker activation | repository-scoped activation, Roots/caller workspace metadata, tool refresh, skill injection, or Desktop/CLI discovery changes |
 | 008B | Exact caller project resolution via Codex state DB | Passed (D1) | Installed Codex 0.153.4 maps exact caller ids to unique cwd-bearing rows; a live inactive project transitioned to enabled on the same MCP process with zero rollout reads | state DB schema, caller identity, cwd/project semantics, or DB sharing changes |
 | 009 | C-Team project bootstrap and onboarding | Partial (O4) | One canonical initializer produces two deterministic project files through direct native, local `dnx`, and offline NVM-managed npx; real installed-skill discovery and agent execution remain unmeasured | project schema, package runners, repository-scoped plugin activation, or stable plugin executable paths change |
-| 009B | Real agent-first onboarding validation | Partial (O4) | Approval, bundled initialization, canonical output and repeat safety passed; a fresh Desktop task retained the old plugin snapshot, so ordinary skill selection and same-MCP activation were not proven | full Desktop restart; plugin skill/catalog hot-reload changes |
+| 009B | Real agent-first onboarding validation | Passed (O1) | After Desktop restart, one fresh task selected the installed skill normally, obtained one approval, invoked the bundled initializer, observed immediate same-MCP activation, and repeated safely | plugin skill/catalog loading, hot reload, or initializer schema changes |
 | 010 | State database mission locator | Pending | Broader optional evaluation of `state_N.sqlite` as exact `thread_id → rollout_path` fast-path beyond activation | execute only if later profiling/compatibility work justifies it; state DB schema changes |
 
 ## Required experiment folder contract
@@ -126,9 +126,9 @@ same MCP reports project_enabled immediately
 fresh session recommended only for newly written project guidance
 ```
 
-The approval boundary, bundled initializer invocation, canonical files and repeat request passed. The fresh Desktop task nevertheless retained the running host's older C-Team package snapshot and found the new skill only through manual cache inspection. A separately started no-inference app-server discovered the new one-skill catalog immediately, so the remaining gap is Desktop lifecycle pickup rather than package ingestion.
+The initial task retained the running host's older C-Team package snapshot, establishing that reinstall did not hot-reload the active Desktop host. After the required Desktop restart, one fresh task selected the installed skill through normal discovery, explained the two canonical project changes, obtained one approval, invoked the bundled NativeAOT initializer, matched the golden files, and observed `project_enabled` from the same MCP lifetime. A repeated natural request made no writes and reported the already-initialized state.
 
-The result is **O4 — More evidence needed**; see `experiments/009b-agent-onboarding/`. Retest once after a full Desktop restart. Foundational onboarding validation and production/MVP implementation planning remain gated.
+The result is **O1 — Agent-first + portable bootstrap packages**; see `experiments/009b-agent-onboarding/`. Foundational onboarding validation is complete. The next work should be production/MVP architecture and implementation planning.
 
 ### Later optional: Experiment 010 — broader state database mission locator
 
