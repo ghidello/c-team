@@ -1,5 +1,6 @@
 using System.Collections.Concurrent;
 using System.Diagnostics;
+using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using CTeam.Spike.Codex;
@@ -37,7 +38,7 @@ public static class Program
             }
             return 0;
         }
-        var codex = options.Required("codex"); var output = options.Required("output"); var serverCwd = command == "run" ? options.Required("cwd") : Environment.CurrentDirectory;
+        var codex = options.Required("codex"); var output = options.Required("output"); var serverCwd = command is "run" or "skills" ? options.Required("cwd") : Environment.CurrentDirectory;
         await using var client = await AppServer.StartAsync(codex, output, serverCwd);
         var experimentalApi = command == "run";
         await client.RequestAsync("initialize", new { clientInfo = new { name = "cteam", title = "C-Team", version = "spike" }, capabilities = new { experimentalApi, requestAttestation = false } });
@@ -48,6 +49,21 @@ public static class Program
             await client.RequestAsync("account/rateLimits/read", null);
             string? cursor = null;
             do { var result = await client.RequestAsync("model/list", new { cursor, limit = 100, includeHidden = true }); cursor = result?["nextCursor"]?.GetValue<string>(); } while (cursor is not null);
+        }
+        else if (command == "skills")
+        {
+            var cwd = options.Required("cwd");
+            var result = await client.RequestAsync("skills/list", new { cwds = new[] { cwd }, forceReload = true });
+            var skills = result?["data"]?[0]?["skills"] as JsonArray;
+            var cteamSkills = skills?.OfType<JsonObject>().Where(skill => skill["pluginId"]?.GetValue<string>() == "c-team@personal").ToArray() ?? [];
+            var catalogText = string.Join("\n", cteamSkills.Select(skill => $"{skill["name"]?.GetValue<string>()}\n{skill["description"]?.GetValue<string>()}"));
+            Console.WriteLine(new JsonObject
+            {
+                ["cteam_skill_count"] = cteamSkills.Length,
+                ["catalog_chars"] = catalogText.Length,
+                ["catalog_utf8_bytes"] = Encoding.UTF8.GetByteCount(catalogText),
+                ["skill_names"] = new JsonArray(cteamSkills.Select(skill => JsonValue.Create(skill["name"]?.GetValue<string>())).ToArray())
+            }.ToJsonString());
         }
         else if (command == "run")
         {
@@ -63,7 +79,7 @@ public static class Program
         }
         else return Usage();
         await client.StopAsync();
-        Renderer.Write(client.State);
+        if (command != "skills") Renderer.Write(client.State);
         if (options.Get("json") is { } stateFile) await File.WriteAllTextAsync(stateFile, client.State.ToJson());
         return 0;
     }
@@ -73,7 +89,7 @@ public static class Program
         var candidates = Directory.EnumerateFiles(root, $"*{thread}*.jsonl", SearchOption.AllDirectories).OrderByDescending(File.GetLastWriteTimeUtc).ToArray();
         return candidates.FirstOrDefault() ?? throw new FileNotFoundException($"No rollout found for thread {thread} under {root}.");
     }
-    static int Usage() { Console.Error.WriteLine("cteam watch (--file <rollout> | --thread <id> [--sessions-root <root>]) [--duration-seconds <seconds>] [--json <private measurement>] | capabilities --codex <path> --output <recording> | run --codex <path> --cwd <fixture> --prompt-file <file> --model <model> --output <recording> | replay <recording> [--json <state>]"); return 2; }
+    static int Usage() { Console.Error.WriteLine("cteam watch (--file <rollout> | --thread <id> [--sessions-root <root>]) [--duration-seconds <seconds>] [--json <private measurement>] | capabilities --codex <path> --output <recording> | skills --codex <path> --cwd <project> --output <recording> | run --codex <path> --cwd <fixture> --prompt-file <file> --model <model> --output <recording> | replay <recording> [--json <state>]"); return 2; }
 }
 
 public sealed class Options

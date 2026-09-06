@@ -2,18 +2,12 @@
   "mcpServers": {
     "cteam": {
       "command": "./bin/win-x64/cteam.exe",
-      "args": ["mcp-server"],
+      "args": ["context-activation-server"],
       "cwd": ".",
       "enabled": true,
       "default_tools_approval_mode": "approve",
       "tools": {
-        "cteam_ping": { "approval_mode": "approve" },
-        "cteam_runtime_info": { "approval_mode": "approve" },
-        "cteam_test_plugin_data": { "approval_mode": "approve" },
-        "cteam_probe_current_mission": { "approval_mode": "approve" },
-        "cteam_get_current_mission": { "approval_mode": "approve" },
-        "cteam_get_agent_tree": { "approval_mode": "approve" },
-        "cteam_get_usage": { "approval_mode": "approve" }
+        "cteam": { "approval_mode": "approve" }
       },
       "env_vars": ["CTEAM_EXPERIMENT_EVIDENCE", "CTEAM_CONTEXT_LABEL"],
       "startup_timeout_sec": 15,

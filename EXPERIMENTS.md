@@ -34,7 +34,7 @@ The purpose is to preserve **what was tested, how it was tested, what failed or 
 | 005 | Plugin-bundled NativeAOT stdio MCP runtime | Partial (PF2-B, M2) | Plugin-managed NativeAOT stdio MCP, structured tools, persisted reads and concurrent independent MCP children work without recurring approval; Roots/plugin data are absent and cross-project attribution still needs explicit context | Roots/plugin data support or MCP caller/workspace metadata changes |
 | 006 | Caller-to-mission correlation | Passed (C2) | Caller `thread_id` maps exactly through a bounded adapter; two Desktop roots remained distinct and a post-restart no-argument Desktop call resolved the active root exactly | Desktop plugin reload, caller metadata, or rollout identity/layout changes |
 | 007 | Plugin MCP process topology | Passed (P3) | Native subagents and independent roots each used distinct MCP processes; same-project and cross-context roots were isolated, with clean normal and abrupt-owner cleanup | plugin/subagent process reuse or lifecycle changes |
-| 008 | Project activation and MCP context footprint | Pending | Test a tiny stable globally installed MCP facade, `.cteam` activation, inactive-project dormancy and marker transition without MCP restart | execute after 007; repo-scoped activation/tool-refresh behavior changes |
+| 008 | Project activation and MCP context footprint | Partial (A4) | One 292-byte tool and zero global C-Team skills keep context small; MCP startup is eager but dormant, while missing CLI workspace/Roots data prevents reliable marker activation | repository-scoped activation, Roots/caller workspace metadata, tool refresh, skill injection, or Desktop/CLI discovery changes |
 | 009 | C-Team project bootstrap and onboarding | Pending | Compare agent-first initialization with npx, .NET one-shot and bundled-runtime bootstrap paths while keeping one canonical project layout | execute after 008; package/runtime onboarding mechanisms change |
 | 010 | State database mission locator | Pending | Test whether latest compatible `state_N.sqlite` is a safe optional exact `thread_id → rollout_path` fast-path with bounded fallback | execute if still useful; state DB schema changes |
 
@@ -56,7 +56,7 @@ Experiment 007 found one distinct plugin MCP process per tested root or native a
 
 A shared C-Team core remains deferred. If ever introduced, zombie prevention and demand-started/idle-stopped lifecycle are hard requirements; see `docs/runtime-topology.md`.
 
-### Current: Experiment 008 — project activation and context footprint
+### Completed: Experiment 008 — project activation and context footprint
 
 `CONTEXT_ACTIVATION_SPIKE.md` answers a separate question: how a globally installed C-Team can stay almost invisible in projects that do not opt in.
 
@@ -73,9 +73,9 @@ resolve project
 
 It also tests whether creating `.cteam/` during the same MCP lifetime activates the backend without restarting the MCP, while recognizing that newly created project guidance/skills may still justify a fresh Codex session.
 
-Finish with A1/A2/A3/A4.
+Experiment 008 produced a one-tool, 292-byte NativeAOT facade with zero globally listed C-Team skills. The inactive MCP starts eagerly but performs no rollout work. The tested independent CLI repository supplied exact caller ids but neither a workspace map nor MCP Roots, so the live facade could not distinguish inactive from enabled without parsing persisted state and was classified A4; see `experiments/008-context-activation/`.
 
-### Then: Experiment 009 — project bootstrap and onboarding
+### Current: Experiment 009 — project bootstrap and onboarding
 
 `ONBOARDING_BOOTSTRAP_SPIKE.md` compares four entry points:
 

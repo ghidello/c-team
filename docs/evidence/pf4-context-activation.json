@@ -1,0 +1,149 @@
+{
+  "environment": {
+    "date": "2026-09-06",
+    "platform": "Windows 10.0.26220",
+    "codexCli": "0.153.4",
+    "dotnetSdk": "10.0.400",
+    "plugin": "c-team@personal",
+    "livePluginVersion": "0.1.0+codex.20260906201401",
+    "finalInstalledPluginVersion": "0.1.0+codex.20260906202914",
+    "nativeAot": true,
+    "liveModel": "gpt-5.6-sol",
+    "liveReasoningEffort": "high"
+  },
+  "reusedEvidence": {
+    "experiment005McpInitializeAndWorkspaceShape": true,
+    "experiment006ExactCallerIdentityAndDesktopReloadBoundary": true,
+    "experiment007ProcessTopology": true,
+    "earlierPaidWorkloadsRepeated": false
+  },
+  "stableFacade": {
+    "toolCount": 1,
+    "toolName": "cteam",
+    "actions": [
+      "status",
+      "mission",
+      "agents",
+      "usage",
+      "open"
+    ],
+    "implementedActionsInThisExperiment": [
+      "status"
+    ],
+    "serializedDefinitionChars": 292,
+    "serializedDefinitionUtf8Bytes": 292,
+    "dynamicToolsListRefreshRequiredByBackend": false,
+    "nativeAotToolsListVerified": true
+  },
+  "globalGuidanceFootprint": {
+    "finalPackagedSkillsDirectoryPresent": false,
+    "finalCodexSkillListCount": 0,
+    "finalSkillCatalogChars": 0,
+    "finalSkillCatalogUtf8Bytes": 0,
+    "pluginInterfaceTextExposedThroughInspectedProtocol": false,
+    "failedManifestOnlyAttempt": "Removing the manifest skills field alone did not suppress auto-discovery while the skills directory remained in the package; activation staging now omits that directory."
+  },
+  "inactiveStartup": {
+    "classification": "eager",
+    "mcpStartedBeforeFirstExplicitCteamCall": true,
+    "toolsListedBeforeFirstExplicitCteamCall": true,
+    "runtimeWork": "dormant",
+    "rolloutOrSessionScanBeforeFirstCall": false,
+    "persistedMissionReadsBeforeFirstCall": 0,
+    "runtimeStartToInitializeMilliseconds": [
+      10.951,
+      10.858
+    ],
+    "runtimeStartToToolsListMilliseconds": [
+      11.816,
+      11.452
+    ],
+    "startupWorkingSetBytes": [
+      11800576,
+      11116544
+    ],
+    "startupTimingBoundary": "Managed runtime static initialization timestamp to receipt of initialize/tools-list; not full operating-system process launch latency."
+  },
+  "callerProjectEvidence": {
+    "initializeClient": "codex-mcp-client",
+    "initializeClientVersion": "0.153.4",
+    "requestedProtocol": "2025-06-18",
+    "rootsCapabilityDeclared": false,
+    "exactThreadIdOnCalls": true,
+    "exactSessionIdOnCalls": true,
+    "workspaceEntriesPerCall": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "fixtureStates": [
+      "nested Git repository before first commit",
+      "nested Git repository with an initial commit"
+    ],
+    "cwdUsedAsProjectIdentity": false,
+    "persistedRolloutUsedForActivation": false,
+    "projectCouldBeResolvedWithoutPersistedState": false
+  },
+  "inactiveCall": {
+    "expectedStatus": "project_not_enabled",
+    "observedStatus": "project_unresolved",
+    "markerChecked": false,
+    "persistedMissionRead": false,
+    "reason": "The client supplied neither a workspace map nor MCP Roots, and the facade refused to infer the project from cwd, recency, or persisted rollout state."
+  },
+  "markerTransition": {
+    "liveRuns": 2,
+    "markerCreatedBetweenCalls": true,
+    "samePidWithinEachRun": true,
+    "sameProcessStartWithinEachRun": true,
+    "additionalToolsListObservedBetweenCalls": false,
+    "backendRecognizedTransitionWhenWorkspaceMetadataWasSuppliedDeterministically": true,
+    "liveCodexRecognizedTransition": false,
+    "markerTransitionWithoutMcpRestart": false,
+    "secondLiveStatus": "project_unresolved"
+  },
+  "guidanceBoundary": {
+    "mcpMechanicsNeedNewSessionAfterMarker": false,
+    "newCodexSessionNeededForProjectGuidance": "yes",
+    "basis": "The backend rechecks the marker on every status call, while project instructions and skills belong to the session's initial agent context."
+  },
+  "hostComparison": {
+    "cli": "Two bounded real runs both omitted workspace metadata and Roots for the independent nested repository.",
+    "desktop": "The final package was not hot-loaded into the already-running Desktop host. Experiment 006 already established that this host loads an updated plugin payload after Desktop restart, so no duplicate paid Desktop workload was created.",
+    "result": "host-dependent/unfinished"
+  },
+  "validation": {
+    "spikeTestsPassed": 16,
+    "experimentTestsPassed": 37,
+    "nativeAotPublishSucceeded": true,
+    "pluginValidationPassed": true,
+    "publishedAndInstalledExecutableSha256Match": true,
+    "finalInstalledSkillsDirectoryPresent": false,
+    "liveMcpProcessErrors": 0
+  },
+  "failedApproaches": [
+    {
+      "approach": "Treat removal of the manifest skills field as sufficient to remove global C-Team skill context.",
+      "result": "Codex still auto-discovered the packaged skills directory; the final activation package omits it and app-server skills/list reports zero C-Team skills."
+    },
+    {
+      "approach": "Attribute the missing workspace map to an unborn nested Git repository.",
+      "result": "After an initial commit, the second bounded run still supplied zero workspace entries."
+    },
+    {
+      "approach": "Treat exact caller thread_id or plugin cwd as project identity for activation.",
+      "result": "Rejected: thread_id would require persisted rollout parsing to recover cwd, and the MCP process cwd is the plugin cache rather than the caller project."
+    }
+  ],
+  "requiredSummary": {
+    "inactiveMcpStartup": "eager",
+    "inactiveRuntimeWork": "dormant",
+    "visibleStableToolCount": 1,
+    "serializedStableToolDefinitionSize": "292 bytes / 292 chars",
+    "markerTransitionWithoutMcpRestart": "no",
+    "newCodexSessionNeededForProjectGuidance": "yes"
+  },
+  "classification": "A4 — Insufficient/host-dependent",
+  "privacy": "Only aggregate timings, sizes, counts, booleans, versions and semantic outcomes are committed. Raw identifiers, absolute paths, prompts, commands, MCP envelopes, app-server output and rollout inspection remain under ignored .cteam/experiment-008/."
+}

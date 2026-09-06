@@ -1,19 +1,18 @@
 {
   "name": "c-team",
   "version": "0.1.0",
-  "description": "Run C-Team compatibility experiments and inspect sanitized observability evidence.",
+  "description": "Expose a compact C-Team project-activation facade.",
   "author": {
     "name": "Local developer"
   },
-  "skills": "./skills/",
   "mcpServers": "./.mcp.json",
   "interface": {
     "displayName": "C-Team",
-    "shortDescription": "Run C-Team compatibility experiments.",
-    "longDescription": "Development-only probes for Codex observability, plugin packaging, and MCP runtime compatibility.",
+    "shortDescription": "Check C-Team project activation.",
+    "longDescription": "One compact development facade for C-Team project activation and context-footprint experiments.",
     "developerName": "Local developer",
     "category": "Productivity",
     "capabilities": [],
-    "defaultPrompt": "Inspect a C-Team recording."
+    "defaultPrompt": "Check C-Team status for this project."
   }
 }

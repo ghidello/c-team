@@ -6,7 +6,7 @@ public static class ExperimentProgram
     {
         if (args.Length == 0)
         {
-            await error.WriteLineAsync("Usage: cteam <plugin-native-companion|resolve-companion|validate-plugin-layout|invoke-plugin-companion|stage-plugin|mcp-server> [options]");
+            await error.WriteLineAsync("Usage: cteam <plugin-native-companion|resolve-companion|validate-plugin-layout|invoke-plugin-companion|stage-plugin|mcp-server|context-activation-server> [options]");
             return 2;
         }
 
@@ -20,6 +20,7 @@ public static class ExperimentProgram
                 "invoke-plugin-companion" => await InvokeAsync(args[1..], output, error, cancellationToken),
                 "stage-plugin" => await StageAsync(args[1..], output),
                 "mcp-server" => await McpServer.RunAsync(Console.In, output, error, cancellationToken),
+                "context-activation-server" => await ActivationMcpServer.RunAsync(Console.In, output, error, cancellationToken),
                 _ => throw new ArgumentException($"Unknown experiment command: {args[0]}")
             };
         }
@@ -39,7 +40,7 @@ public static class ExperimentProgram
 
     static async Task<int> ValidateAsync(string[] args, TextWriter output, TextWriter error)
     {
-        var validation = PluginLayout.Validate(RequiredOption(args, "--plugin-root"));
+        var validation = PluginLayout.Validate(RequiredOption(args, "--plugin-root"), requireHistoricalSkill: !args.Contains("--without-skills", StringComparer.Ordinal));
         foreach (var issue in validation.Issues)
             await error.WriteLineAsync(issue);
         await output.WriteLineAsync(validation.IsValid ? "plugin-layout-valid" : "plugin-layout-invalid");
@@ -61,7 +62,7 @@ public static class ExperimentProgram
         var sourceRoot = RequiredOption(args, "--source-root");
         var pluginRoot = RequiredOption(args, "--plugin-root");
         var companion = RequiredOption(args, "--companion");
-        PluginStager.Stage(sourceRoot, pluginRoot, companion);
+        PluginStager.Stage(sourceRoot, pluginRoot, companion, includeHistoricalSkills: !args.Contains("--without-skills", StringComparer.Ordinal));
         await output.WriteLineAsync($"plugin-staged={Path.GetFullPath(pluginRoot)}");
         return 0;
     }

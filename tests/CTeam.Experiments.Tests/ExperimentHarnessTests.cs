@@ -54,6 +54,24 @@ public sealed class ExperimentHarnessTests : IDisposable
     }
 
     [Fact]
+    public void Activation_staging_omits_historical_skills_from_the_installed_surface()
+    {
+        var source = Path.Combine(scratch, "activation-source");
+        var destination = Path.Combine(scratch, "activation-destination");
+        var companion = Path.Combine(scratch, "activation-built", "cteam-pf1.exe");
+        Write(Path.Combine(source, ".codex-plugin", "plugin.json"), "{}");
+        Write(Path.Combine(source, ".mcp.json"), "{}");
+        Write(Path.Combine(source, "skills", "pf1-native-companion", "SKILL.md"), "fixture");
+        Write(Path.Combine(destination, "skills", "stale", "SKILL.md"), "stale");
+        Write(companion, "native-fixture");
+
+        PluginStager.Stage(source, destination, companion, includeHistoricalSkills: false);
+
+        Assert.True(PluginLayout.Validate(destination, requireHistoricalSkill: false).IsValid);
+        Assert.False(Directory.Exists(Path.Combine(destination, "skills")));
+    }
+
+    [Fact]
     public async Task Process_runner_captures_exit_code_and_output()
     {
         var executable = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), "dotnet", "dotnet.exe");
