@@ -228,7 +228,9 @@ Do not make Experiment 010 a prerequisite. Start with the proven bounded rollout
 
 Automatic child hydration is new implementation work, not a capability already completed by Experiments 003/006. Follow explicit relationship records from admitted rollouts, deduplicate thread identities, detect cycles, and cap depth, threads, lookup work, bytes, and retries. Revisit pending/zero-byte children and new relationship records while an observation lease is active.
 
-Use the architecture's caller-project policy: a relative's execution data is included only when its independently resolved normalized project root equals the caller's activated root. Recognize `.git` files as well as directories. Other worktrees, nested repositories, and unresolved relatives remain excluded branches; do not traverse them or include their usage. Preserve the caller even when its mission root is outside scope. Include only already-established relationship identity for excluded branches, with no external activity or paths.
+Use the architecture's conservative caller-project policy: by default, a relative's execution data is included only when its independently resolved normalized filesystem project root equals the caller's activated root. Recognize `.git` files as well as directories. Different filesystem roots—including sibling worktrees, nested repositories, and unresolved relatives—remain excluded branches in the MVP; do not traverse them or include their usage. Preserve the caller even when its mission root is outside scope. Include only already-established relationship identity for excluded branches, with no external activity or paths.
+
+Do not treat that root-path equality as C-Team's permanent logical-project definition. Worktree-aware inclusion may be added later only after validating an explicit equivalence contract, such as a stable C-Team project identity plus proven mission relationship and verified Git common-repository identity. Matching Git history, origin URL, branch names, or `.cteam` contents is not enough on its own.
 
 Separate exact identity from hierarchy coverage using `treeCompleteness` (`complete_for_observed_relationships`, `partial`, `unknown`) and coverage reasons. A complete observed snapshot is not proof that all running agents have already been persisted.
 
@@ -271,7 +273,8 @@ Create sanitized fixtures covering:
 - child and nested child first appearing after the initial root query;
 - duplicate/cyclic relationships and exhausted lookup/traversal bounds;
 - child in a sibling worktree, nested repository, or unactivated project;
-- in-scope child whose mission root is out of scope.
+- in-scope child whose mission root is out of scope;
+- same-repository worktree child remains excluded by default until a logical-project equivalence contract is explicitly enabled and validated.
 
 Exit criteria:
 
@@ -279,6 +282,7 @@ Exit criteria:
 - no cwd/recency heuristic determines identity;
 - starting with only a root caller discovers fixture children without supplied child IDs, updates after late creation, and reports pending/excluded/truncated branches explicitly;
 - project-scope fixtures never include excluded execution data or traverse excluded branches;
+- worktree fixtures prove that root-path inequality is a conservative default rather than an assertion that the roots can never belong to one future logical C-Team project;
 - CLI response is useful without widget.
 
 ## Phase 3 — Agent tree and current activity
@@ -385,8 +389,8 @@ Lifecycle:
 - start lazily after a mission query/open operation;
 - keep no global watcher for inactive projects;
 - renew demand only on explicit `mission`, `agents`, or `usage` queries or visible-view refreshes; `status`, discovery, and filesystem events do not renew it;
-- track view leases separately; dispose watchers, timers, readers, pending retries, and cached mission data once the last demand expires, initially after 30 seconds idle, even when the MCP remains alive;
-- check activation before query responses and before reconciliation, at most one second apart while observation is active; cancel and evict data on missing/invalid/inaccessible activation;
+- track view leases separately; dispose watchers, timers, readers, pending retries, and cached mission data once the last demand expires, using an initially configurable 30-second idle default rather than a protocol contract;
+- check activation before query responses and before reconciliation, using an initially configurable maximum one-second active reconciliation interval rather than a fixed architectural guarantee; cancel and evict data on missing/invalid/inaccessible activation;
 - after expiry or opt-out, restart only on a new explicit query that revalidates activation;
 - release on cancellation, MCP exit, and view closure when supported; lease expiry handles lost views;
 - tolerate duplicate watcher events;
@@ -404,10 +408,11 @@ Exit criteria:
 - active mission query does not repeatedly parse the complete file;
 - a fake-clock test proves expiry releases all observation resources while the MCP stays available, and a subsequent query reconstructs current state;
 - filesystem events alone cannot keep a lease alive;
-- activation removal cancels background observation within the reconciliation bound, evicts execution data, and prevents cached responses until activation is revalidated;
+- activation removal cancels background observation within the configured reconciliation bound, evicts execution data, and prevents cached responses until activation is revalidated;
 - missing/zero-byte children discovered after the first query are retried within the lease and reflected in coverage;
 - cancellation, lost-view, multiple-process, and resource-budget cases leave no indefinite observation work;
-- inactive projects retain no background observation work after cancellation.
+- inactive projects retain no background observation work after cancellation;
+- implementation measurements can tune lease/reconciliation defaults without changing the public MCP contract.
 
 ## Phase 6 — Optional Desktop rich presentation
 
