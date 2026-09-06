@@ -21,9 +21,10 @@
 
 ## Planned follow-ups
 
-- [`../PLUGIN_MCP_TOPOLOGY_SPIKE.md`](../PLUGIN_MCP_TOPOLOGY_SPIKE.md) — Experiment 007: plugin MCP process scope and cleanup.
-- [`../CONTEXT_ACTIVATION_SPIKE.md`](../CONTEXT_ACTIVATION_SPIKE.md) — Experiment 008: stable minimal MCP facade, `.cteam` activation, marker transition and inactive-project context/runtime footprint.
-- [`../ONBOARDING_BOOTSTRAP_SPIKE.md`](../ONBOARDING_BOOTSTRAP_SPIKE.md) — Experiment 009: compare agent-first, `npx`, .NET one-shot and possible `cteam init` bootstrap paths.
-- [`../STATE_DB_LOCATOR_SPIKE.md`](../STATE_DB_LOCATOR_SPIKE.md) — Experiment 010: optional `state_N.sqlite` fast-path from exact thread identity to rollout path.
+- [`../CONTEXT_ACTIVATION_DB_SPIKE.md`](../CONTEXT_ACTIVATION_DB_SPIKE.md) — **Experiment 008B (current):** resolve exact caller `thread_id` through the installed Codex state DB to `cwd`/project metadata and close `.cteam` activation without relying on MCP Roots/workspaces.
+- [`../ONBOARDING_BOOTSTRAP_SPIKE.md`](../ONBOARDING_BOOTSTRAP_SPIKE.md) — Experiment 009: compare agent-first, `npx`, .NET one-shot and possible `cteam init` bootstrap paths after 008B establishes end-to-end activation.
+- [`../STATE_DB_LOCATOR_SPIKE.md`](../STATE_DB_LOCATOR_SPIKE.md) — Experiment 010: broader optional `state_N.sqlite` mission-location optimization; re-evaluate after 008B because it may be partly subsumed.
+
+Completed experiment plans remain at the repository root and their durable results live under `experiments/`.
 
 `EXPERIMENTS.md` at the repository root is the compatibility/retest matrix and remains authoritative for experimentally proven behavior.
