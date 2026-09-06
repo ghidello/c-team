@@ -6,6 +6,7 @@ using Xunit;
 
 namespace CTeam.Experiments.Tests;
 
+[Collection(EnvironmentVariableCollection.Name)]
 public sealed class ContextActivationTests : IDisposable
 {
     readonly string scratch = Path.Combine(Path.GetTempPath(), "cteam-activation-tests-" + Guid.NewGuid().ToString("N"));
@@ -128,7 +129,8 @@ public sealed class ContextActivationTests : IDisposable
             var log = File.ReadAllText(Assert.Single(Directory.GetFiles(evidence, "*.jsonl")));
             Assert.Contains("\"activation-checked\"", log);
             Assert.Contains("\"persisted_mission_reads\":0", log);
-            Assert.DoesNotContain("rollout", log, StringComparison.OrdinalIgnoreCase);
+            Assert.Contains("\"rollout_files_read\":0", log);
+            Assert.DoesNotContain("exact-rollout-fallback", log, StringComparison.Ordinal);
         }
         finally
         {

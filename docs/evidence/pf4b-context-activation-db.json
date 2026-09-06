@@ -1,0 +1,137 @@
+{
+  "environment": {
+    "date": "2026-09-06",
+    "platform": "Windows 10.0.26220",
+    "codexCli": "0.153.4",
+    "dotnetSdk": "10.0.400",
+    "plugin": "c-team@personal",
+    "livePluginVersion": "0.1.0+codex.20260906205829",
+    "finalInstalledPluginVersion": "0.1.0+codex.20260906210929",
+    "nativeAot": true
+  },
+  "reuse": {
+    "experiments": ["006", "007", "008"],
+    "paidWorkloadsRepeated": false,
+    "newLiveRuns": 1,
+    "newLivePurpose": "DB4 and DB5 inactive-project and same-process marker transition"
+  },
+  "installedSchema": {
+    "database": "state_5.sqlite",
+    "userVersion": 0,
+    "journalMode": "wal",
+    "readOnly": true,
+    "queryOnly": true,
+    "threadsId": {
+      "type": "TEXT",
+      "primaryKey": true,
+      "uniqueAutoindex": true
+    },
+    "threadsCwd": {
+      "type": "TEXT",
+      "notNull": true
+    },
+    "threadsProjectId": {
+      "type": "TEXT",
+      "nullable": true,
+      "foreignKey": "projects.id"
+    },
+    "projectRootsAvailable": true,
+    "childEdge": {
+      "table": "thread_spawn_edges",
+      "childThreadIdPrimaryKey": true,
+      "parentThreadIdAvailable": true
+    },
+    "activeCallerVisibleByFirstToolCall": true
+  },
+  "realLookups": {
+    "rootContexts": {
+      "distinctIdsTested": 5,
+      "exactMatches": 5,
+      "minimumRequiredMet": true,
+      "knownLocationMatched": true,
+      "identityFilters": ["thread_id"]
+    },
+    "childContext": {
+      "naturallyAvailable": true,
+      "exactMatch": true,
+      "ownCwdIdentifiedParentProject": true,
+      "parentEdgeAvailable": true,
+      "parentAssistanceRequired": false
+    },
+    "projectIdPresentInTestedRows": false,
+    "managedLookupMicroseconds": {
+      "minimum": 7731,
+      "maximum": 8627,
+      "samples": 5
+    },
+    "finalNativeAotLookupMicroseconds": 1958
+  },
+  "projectNormalization": {
+    "successfulLiveBoundary": "git-root",
+    "successfulLiveLevelsUp": 0,
+    "windowsDevicePrefixCanonicalized": true,
+    "maximumLevels": 32,
+    "direction": "upward-only-from-exact-caller-cwd",
+    "perLevelPrecedence": [".git", ".cteam"],
+    "neighborOrUnrelatedProjectSearch": false
+  },
+  "liveTransition": {
+    "host": "Codex CLI",
+    "clientDeclaredRoots": false,
+    "callerWorkspaceCount": 0,
+    "before": {
+      "status": "project_not_enabled",
+      "resolutionSource": "codex-state-db",
+      "databaseOutcome": "exact",
+      "databaseRowsRead": 1,
+      "databaseLookupMicroseconds": 1691,
+      "rolloutFilesRead": 0
+    },
+    "after": {
+      "status": "project_enabled",
+      "resolutionSource": "codex-state-db",
+      "databaseOutcome": "exact",
+      "databaseRowsRead": 1,
+      "databaseLookupMicroseconds": 947,
+      "rolloutFilesRead": 0
+    },
+    "samePid": true,
+    "sameProcessStart": true,
+    "toolsListCount": 1,
+    "mcpRestartRequired": false,
+    "catalogRefreshRequired": false,
+    "startupWorkingSetBytes": 11952128
+  },
+  "failureFixtures": {
+    "databaseAbsent": "exact-rollout-fallback-or-unresolved",
+    "incompatibleSchema": "exact-rollout-fallback-or-unresolved",
+    "missingThreadId": "unresolved",
+    "missingRow": "exact-rollout-fallback-or-unresolved",
+    "blankCwd": "exact-rollout-fallback-or-unresolved",
+    "staleCwd": "exact-rollout-fallback-or-unresolved",
+    "ambiguousProjectRoot": "unresolved",
+    "databaseLockedOrReadFailed": "exact-rollout-fallback-or-unresolved",
+    "markerInaccessible": "unresolved",
+    "staleChildCwdWithExactParent": "parent-assisted",
+    "normalizationLimit": "unresolved",
+    "guessingUsed": false
+  },
+  "verification": {
+    "spikeTestsPassed": 16,
+    "experimentTestsPassed": 44,
+    "finalNativeAotPublished": true,
+    "finalInstalledHashMatched": true
+  },
+  "orthogonalResults": {
+    "rootCallerDbLookup": "exact",
+    "childCallerDbLookup": "exact",
+    "inactiveProject": "project_not_enabled",
+    "sameProcessMarkerTransition": "yes",
+    "successfulPathRolloutRead": "zero",
+    "dbFailureFallback": "safe"
+  },
+  "classification": "D1 — Exact DB activation",
+  "experiment009OnboardingUnblocked": true,
+  "rawEvidenceLocation": ".cteam/experiment-008b/",
+  "sanitization": "Raw ids, absolute paths, prompts, commands, and detailed DB records are excluded."
+}

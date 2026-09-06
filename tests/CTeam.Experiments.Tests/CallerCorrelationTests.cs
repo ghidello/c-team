@@ -5,6 +5,7 @@ using Xunit;
 
 namespace CTeam.Experiments.Tests;
 
+[Collection(EnvironmentVariableCollection.Name)]
 public sealed class CallerCorrelationTests : IDisposable
 {
     readonly string scratch = Path.Combine(Path.GetTempPath(), "cteam-correlation-tests-" + Guid.NewGuid().ToString("N"));

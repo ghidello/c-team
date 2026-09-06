@@ -14,6 +14,7 @@ public static class ActivationMcpServer
     public static async Task<int> RunAsync(TextReader input, TextWriter output, TextWriter error, CancellationToken cancellationToken = default)
     {
         using var evidence = EvidenceLog.Create();
+        var totalRolloutReads = 0;
         evidence.Write("process-start", new JsonObject
         {
             ["pid"] = Environment.ProcessId,
@@ -50,7 +51,7 @@ public static class ActivationMcpServer
                     {
                         ["protocolVersion"] = ProtocolVersion,
                         ["capabilities"] = new JsonObject { ["tools"] = new JsonObject() },
-                        ["serverInfo"] = new JsonObject { ["name"] = "cteam", ["version"] = "0.1.0-experiment-008" }
+                        ["serverInfo"] = new JsonObject { ["name"] = "cteam", ["version"] = "0.1.0-experiment-008b" }
                     }));
                     continue;
                 }
@@ -93,6 +94,7 @@ public static class ActivationMcpServer
 
                         var caller = CallerContext.FromToolParameters(parameters);
                         var activation = ActivationProbe.Probe(caller);
+                        totalRolloutReads += activation.RolloutFilesRead;
                         result = Result(action, activation);
                         evidence.Write("activation-checked", new JsonObject
                         {
@@ -100,7 +102,16 @@ public static class ActivationMcpServer
                             ["status"] = activation.Status,
                             ["workspace_count"] = activation.WorkspaceCount,
                             ["marker_checked"] = activation.MarkerChecked,
-                            ["persisted_mission_reads"] = 0,
+                            ["resolution_source"] = activation.ResolutionSource,
+                            ["database_outcome"] = activation.DatabaseOutcome,
+                            ["database_rows_read"] = activation.DatabaseRowsRead,
+                            ["database_lookup_microseconds"] = activation.DatabaseLookupMicroseconds,
+                            ["rollout_files_read"] = activation.RolloutFilesRead,
+                            ["project_boundary"] = activation.ProjectBoundary,
+                            ["normalization_levels"] = activation.NormalizationLevels,
+                            ["caller_is_child"] = activation.CallerIsChild,
+                            ["parent_assisted"] = activation.ParentAssisted,
+                            ["persisted_mission_reads"] = activation.RolloutFilesRead,
                             ["has_thread_id"] = caller.ThreadId is not null,
                             ["has_session_id"] = caller.SessionId is not null
                         });
@@ -134,7 +145,7 @@ public static class ActivationMcpServer
         }
         finally
         {
-            evidence.Write("process-stop", new JsonObject { ["pid"] = Environment.ProcessId, ["persisted_mission_reads"] = 0 });
+            evidence.Write("process-stop", new JsonObject { ["pid"] = Environment.ProcessId, ["persisted_mission_reads"] = totalRolloutReads });
         }
     }
 
@@ -177,6 +188,15 @@ public static class ActivationMcpServer
             ["workspace_count"] = activation.WorkspaceCount,
             ["marker_checked"] = activation.MarkerChecked,
             ["persisted_mission_read"] = activation.PersistedMissionRead,
+            ["resolution_source"] = activation.ResolutionSource,
+            ["database_outcome"] = activation.DatabaseOutcome,
+            ["database_rows_read"] = activation.DatabaseRowsRead,
+            ["database_lookup_microseconds"] = activation.DatabaseLookupMicroseconds,
+            ["rollout_files_read"] = activation.RolloutFilesRead,
+            ["project_boundary"] = activation.ProjectBoundary,
+            ["normalization_levels"] = activation.NormalizationLevels,
+            ["caller_is_child"] = activation.CallerIsChild,
+            ["parent_assisted"] = activation.ParentAssisted,
             ["pid"] = Environment.ProcessId,
             ["process_started_at"] = ProcessStartedAt.ToString("O")
         };

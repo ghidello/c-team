@@ -6,7 +6,7 @@ public static class ExperimentProgram
     {
         if (args.Length == 0)
         {
-            await error.WriteLineAsync("Usage: cteam <plugin-native-companion|resolve-companion|validate-plugin-layout|invoke-plugin-companion|stage-plugin|mcp-server|context-activation-server> [options]");
+            await error.WriteLineAsync("Usage: cteam <plugin-native-companion|resolve-companion|validate-plugin-layout|invoke-plugin-companion|stage-plugin|inspect-state-db|inspect-state-thread|mcp-server|context-activation-server> [options]");
             return 2;
         }
 
@@ -19,6 +19,8 @@ public static class ExperimentProgram
                 "validate-plugin-layout" => await ValidateAsync(args[1..], output, error),
                 "invoke-plugin-companion" => await InvokeAsync(args[1..], output, error, cancellationToken),
                 "stage-plugin" => await StageAsync(args[1..], output),
+                "inspect-state-db" => await InspectStateDatabaseAsync(args[1..], output),
+                "inspect-state-thread" => await InspectStateThreadAsync(args[1..], output),
                 "mcp-server" => await McpServer.RunAsync(Console.In, output, error, cancellationToken),
                 "context-activation-server" => await ActivationMcpServer.RunAsync(Console.In, output, error, cancellationToken),
                 _ => throw new ArgumentException($"Unknown experiment command: {args[0]}")
@@ -65,6 +67,32 @@ public static class ExperimentProgram
         PluginStager.Stage(sourceRoot, pluginRoot, companion, includeHistoricalSkills: !args.Contains("--without-skills", StringComparer.Ordinal));
         await output.WriteLineAsync($"plugin-staged={Path.GetFullPath(pluginRoot)}");
         return 0;
+    }
+
+    static async Task<int> InspectStateDatabaseAsync(string[] args, TextWriter output)
+    {
+        await output.WriteLineAsync(CodexStateSchemaInspector.Inspect(RequiredOption(args, "--db")).ToJsonString(new() { WriteIndented = true }));
+        return 0;
+    }
+
+    static async Task<int> InspectStateThreadAsync(string[] args, TextWriter output)
+    {
+        var result = CodexStateThreadLocator.Lookup(RequiredOption(args, "--thread-id"), databasePath: RequiredOption(args, "--db"));
+        var json = new System.Text.Json.Nodes.JsonObject
+        {
+            ["outcome"] = result.Outcome,
+            ["database_path"] = result.DatabasePath,
+            ["cwd"] = result.Cwd,
+            ["project_id"] = result.ProjectId,
+            ["parent_thread_id"] = result.ParentThreadId,
+            ["is_child"] = result.IsChild,
+            ["project_roots"] = new System.Text.Json.Nodes.JsonArray(result.ProjectRoots.Select(path => System.Text.Json.Nodes.JsonValue.Create(path)).ToArray()),
+            ["matching_rows"] = result.MatchingRows,
+            ["id_primary_key"] = result.IdPrimaryKey,
+            ["elapsed_microseconds"] = result.ElapsedMicroseconds
+        };
+        await output.WriteLineAsync(json.ToJsonString(new() { WriteIndented = true }));
+        return result.Outcome == "exact" ? 0 : 1;
     }
 
     static string RequiredOption(string[] args, string name) => OptionalOption(args, name) ?? throw new ArgumentException($"Missing required option {name}.");

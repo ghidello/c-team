@@ -4,6 +4,7 @@ using Xunit;
 
 namespace CTeam.Experiments.Tests;
 
+[Collection(EnvironmentVariableCollection.Name)]
 public sealed class McpRuntimeTests : IDisposable
 {
     readonly string scratch = Path.Combine(Path.GetTempPath(), "cteam-mcp-tests-" + Guid.NewGuid().ToString("N"));

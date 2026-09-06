@@ -35,8 +35,8 @@ The purpose is to preserve **what was tested, how it was tested, what failed or 
 | 006 | Caller-to-mission correlation | Passed (C2) | Caller `thread_id` maps exactly through a bounded adapter; two Desktop roots remained distinct and a post-restart no-argument Desktop call resolved the active root exactly | Desktop plugin reload, caller metadata, or rollout identity/layout changes |
 | 007 | Plugin MCP process topology | Passed (P3) | Native subagents and independent roots each used distinct MCP processes; same-project and cross-context roots were isolated, with clean normal and abrupt-owner cleanup | plugin/subagent process reuse or lifecycle changes |
 | 008 | Project activation and MCP context footprint | Partial (A4) | One 292-byte tool and zero global C-Team skills keep context small; MCP startup is eager but dormant, while missing CLI workspace/Roots data prevents reliable marker activation | repository-scoped activation, Roots/caller workspace metadata, tool refresh, skill injection, or Desktop/CLI discovery changes |
-| 008B | Exact caller project resolution via Codex state DB | Pending | Test exact `thread_id → state DB thread row → cwd/project → .cteam` activation with rollout fallback only on DB failure | execute now; state DB schema/project metadata changes |
-| 009 | C-Team project bootstrap and onboarding | Pending | Compare agent-first initialization with npx, .NET one-shot and bundled-runtime bootstrap paths while keeping one canonical project layout | execute after 008B; package/runtime onboarding mechanisms change |
+| 008B | Exact caller project resolution via Codex state DB | Passed (D1) | Installed Codex 0.153.4 maps exact caller ids to unique cwd-bearing rows; a live inactive project transitioned to enabled on the same MCP process with zero rollout reads | state DB schema, caller identity, cwd/project semantics, or DB sharing changes |
+| 009 | C-Team project bootstrap and onboarding | Pending | Compare agent-first initialization with npx, .NET one-shot and bundled-runtime bootstrap paths while keeping one canonical project layout | execute next; package/runtime onboarding mechanisms change |
 | 010 | State database mission locator | Pending | Broader optional evaluation of `state_N.sqlite` as exact `thread_id → rollout_path` fast-path beyond activation | execute only if still useful after 008B; state DB schema changes |
 
 ## Required experiment folder contract
@@ -63,13 +63,13 @@ Experiment 008 produced a one-tool, 292-byte NativeAOT facade with zero globally
 
 The marker logic itself is deterministic: if an exact project root is known, `.cteam/` can appear between two calls on the same MCP process and no tool-catalog refresh is required.
 
-### Current: Experiment 008B — exact caller project resolution via Codex state DB
+### Completed: Experiment 008B — exact caller project resolution via Codex state DB
 
-`CONTEXT_ACTIVATION_DB_SPIKE.md` closes Experiment 008's remaining project-resolution gap.
+Experiment 008B closed Experiment 008's remaining project-resolution gap. The installed Codex 0.153.4 `state_5.sqlite` stores `threads.id` as a unique primary key and a non-null cwd. Multiple existing real root callers and one natural child resolved exactly; the child's own cwd was sufficient without parent assistance.
 
 Current upstream Codex source shows canonical thread metadata with `id`, `rollout_path`, `cwd`, and optional `project_id`, but **the installed Codex 0.153.4 state database is authoritative**.
 
-Test this preferred path:
+The validated path is:
 
 ```text
 MCP caller thread_id
@@ -84,9 +84,9 @@ bounded project-root normalization if needed
 .cteam present → project_enabled
 ```
 
-The successful DB fast path should read no rollout. Experiment 006's exact rollout adapter remains the fallback when DB access/schema/metadata is unavailable.
+One bounded live inactive-project run returned `project_not_enabled`, then `project_enabled` after `.cteam/` appeared on the same MCP process. Both calls selected one exact DB row and read zero rollout files. Deterministic fixtures preserve Experiment 006's exact rollout adapter as the safe fallback for absent, incompatible, locked, missing-row, blank-cwd, and stale-cwd cases; unresolved outcomes never guess.
 
-Finish with D1/D2/D3/D4 from `CONTEXT_ACTIVATION_DB_SPIKE.md`.
+The result is **D1 — Exact DB activation**; see `experiments/008b-context-activation-db/`. Experiment 009 onboarding is unblocked.
 
 ### Then: Experiment 009 — project bootstrap and onboarding
 
@@ -97,7 +97,7 @@ Finish with D1/D2/D3/D4 from `CONTEXT_ACTIVATION_DB_SPIKE.md`.
 - a .NET one-shot equivalent such as a future `dnx` package/application;
 - `cteam init` only if it can be exposed without PATH/installer friction.
 
-Do not run 009 until 008B establishes what creating `.cteam/` means end to end.
+Experiment 008B has established what creating `.cteam/` means end to end. Experiment 009 may now run as a separate mission.
 
 All paths must share one canonical deterministic initializer/project footprint. The expected product shape is agent-first UX with portable manual bootstrap commands, but the experiment must compare actual friction rather than assuming it.
 
