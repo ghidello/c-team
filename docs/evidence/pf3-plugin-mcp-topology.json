@@ -1,0 +1,138 @@
+{
+  "environment": {
+    "date": "2026-09-06",
+    "platform": "Windows 10.0.26220",
+    "chatgptDesktopUsed": true,
+    "chatgptDesktopVersion": null,
+    "chatgptDesktopVersionReason": "Product version was unavailable from the inspected process and package metadata.",
+    "codexCli": "0.153.4",
+    "dotnetSdk": "10.0.400",
+    "plugin": "c-team@personal",
+    "pluginVersion": "0.1.0+codex.20260906191756",
+    "nativeAot": true,
+    "primaryConfiguredModel": "gpt-5.6-sol",
+    "primaryConfiguredEffort": "high"
+  },
+  "reusedEvidence": {
+    "experiment005PackagingAndMcpRuntime": true,
+    "experiment005ConcurrentCliProcesses": true,
+    "experiment006ExactCallerCorrelation": true,
+    "paidTelemetryWorkloadsRepeated": false
+  },
+  "rootBaseline": {
+    "label": "root-A",
+    "pidAlias": "pid-1",
+    "processStartedAtUtc": "2026-09-06T19:30:55.1875611Z",
+    "correlationOutcome": "exact",
+    "callerKind": "root",
+    "rootKeyMatchedMissionKey": true
+  },
+  "nativeFanout": {
+    "requestedAgents": [
+      "Face",
+      "B.A.",
+      "Reviewer"
+    ],
+    "rootAndChildPidCount": 4,
+    "distinctPidCount": 4,
+    "allProcessStartsDistinct": true,
+    "observations": [
+      {
+        "label": "face-A",
+        "pidAlias": "pid-2",
+        "processStartedAtUtc": "2026-09-06T19:32:44.4811128Z",
+        "correlationOutcome": "exact",
+        "callerKind": "child",
+        "childKeyDifferedFromRootKey": true,
+        "rootKeyPresent": true
+      },
+      {
+        "label": "ba-A",
+        "pidAlias": "pid-4",
+        "processStartedAtUtc": "2026-09-06T19:33:44.5884224Z",
+        "correlationOutcome": "not-found",
+        "callerKind": null,
+        "rootKeyPresent": false,
+        "fixture": "Ignored .NET 10 console fixture compiled successfully."
+      },
+      {
+        "label": "reviewer-A",
+        "pidAlias": "pid-3",
+        "processStartedAtUtc": "2026-09-06T19:33:13.1051935Z",
+        "correlationOutcome": "exact",
+        "callerKind": "child",
+        "childKeyDifferedFromRootKey": true,
+        "rootKeyPresent": true
+      }
+    ],
+    "allChildrenUsedPidDistinctFromRoot": true,
+    "allChildrenUsedDistinctPidsFromEachOther": true,
+    "completedTurnImmediatelyClosedEveryAgentMcp": false,
+    "retainedAgentContextsWereExplicitlyDisposed": false
+  },
+  "sameProjectRoots": {
+    "rootA": "pid-1",
+    "rootB": "pid-5",
+    "rootBProcessStartedAtUtc": "2026-09-06T19:34:50.1726068Z",
+    "shared": false,
+    "result": "isolated",
+    "rootBCorrelationOutcome": "exact",
+    "rootBPingAndRuntimePidMatched": true
+  },
+  "crossProject": {
+    "projectARoot": "pid-5",
+    "otherContextRoot": "pid-6",
+    "otherContextProcessStartedAtUtc": "2026-09-06T19:34:59.2128510Z",
+    "otherContextKind": "projectless",
+    "shared": false,
+    "result": "isolated",
+    "pingHoldSecondsPerContext": 15,
+    "processStartDeltaSecondsApproximate": 9.04,
+    "simultaneouslyAliveInOneProcessSnapshot": true,
+    "bothCorrelationOutcomes": "exact",
+    "bothCallerKinds": "root",
+    "distinctMissionsInferredFromExactDistinctRootIds": true,
+    "crossContextLeakageObserved": false
+  },
+  "cleanup": {
+    "normal": {
+      "result": "clean",
+      "owners": [
+        "root-B",
+        "other-context-root"
+      ],
+      "boundary": "completed then archived",
+      "graceSeconds": 5,
+      "mcpProcessesAliveAfterGrace": 0
+    },
+    "abrupt": {
+      "result": "clean",
+      "owner": "disposable Codex CLI",
+      "mcpPidAlias": "pid-7",
+      "mcpProcessStartedAtUtc": "2026-09-06T19:39:41.4441781Z",
+      "ownerAndMcpAliveBeforeTermination": true,
+      "ownerTermination": "forced",
+      "graceSeconds": 5,
+      "mcpAliveAfterGrace": false
+    }
+  },
+  "failedApproaches": [
+    {
+      "approach": "Pass the abrupt-test prompt as a spaced Start-Process argument.",
+      "result": "Codex rejected the split arguments before MCP startup; redirected stdin was used for the bounded retry."
+    }
+  ],
+  "instrumentationLimitations": {
+    "workspaceMapNewlyCaptured": false,
+    "workspaceMapEvidenceReusedFromExperiment005": true,
+    "exactToolCallTimestampsCapturedForDesktopCalls": false,
+    "missionProbeRepeatedPid": false
+  },
+  "classification": "P3 — per-thread/per-agent",
+  "sameProjectIndependentRoots": "isolated",
+  "crossProjectContexts": "isolated",
+  "cleanupAfterNormalExit": "clean",
+  "cleanupAfterAbruptExit": "clean",
+  "futureDirection": "Prefer a thin facade plus demand-started shared core once shared-state cost is real; no shared core was implemented.",
+  "privacy": "Only role/root labels, PID aliases, booleans, bounded timings, versions, and aggregate results are committed. Actual PIDs, task ids, paths, prompts, commands, MCP envelopes, and rollout data remain under ignored .cteam/experiment-007/."
+}

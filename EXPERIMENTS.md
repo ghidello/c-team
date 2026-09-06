@@ -33,7 +33,7 @@ The purpose is to preserve **what was tested, how it was tested, what failed or 
 | 004 | Plugin-bundled NativeAOT companion | Passed (PF1-C) | Installed payload, relative launch, current-user execution and versioned refresh work; `%LOCALAPPDATA%` durable state required approval on both tested commands | plugin trust, sandbox writable roots, approval persistence or package cache changes |
 | 005 | Plugin-bundled NativeAOT stdio MCP runtime | Partial (PF2-B, M2) | Plugin-managed NativeAOT stdio MCP, structured tools, persisted reads and concurrent independent MCP children work without recurring approval; Roots/plugin data are absent and cross-project attribution still needs explicit context | Roots/plugin data support or MCP caller/workspace metadata changes |
 | 006 | Caller-to-mission correlation | Passed (C2) | Caller `thread_id` maps exactly through a bounded adapter; two Desktop roots remained distinct and a post-restart no-argument Desktop call resolved the active root exactly | Desktop plugin reload, caller metadata, or rollout identity/layout changes |
-| 007 | Plugin MCP process topology | Pending | Determine whether native subagents/roots/projects share or isolate the plugin MCP process and verify child-process cleanup | execute after 006; plugin/subagent lifecycle changes |
+| 007 | Plugin MCP process topology | Passed (P3) | Native subagents and independent roots each used distinct MCP processes; same-project and cross-context roots were isolated, with clean normal and abrupt-owner cleanup | plugin/subagent process reuse or lifecycle changes |
 | 008 | Project activation and MCP context footprint | Pending | Test a tiny stable globally installed MCP facade, `.cteam` activation, inactive-project dormancy and marker transition without MCP restart | execute after 007; repo-scoped activation/tool-refresh behavior changes |
 | 009 | C-Team project bootstrap and onboarding | Pending | Compare agent-first initialization with npx, .NET one-shot and bundled-runtime bootstrap paths while keeping one canonical project layout | execute after 008; package/runtime onboarding mechanisms change |
 | 010 | State database mission locator | Pending | Test whether latest compatible `state_N.sqlite` is a safe optional exact `thread_id → rollout_path` fast-path with bounded fallback | execute if still useful; state DB schema changes |
@@ -50,13 +50,13 @@ When executable code is worth keeping, prefer the shared compiled C# harness und
 
 Experiment 006 established caller `thread_id` as the stable exact key for persisted mission lookup on the tested Codex version. The dated rollout layout requires a bounded compatibility adapter. A post-restart no-argument Desktop call directly confirmed the final installed plugin and completed the local runtime/identity phase; see `experiments/006-caller-mission-correlation/`.
 
-### Current: Experiment 007 — plugin MCP process topology
+### Completed: Experiment 007 — plugin MCP process topology
 
-`PLUGIN_MCP_TOPOLOGY_SPIKE.md` deliberately creates tiny Face/B.A./Reviewer fan-out to measure whether Codex scopes the C-Team MCP per project, root tree or thread/agent. Finish with P1/P2/P3/P4 plus same-project root sharing, cross-project isolation and normal/abrupt cleanup.
+Experiment 007 found one distinct plugin MCP process per tested root or native agent. Same-project and simultaneous different-context roots were isolated, and bounded normal/abrupt owner cleanup checks were clean. A facade plus demand-started shared core is deferred until shared-state cost becomes real; see `experiments/007-plugin-mcp-topology/`.
 
 A shared C-Team core remains deferred. If ever introduced, zombie prevention and demand-started/idle-stopped lifecycle are hard requirements; see `docs/runtime-topology.md`.
 
-### Then: Experiment 008 — project activation and context footprint
+### Current: Experiment 008 — project activation and context footprint
 
 `CONTEXT_ACTIVATION_SPIKE.md` answers a separate question: how a globally installed C-Team can stay almost invisible in projects that do not opt in.
 
