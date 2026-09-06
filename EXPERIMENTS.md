@@ -6,13 +6,13 @@ The purpose is to preserve **what was tested, how it was tested, what failed or 
 
 ## Rules
 
-- `.cteam/` is private/disposable runtime scratch and raw evidence.
+- `.cteam/` is private/disposable runtime scratch and raw evidence during development; when used as the future project activation marker, only its intended project configuration/policy contents are committed.
 - `experiments/` is committed, sanitized, reproducible history.
 - `docs/evidence/` contains sanitized evidence that supports published findings.
 - `tests/fixtures/` contains deterministic fixtures required by compiled C# tests.
 - Preserve failed hypotheses when the failure is informative; do not preserve failed build directories merely because they exist.
 - Do not rerun an old paid Codex workload just to archive it. Reuse the evidence already produced.
-- New reusable probes/tests should be written in C# and compiled as part of the repository unless an external shell command is intrinsically the subject of the experiment.
+- New reusable probes/tests should be written in C# and compiled as part of the repository unless an external shell/package command is intrinsically the subject of the experiment.
 - Python/PowerShell may remain as historical reproduction artifacts when necessary, but they must not become production runtime dependencies and should not be the default for new experiments.
 
 ## Status vocabulary
@@ -34,89 +34,64 @@ The purpose is to preserve **what was tested, how it was tested, what failed or 
 | 005 | Plugin-bundled NativeAOT stdio MCP runtime | Partial (PF2-B, M2) | Plugin-managed NativeAOT stdio MCP, structured tools, persisted reads and concurrent independent MCP children work without recurring approval; Roots/plugin data are absent and cross-project attribution still needs explicit context | Roots/plugin data support or MCP caller/workspace metadata changes |
 | 006 | Caller-to-mission correlation | Pending | Test whether per-call `x-codex-turn-metadata.thread_id` maps exactly to persisted rollout/session identity, including multiple real persisted contexts | execute current experiment |
 | 007 | Plugin MCP process topology | Pending | Determine whether native subagents/roots/projects share or isolate the plugin MCP process and verify child-process cleanup | execute after 006; plugin/subagent lifecycle changes |
-| 008 | State database mission locator | Pending | Test whether latest compatible `state_N.sqlite` is a safe optional exact `thread_id → rollout_path` fast-path with bounded fallback | execute after 006/007 if still useful; state DB schema changes |
+| 008 | Project activation and MCP context footprint | Pending | Test a tiny stable globally installed MCP facade, `.cteam` activation, inactive-project dormancy and marker transition without MCP restart | execute after 007; repo-scoped activation/tool-refresh behavior changes |
+| 009 | C-Team project bootstrap and onboarding | Pending | Compare agent-first initialization with npx, .NET one-shot and bundled-runtime bootstrap paths while keeping one canonical project layout | execute after 008; package/runtime onboarding mechanisms change |
+| 010 | State database mission locator | Pending | Test whether latest compatible `state_N.sqlite` is a safe optional exact `thread_id → rollout_path` fast-path with bounded fallback | execute if still useful; state DB schema changes |
 
 ## Required experiment folder contract
 
-Each durable experiment should live under:
+Each durable experiment should live under `experiments/<id>-<slug>/` and contain at minimum `README.md` with purpose, environment, hypothesis, procedure, success criteria, observed result, status, evidence, limitations and retest trigger.
 
-```text
-experiments/<id>-<slug>/
-```
-
-and contain at minimum `README.md` with:
-
-```text
-Purpose
-Original environment
-Hypothesis
-Procedure
-Success criteria
-Observed result
-Current status
-Evidence references
-Known limitations
-Retest trigger
-```
-
-When executable code is worth keeping, prefer a shared compiled C# harness under `experiments/CTeam.Experiments/` and deterministic tests under `tests/CTeam.Experiments.Tests/` rather than one-off scripts per experiment.
-
-## Build artifacts
-
-Reusable experiment code should place generated build/publish output under a repository-level ignored artifacts location where practical, for example:
-
-```text
-artifacts/
-  experiments/
-    007-plugin-mcp-topology/
-```
-
-Build output is not experiment evidence and must not be committed.
+When executable code is worth keeping, prefer the shared compiled C# harness under `experiments/CTeam.Experiments/` and deterministic tests under `tests/CTeam.Experiments.Tests/` rather than one-off scripts.
 
 ## Experiment order
 
 ### Current: Experiment 006 — caller-to-mission correlation
 
-Experiment 005 established **PF2-B** with multi-project result **M2**: the plugin's bundled NativeAOT executable works as an approval-free stdio MCP backend, and every tested tool call carries an exact caller `thread_id`, but automatic project-to-persisted-rollout attribution was not yet proven.
-
-Experiment 006, described in `CALLER_MISSION_CORRELATION_SPIKE.md`, must determine whether caller `thread_id` is itself the stable exact key for persisted mission lookup, with cwd/project hints relegated to fallback metadata.
-
-Finish Experiment 006 with exactly one classification:
-
-- **C1 — Exact**
-- **C2 — Exact with bounded adapter**
-- **C3 — Context-assisted**
-- **C4 — Insufficient**
-
-If C1 or C2 is proven, the local runtime/identity spike phase should be considered complete unless a new blocker appears. Production implementation remains a separate task.
+Experiment 006 determines whether caller `thread_id` is itself the stable exact key for persisted mission lookup. Finish with C1/C2/C3/C4 from `CALLER_MISSION_CORRELATION_SPIKE.md`.
 
 ### Next: Experiment 007 — plugin MCP process topology
 
-`PLUGIN_MCP_TOPOLOGY_SPIKE.md` measures an assumption Experiment 005 did not answer: whether Codex starts plugin MCP processes per project, per root tree, or per native subagent/thread.
+`PLUGIN_MCP_TOPOLOGY_SPIKE.md` deliberately creates tiny Face/B.A./Reviewer fan-out to measure whether Codex scopes the C-Team MCP per project, root tree or thread/agent. Finish with P1/P2/P3/P4 plus same-project root sharing, cross-project isolation and normal/abrupt cleanup.
 
-Unlike Experiment 006, Experiment 007 deliberately creates a tiny authentic named-agent fan-out using Face, B.A. and Reviewer because native fan-out is the subject under test.
+A shared C-Team core remains deferred. If ever introduced, zombie prevention and demand-started/idle-stopped lifecycle are hard requirements; see `docs/runtime-topology.md`.
 
-Finish with one classification:
+### Then: Experiment 008 — project activation and context footprint
 
-- **P1 — project-shared**
-- **P2 — root-tree shared**
-- **P3 — per-thread/per-agent**
-- **P4 — host-dependent/unclear**
+`CONTEXT_ACTIVATION_SPIKE.md` answers a separate question: how a globally installed C-Team can stay almost invisible in projects that do not opt in.
 
-Also report same-project root sharing, cross-project isolation, normal cleanup and abrupt-exit cleanup separately.
+It tests the preferred stable-facade idea:
 
-A shared C-Team core remains deferred. If one is ever introduced, zombie prevention and demand-started/idle-stopped lifecycle are hard requirements; see `docs/runtime-topology.md`.
+```text
+one tiny MCP tool surface
+      ↓ first explicit call carries caller context
+resolve project
+      ↓
+.cteam absent → project_not_enabled
+.cteam present → C-Team active
+```
 
-### Later optional: Experiment 008 — state database mission locator
+It also tests whether creating `.cteam/` during the same MCP lifetime activates the backend without restarting the MCP, while recognizing that newly created project guidance/skills may still justify a fresh Codex session.
 
-`STATE_DB_LOCATOR_SPIKE.md` tests whether current Codex `state_N.sqlite` can be an exact and cheap optional locator from known caller thread id to rollout path.
+Finish with A1/A2/A3/A4.
 
-This is an optimization, not a product blocker. Rollout JSONL remains execution evidence and a filesystem/session-index fallback remains required.
+### Then: Experiment 009 — project bootstrap and onboarding
 
-Finish with:
+`ONBOARDING_BOOTSTRAP_SPIKE.md` compares four entry points:
 
-- **S1 — Exact fast-path**
-- **S2 — Useful metadata only**
-- **S3 — Too brittle**
+- agent/plugin skill initialization;
+- `npx ... init`;
+- a .NET one-shot equivalent such as a future `dnx` package/application;
+- `cteam init` only if it can be exposed without PATH/installer friction.
 
-Do not run Experiment 008 before 006/007 merely because it is prepared.
+All paths must share one canonical deterministic initializer/project footprint. The expected product shape is agent-first UX with portable manual bootstrap commands, but the experiment must compare actual friction rather than assuming it.
+
+Finish with O1/O2/O3/O4.
+
+### Later optional: Experiment 010 — state database mission locator
+
+`STATE_DB_LOCATOR_SPIKE.md` tests whether current Codex `state_N.sqlite` can be an exact and cheap optional locator from caller thread id to rollout path.
+
+This is an optimization, not a product blocker. Rollout JSONL remains execution evidence and a bounded fallback remains required.
+
+Finish with S1/S2/S3. Do not run it ahead of 007–009 merely because it is prepared.
