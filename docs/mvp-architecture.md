@@ -48,7 +48,9 @@ fresh Codex task recommended only for new project guidance
 
 Portable manual fallbacks remain available through equivalent `npx` and `dnx` bootstrap packages.
 
-Once active, the user can ask for the current mission, agent tree, usage, or open the richer Desktop presentation. CLI/headless use must remain fully functional without a widget.
+Once active, the user can ask for the current mission, agent tree, and usage through text and structured responses in Desktop or CLI/headless use.
+
+The first MVP release requires this text/structured experience. The richer Desktop widget is an optional follow-up and does not block the plugin release candidate. Its host interaction must pass a small compatibility gate before its tool contract is finalized.
 
 ## Proven constraints that shape the architecture
 
@@ -92,7 +94,7 @@ There may be several `cteam.exe` processes at once. The MVP accepts this.
 
 Experiment 007 established P3, so a future shared core is likely useful once C-Team owns expensive shared work such as watchers across many contexts, historical indexing, analytics, or learning state.
 
-Do **not** build it for MVP. Read-only current-mission reconstruction is cheap enough to remain process-local and avoiding a broker keeps installation and lifecycle simple.
+Do **not** build it for MVP. Start with process-local current-mission reconstruction and measure its resource cost during implementation. Bounded observation lifetimes and caches are required; the experiments did not establish that duplicated full mission reconstruction is always cheap.
 
 The code must nevertheless preserve this seam:
 
@@ -126,8 +128,9 @@ status
 mission
 agents
 usage
-open
 ```
+
+Add `open` only with the optional Desktop widget after its host compatibility gate passes. Keep the single-tool shape unless that gate establishes a concrete need for a separate mount operation; measure any resulting catalog growth.
 
 Possible later operations may include history and after-action data, but the schema must stay deliberately small.
 
@@ -178,11 +181,11 @@ bounded upward root normalization
 
 The state DB is private Codex implementation detail and therefore compatibility-checked. It is an efficient locator, not C-Team's canonical execution evidence.
 
-When the DB is absent, locked, incompatible, stale, or missing the caller row, degrade to the exact bounded rollout adapter. If neither path proves identity, return an explicit unresolved result. Never guess.
+On an explicit call, when the DB is absent, locked, incompatible, stale, or missing the caller row, degrade to the exact bounded rollout adapter. Before activation, this fallback may enumerate bounded candidate locations and read identity metadata only. It must not reconstruct activities, hydrate descendants, or start watchers. If neither path proves identity, return an explicit unresolved result. Never guess.
 
 ## Dormant behavior
 
-When the caller project is not enabled:
+Before any explicit C-Team call:
 
 ```text
 C-Team installed
@@ -197,10 +200,16 @@ no shared-core startup
       ↓
 explicit cteam call only
       ↓
-project_not_enabled
+bounded caller/project identity lookup
+      ↓
+activation check
+      ↓
+not enabled or unresolved → small status result; no observation
 ```
 
-MCP initialization and tool-list serialization are acceptable; active observation is not.
+MCP initialization and tool-list serialization are acceptable. Startup performs no project lookup or rollout reads. On an explicit call, a successful state DB activation lookup still reads zero rollouts; the compatibility fallback may perform bounded identity reads even when the project ultimately proves inactive. These reads are distinct from active mission observation and must be counted separately in tests.
+
+An inactive or unresolved result must leave no observation session running. Removing or invalidating activation also stops an existing session under the lifecycle rules below.
 
 ## Observation sources
 
@@ -267,6 +276,9 @@ MissionState
   lifecycle
   rootAgent
   agents[]
+  treeCompleteness
+  coverageReasons[]
+  observedAt
   plan
   usage
   currentActivity
@@ -307,6 +319,20 @@ Rules:
 - Discover children independently of parent-first load order.
 - Keep malformed or ambiguous relationships visible as evidence/diagnostics rather than inventing a hierarchy.
 
+Exact identity does not establish a complete tree. Experiment 003 left automatic child-file attachment unimplemented; Experiment 006 established child-to-root correlation for already-known child identities. Production must explicitly validate discovery from a root caller, including nested and late-created children.
+
+Discover descendants from explicit persisted relationship records in admitted rollouts, then resolve each referenced thread exactly. Reconcile newly persisted relationships during observation. Bound traversal depth, unique thread count, candidate lookup work, bytes, and retries; detect cycles and deduplicate identities. Missing or zero-byte child files remain pending and are retried only within an active observation lease. Do not search unrelated projects to fill gaps.
+
+Return `treeCompleteness` independently from identity confidence: `complete_for_observed_relationships`, `partial`, or `unknown`. Completeness is relative to the records read at the reported observation time, never a claim that Codex has already persisted every agent. Missing files, pending children, excluded branches, incompatible records, and exhausted bounds must appear as coverage reasons.
+
+### Project boundary for mission traversal
+
+For MVP, returned execution data is scoped to the exact caller's activated project root. A proven parent/session relationship may identify a mission root outside that scope, but does not activate another project.
+
+Before reading a relative's execution records, resolve its own project using the same bounded identity and project-normalization rules. Include its activity and usage only when that normalized root equals the caller's activated root. A sibling worktree or nested repository is a separate project even when it shares Git history or also enables C-Team; recognize both `.git` files and directories as boundaries.
+
+Represent an out-of-scope or unresolved relative as an excluded branch using only relationship identity already established from admitted evidence. Omit its paths, prompts, activity, and usage, mark coverage partial, and do not traverse through that branch. A child whose root is excluded remains displayed as the exact caller within a partial mission view. Cross-project observation is deferred to a separately designed opt-in contract.
+
 ## Incremental rollout reading
 
 Production reading must be incremental.
@@ -336,6 +362,16 @@ Watcher-only and timestamp-only strategies are insufficient based on Experiment 
 
 The MVP may initially reconstruct on explicit queries and keep a short-lived in-process cache; a continuously active watcher should only be started for an enabled project and when a query/presentation actually benefits from near-live updates.
 
+### Observation lifetime
+
+Experiment 007 showed that completed turns can retain reusable agents and their MCP processes. MCP process lifetime therefore cannot be the sole observation lifetime.
+
+Use process-local demand leases for observed missions. An explicit `mission`, `agents`, or `usage` query, or a visible-view refresh, renews demand; `status`, tool discovery, and watcher events do not. Track views separately so closing one does not cancel another view's unexpired demand. Start with a 30-second idle expiry measured by a monotonic clock. When the last demand expires, dispose file watchers, reconciliation timers, open readers, pending child retries, and cached mission data. A later query revalidates activation and reconstructs the session. The MCP itself remains available.
+
+Check activation before serving each query and before each background reconciliation pass, with a maximum one-second reconciliation interval while a lease is active. Missing, invalid, inaccessible, or unresolved activation cancels observation and evicts cached execution data. After cancellation, only another explicit query can attempt activation again. View closure may release a lease early where supported; expiry remains the fallback for a lost view or client. Cancellation and MCP shutdown also dispose sessions.
+
+Set explicit per-process limits on retained missions, tracked files, and buffered bytes in the implementation. Reaching a limit must produce partial coverage or release an idle session, never silently grow resources without a bound. These are initial product limits to validate, not latency/resource claims from the experiments.
+
 ## Usage accounting
 
 Expose both direct and inclusive usage.
@@ -350,6 +386,8 @@ mission total
 ```
 
 Do not double count inherited child history. Use explicit validated child-history boundaries where available; otherwise report attribution uncertainty.
+
+When hierarchy coverage is partial, expose the observed in-scope subtotal and its coverage reasons. Do not label it as the full mission total or treat unavailable/excluded agents as zero usage. Apply the same rule to each agent's inclusive usage.
 
 MVP usage should report tokens and observed model/effort evidence. Dollar cost and subscription quota attribution are not required for the first production slice unless a reliable source is available.
 
@@ -394,7 +432,11 @@ MissionQueryService
       └─ MCP App resource              -> Desktop rich UI
 ```
 
-The rich UI is an enhancement, never a requirement.
+The rich UI is optional for the first MVP release. Text/structured responses remain the required experience in both Desktop and CLI.
+
+Experiments 001-009B did not validate MCP App mounting or widget-originated refresh calls. Before freezing `open` or building the view, test a minimal resource against the installed Desktop host: mount once, refresh without remounting, and retain the same exact mission when switching tasks or opening two views. Establish whether refresh carries caller metadata. If it does not, validate a process-local view binding created by an exact caller request, recheck activation on refresh, and reject expired or mismatched bindings rather than falling back to process cwd or the latest task. This binding carries no durable authorization and must not widen the project boundary.
+
+Record the result and host-version retest trigger in the compatibility lab. If the gate fails, omit the widget/open surface from the MVP package and retain text/structured operation. Do not add a second application protocol to bypass a failed gate.
 
 Initial CLI rendering should favor compact Unicode/text output rather than building a separate C-Team terminal application.
 

@@ -14,11 +14,13 @@ A user can:
 2. initialize a repository through the installed onboarding skill or a portable bootstrap package;
 3. start a fresh Codex task in that project;
 4. ask C-Team for the current mission;
-5. receive an exact root/agent hierarchy with current activity and usage, including provenance/uncertainty where needed;
+5. receive an exactly identified caller/mission and an evidence-backed observed agent hierarchy, with explicit coverage, current activity, and usage provenance;
 6. use the same capability from Codex CLI without a graphical dependency;
 7. use unrelated repositories without C-Team performing active observation work.
 
 The MVP is complete when this path is reliable and packaged, not when every future dashboard/analytics idea exists.
+
+Release scope: Phases 0-5 and 7 deliver the required text/structured MVP for Desktop and CLI. Phase 6 is an optional follow-up; packaging does not wait for it. The small Desktop compatibility gate below runs before its interaction contract is frozen, and may run alongside core implementation without making the widget a release dependency.
 
 ## Production repository shape
 
@@ -105,7 +107,7 @@ Operations implemented in this phase:
 status
 ```
 
-Reserve the enum entries for upcoming MVP operations only if doing so does not materially inflate context; otherwise add them as implemented.
+Add operations as implemented. Do not advertise `open` until the optional Desktop compatibility gate passes and a usable view is packaged.
 
 ### Activation implementation
 
@@ -130,6 +132,8 @@ Compatibility rules:
 - strip/canonicalize Windows device-path form safely;
 - bounded upward project-root normalization;
 - return unresolved rather than guessing.
+
+Startup and tool discovery perform no identity lookups. An explicit `status` or observation call may perform bounded candidate enumeration and identity-only rollout reads when the state DB cannot resolve the caller. No activity parsing, descendant hydration, watcher, or retained observation session is allowed until activation succeeds.
 
 `status` should distinguish at least:
 
@@ -176,8 +180,26 @@ Exit criteria:
 - clean Desktop lifecycle chooses the installed skill normally;
 - initialization produces golden bytes;
 - same MCP reports `project_enabled` immediately;
-- unrelated project status is tiny and causes no rollout scan/watcher;
+- unrelated project status is tiny; the successful DB path reads zero rollouts, while DB-failure fixtures permit only bounded identity fallback reads and no observation/watcher;
+- startup/tool discovery perform no persisted lookups, and an inactive/unresolved result retains no observation session;
 - repeat init is safe/no-op.
+
+## Early gate — Optional Desktop interaction contract
+
+After the production MCP can start, validate the unproven host interaction before finalizing the widget tool contract. This check does not block PR 1 or text/structured MVP work.
+
+Use one minimal MCP App resource and prove:
+
+- an explicit exact-caller operation mounts a single view;
+- subsequent structured refreshes update that view without remounting;
+- widget-originated calls either preserve exact caller metadata or use a validated process-local binding established by the opening call;
+- two views and task switching cannot substitute one mission for another; missing, expired, or mismatched identity fails explicitly;
+- activation is rechecked on refresh; view closure or lost refreshes releases observation through the demand lease;
+- CLI behavior remains useful without a widget.
+
+Do not assume that action arguments alone control mounting metadata. Keep the compact gateway if supported; permit a separate mount operation only if the host check demonstrates it is necessary, and measure the resulting catalog footprint.
+
+Preserve sanitized evidence and the installed-host retest trigger in the compatibility lab. A failed gate defers Phase 6 and leaves `open` out of the MVP package; it does not trigger a localhost server or a shared core.
 
 ## Phase 2 — Exact current mission query
 
@@ -196,10 +218,19 @@ Given caller `thread_id`:
 1. resolve exact caller/project;
 2. locate exact caller rollout using strongest validated locator available;
 3. parse caller `session_meta` and root relationship;
-4. resolve the mission root exactly;
-5. discover known children independently.
+4. identify the mission root through verified relationships without replacing caller identity;
+5. apply the caller-project traversal boundary before reading any relative's execution records;
+6. discover and exactly resolve referenced children within explicit traversal/read budgets.
 
 Do not make Experiment 010 a prerequisite. Start with the proven bounded rollout locator. If profiling shows directory lookup cost matters, promote the validated DB rollout path as an optimization in a normal implementation PR or run Experiment 010 only if compatibility questions remain.
+
+### Descendant discovery and project scope
+
+Automatic child hydration is new implementation work, not a capability already completed by Experiments 003/006. Follow explicit relationship records from admitted rollouts, deduplicate thread identities, detect cycles, and cap depth, threads, lookup work, bytes, and retries. Revisit pending/zero-byte children and new relationship records while an observation lease is active.
+
+Use the architecture's caller-project policy: a relative's execution data is included only when its independently resolved normalized project root equals the caller's activated root. Recognize `.git` files as well as directories. Other worktrees, nested repositories, and unresolved relatives remain excluded branches; do not traverse them or include their usage. Preserve the caller even when its mission root is outside scope. Include only already-established relationship identity for excluded branches, with no external activity or paths.
+
+Separate exact identity from hierarchy coverage using `treeCompleteness` (`complete_for_observed_relationships`, `partial`, `unknown`) and coverage reasons. A complete observed snapshot is not proof that all running agents have already been persisted.
 
 ### Minimum `MissionState`
 
@@ -214,6 +245,8 @@ lifecycle
 startedAt
 updatedAt
 agents[]
+treeCompleteness / coverageReasons
+observedAt
 plan summary when available
 usage summary
 currentActivity
@@ -234,12 +267,18 @@ Create sanitized fixtures covering:
 - malformed line/incomplete tail;
 - absent parent;
 - ambiguous relationship;
-- active zero-byte child.
+- active zero-byte child that later receives metadata;
+- child and nested child first appearing after the initial root query;
+- duplicate/cyclic relationships and exhausted lookup/traversal bounds;
+- child in a sibling worktree, nested repository, or unactivated project;
+- in-scope child whose mission root is out of scope.
 
 Exit criteria:
 
 - current caller resolves to one exact mission or explicit unresolved/ambiguous state;
 - no cwd/recency heuristic determines identity;
+- starting with only a root caller discovers fixture children without supplied child IDs, updates after late creation, and reports pending/excluded/truncated branches explicitly;
+- project-scope fixtures never include excluded execution data or traverse excluded branches;
 - CLI response is useful without widget.
 
 ## Phase 3 — Agent tree and current activity
@@ -278,7 +317,8 @@ Do not invent A-Team names when Codex did not actually use those configured role
 
 Exit criteria:
 
-- tree is correct for existing multi-agent fixtures and one real bounded mission;
+- tree is correct for existing multi-agent fixtures and one naturally available real bounded mission, starting from the root caller alone;
+- automatic hydration of a newly observed child is checked during useful work when available; record any unexercised live case as fixture-only evidence instead of creating work just for telemetry;
 - uncertain relationships are marked, not guessed;
 - status output stays concise.
 
@@ -313,12 +353,15 @@ Requirements:
 - distinguish cached input if exposed by Codex from total input rather than adding it twice;
 - distinguish reasoning tokens as part of output accounting when applicable.
 
+Incomplete hydration or excluded branches must produce an observed in-scope subtotal with coverage reasons. Full mission/inclusive totals remain unavailable when coverage cannot justify them; missing agents are never counted as zero.
+
 Do not add dollar-cost claims or subscription quota attribution in MVP unless a source proves them.
 
 Exit criteria:
 
 - no double counting in deterministic nested-agent fixtures;
 - totals reconcile explicitly;
+- partial-tree and cross-project fixtures cannot present their observed subtotal as a full mission total;
 - uncertainty appears in structured result and compact text.
 
 ## Phase 5 — Near-live in-process observation
@@ -341,7 +384,11 @@ Lifecycle:
 
 - start lazily after a mission query/open operation;
 - keep no global watcher for inactive projects;
-- stop with the MCP process;
+- renew demand only on explicit `mission`, `agents`, or `usage` queries or visible-view refreshes; `status`, discovery, and filesystem events do not renew it;
+- track view leases separately; dispose watchers, timers, readers, pending retries, and cached mission data once the last demand expires, initially after 30 seconds idle, even when the MCP remains alive;
+- check activation before query responses and before reconciliation, at most one second apart while observation is active; cancel and evict data on missing/invalid/inaccessible activation;
+- after expiry or opt-out, restart only on a new explicit query that revalidates activation;
+- release on cancellation, MCP exit, and view closure when supported; lease expiry handles lost views;
 - tolerate duplicate watcher events;
 - reconcile missed changes by length/file identity;
 - rebuild on truncation/replacement;
@@ -349,17 +396,24 @@ Lifecycle:
 
 Because P3 gives one MCP process per root/agent, this cache is deliberately local and disposable. Do not solve cross-MCP sharing here.
 
+Experiment 007 observed reusable agent MCPs surviving completed turns. Test the observation lifetime separately from process lifetime. Use a monotonic clock for idle expiry and define explicit per-process limits on mission sessions, watched files, and buffered bytes; return partial coverage on exhausted budgets rather than allowing unbounded growth.
+
 Exit criteria:
 
 - Experiment 003 fixture behaviors are covered in production tests;
 - active mission query does not repeatedly parse the complete file;
-- no background work is performed for inactive projects.
+- a fake-clock test proves expiry releases all observation resources while the MCP stays available, and a subsequent query reconstructs current state;
+- filesystem events alone cannot keep a lease alive;
+- activation removal cancels background observation within the reconciliation bound, evicts execution data, and prevents cached responses until activation is revalidated;
+- missing/zero-byte children discovered after the first query are retried within the lease and reflected in coverage;
+- cancellation, lost-view, multiple-process, and resource-budget cases leave no indefinite observation work;
+- inactive projects retain no background observation work after cancellation.
 
-## Phase 6 — Desktop rich presentation
+## Phase 6 — Optional Desktop rich presentation
 
 Goal: add the visual product surface without changing the data architecture.
 
-Implement `cteam(action=open)` and the minimal MCP App resource required to mount C-Team.
+Implement the opening/refresh contract established by the early Desktop gate, preferably `cteam(action=open)`, and the minimal MCP App resource required to mount C-Team. This phase may follow the first release candidate; skip its resources and operation in packages where the gate or implementation is incomplete.
 
 Widget MVP:
 
@@ -391,7 +445,10 @@ Exit criteria:
 
 - Desktop can open one mission view from the MCP;
 - CLI remains fully useful with widget absent;
-- refresh uses structured data operations, not duplicated parsing logic.
+- refresh uses structured data operations, not duplicated parsing logic;
+- two simultaneous views remain bound to their original exact missions through task switching;
+- closing one view does not cancel another view's unexpired demand for the same mission;
+- closed or abandoned views cannot keep an observation lease alive indefinitely, and activation removal prevents further execution-data responses.
 
 ## Phase 7 — Packaging and release candidate
 
@@ -416,6 +473,8 @@ Exit criteria:
 - enabled repository returns mission/tree/usage;
 - NativeAOT executable has no external runtime dependency.
 
+These release criteria apply to the text/structured MVP independently of Phase 6. Include widget resources and `open` only if both the host gate and Phase 6 acceptance criteria pass.
+
 ## Testing strategy
 
 ### Unit tests
@@ -438,7 +497,7 @@ Use fixture state DBs and rollout trees for:
 
 Keep real Codex/Desktop checks sparse and purpose-specific. They belong in the compatibility lab when testing host behavior, not in every CI run.
 
-Retest only on triggers recorded in `EXPERIMENTS.md`.
+Reuse existing evidence for proven behavior and retest it only on recorded triggers. New behavior such as automatic child hydration or widget-originated refresh needs its own bounded acceptance evidence and retest trigger; it must not be labeled proven by an earlier experiment that did not exercise it.
 
 ## Production API/contract discipline
 
@@ -463,11 +522,13 @@ PR 3  mission locator + normalized domain + fixtures
 PR 4  agent tree/activity reducer
 PR 5  usage accounting
 PR 6  incremental observation cache
-PR 7  Desktop widget/open flow
-PR 8  production plugin packaging + RC documentation
+PR 7  production plugin packaging + text/structured MVP RC
+Later Desktop widget/open flow, after the early host gate passes
 ```
 
 PR boundaries may shift as code is extracted, but avoid one giant experiment-to-production rewrite.
+
+Run the small Desktop interaction gate after PR 1 supplies an executable MCP and before freezing any widget-specific contract. It can proceed independently of PRs 2-7 and does not delay the text/structured release if unsupported.
 
 ## Architecture decision gates
 
