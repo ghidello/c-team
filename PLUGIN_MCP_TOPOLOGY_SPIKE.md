@@ -2,9 +2,12 @@
 
 ## Purpose
 
-Determine the actual Codex plugin MCP process topology before C-Team commits to either a direct-per-context runtime or a shared-core architecture.
+Determine the actual Codex plugin MCP process topology before C-Team commits to either a direct-per-context runtime or a shared-core architecture, and measure what a globally installed plugin costs in projects that do not opt into C-Team.
 
-The key unanswered question is whether Codex starts a separate plugin MCP process for each native subagent, shares one process across a root thread and its children, or scopes plugin MCP lifetime at some broader project/client boundary.
+The key unanswered questions are:
+
+1. whether Codex starts a separate plugin MCP process for each native subagent, shares one process across a root thread and its children, or scopes plugin MCP lifetime at a broader project/client boundary;
+2. whether a globally enabled C-Team plugin starts/runs in projects without `.cteam`, and how small/dormant that footprint can be.
 
 This experiment is deliberately small and quota-sensitive, but unlike Experiment 006 it **must intentionally create bounded named-agent fan-out because fan-out itself is the subject under test**.
 
@@ -18,7 +21,9 @@ The difference materially changes the runtime decision:
 - one MCP per subagent/thread makes a thin facade plus shared per-user C-Team core much more attractive once history, analytics, watchers and self-improvement arrive;
 - a globally shared MCP would require especially careful caller/project isolation.
 
-Do not build a broker/core based on an unmeasured assumption.
+Separately, plugin installation is currently broader than repository activation. C-Team should eventually be globally installable without actively observing unrelated projects or injecting a large permanent tool/instruction surface.
+
+Do not build a broker/core or elaborate activation mechanism based on an unmeasured assumption.
 
 ## Environment
 
@@ -44,11 +49,7 @@ Hannibal / root
   └─ Reviewer
 ```
 
-Record whether their C-Team MCP calls use:
-
-- the same `cteam.exe` PID as the root;
-- distinct PIDs per child;
-- some other repeatable grouping.
+Record whether their C-Team MCP calls use the same `cteam.exe` PID as the root, distinct PIDs per child, or some other repeatable grouping.
 
 ### TP2 — same-project conversation scope
 
@@ -72,9 +73,25 @@ Confirm whether plugin-owned MCP children terminate when their owning root/clien
 
 This experiment concerns Codex-owned stdio MCP children only. Do **not** implement a shared C-Team core yet.
 
+### TP5 — globally installed plugin in an inactive project
+
+Use a second minimal repository/workspace that **does not contain `.cteam/`** while the same C-Team plugin remains installed/enabled.
+
+Determine:
+
+- whether Codex starts the C-Team MCP process at all;
+- whether root and native child contexts create additional C-Team MCP processes;
+- what C-Team MCP tool inventory is visible to the host/model;
+- whether startup performs any Codex-session scan or other meaningful work before a tool call;
+- whether an explicit probe can return a tiny `project_not_enabled` result without scanning persisted Codex state;
+- whether the C-Team process exits cleanly when the owning context exits;
+- any observable Desktop versus CLI difference.
+
+Do not claim that `project_not_enabled` removes tool-schema context cost. Tool discovery occurs before tool invocation. The experiment should record the visible tool inventory and serialized schema/description size where practical rather than guessing model-token cost.
+
 ## Instrumentation
 
-Reuse the Experiment 005 NativeAOT MCP harness and plugin package. Extend the existing probe only as needed to emit sanitized process-topology evidence.
+Reuse the Experiment 005 NativeAOT MCP harness and plugin package. Extend the existing probe only as needed to emit sanitized process-topology and activation evidence.
 
 Each relevant MCP initialize/tool call should capture at least:
 
@@ -87,27 +104,26 @@ caller session_id
 caller thread_id
 caller plugin id
 workspace-map presence/count
+project activation: .cteam present | absent | unresolved
 agent role/nickname when persisted evidence can correlate it safely
 parent/root thread id when safely derivable from existing persisted evidence
 tool-call timestamp
 process exit timestamp when observable
 ```
 
-Raw ids, paths, prompts and rollout contents belong under ignored `.cteam/experiment-007/` only.
-
-Published evidence must use sanitized stable labels such as:
+For TP5 also capture, without private project content:
 
 ```text
-root-A
-face-A
-ba-A
-reviewer-A
-root-B
-project-A
-project-B
-pid-1
-pid-2
+MCP process started before first C-Team call: yes/no
+C-Team persisted-state scan before first call: yes/no
+visible production tool count
+serialized production tool definitions size in bytes/chars if reproducible
+explicit inactive-project result
 ```
+
+Raw ids, paths, prompts and rollout contents belong under ignored `.cteam/experiment-007/` only.
+
+Published evidence must use sanitized stable labels such as `root-A`, `face-A`, `ba-A`, `reviewer-A`, `project-A`, `project-inactive`, `pid-1`.
 
 ## Named-agent tasks
 
@@ -135,7 +151,7 @@ Do not invoke Murdock unless the process topology itself becomes surprising enou
 
 1. Spawn Face, B.A. and Reviewer using the existing named-agent configuration.
 2. Ensure each child performs at least one C-Team MCP tool call.
-3. Record the PID and caller metadata for every child call.
+3. Record PID and caller metadata for every child call.
 4. Correlate each child to its parent/root using already-validated persisted metadata where possible.
 5. Avoid repeating work or generating large outputs.
 
@@ -152,10 +168,13 @@ If the host makes this expensive or ambiguous, report TP2 as not established rat
 ### Phase D — simultaneous second project
 
 1. Start one minimal Codex context in a different project/workspace.
-2. Call the topology probe there.
-3. Keep the original project context alive long enough to overlap the process intervals.
-4. Compare PIDs, cache cwd, caller metadata and workspace metadata.
-5. Confirm there is no cross-project state/result leakage.
+2. Keep the original project context alive long enough to overlap process intervals.
+3. If this second project is used for TP5, ensure it contains **no `.cteam/` marker**.
+4. Record whether C-Team is started before any explicit C-Team call.
+5. Inspect the MCP/tool inventory with the least expensive host-native mechanism available.
+6. Explicitly call the small activation/topology probe once and verify that an inactive project returns `project_not_enabled` without persisted-state scanning.
+7. Compare PIDs, caller/workspace metadata and isolation with project A.
+8. Confirm there is no cross-project state/result leakage.
 
 ### Phase E — cleanup
 
@@ -182,6 +201,9 @@ same-project independent roots: shared | isolated | not established
 cross-project contexts: shared | isolated | not established
 cleanup after normal exit: clean | leaked | not established
 cleanup after abrupt exit: clean | leaked | not established
+inactive project MCP startup: eager | lazy/not-started | host-dependent | not established
+inactive project runtime work: dormant | active | not established
+inactive project explicit call: project_not_enabled | other
 ```
 
 ## Decision implications
@@ -201,6 +223,14 @@ Do not immediately build a shared core, but elevate the facade/core topology as 
 ### If P4
 
 Keep the production topology flexible and avoid assumptions about process ownership. Add the observed host/version distinction to the compatibility lab.
+
+### Inactive-project decision
+
+Regardless of P1–P4, production C-Team should treat `.cteam` absence as a hard dormant-state signal unless the user explicitly asks C-Team to initialize that project.
+
+If Codex eagerly starts the MCP globally, startup must remain cheap and perform no heavy observation before project activation is resolved.
+
+If the globally visible tool/skill footprint is material, reduce production tool schemas/instructions or prefer repository-scoped enablement as soon as Codex supports it reliably.
 
 ## Future shared-core lifecycle requirement
 
@@ -227,7 +257,8 @@ At minimum a future lifecycle spike must prove:
 - a core that starts but receives no connection exits quickly;
 - abrupt Codex/Desktop termination does not leave an indefinite zombie core;
 - stale mutex/pipe artifacts recover automatically;
-- no administrator privilege is needed.
+- no administrator privilege is needed;
+- **an unactivated project must never start the shared core merely because the MCP facade was launched.**
 
 Do not implement this in Experiment 007.
 
@@ -247,6 +278,8 @@ Reuse deterministic C# tests under the existing experiment harness where useful.
 Retest when any of these materially changes:
 
 - Codex plugin MCP lifecycle implementation;
+- repository-scoped plugin enablement;
+- MCP dynamic tool-catalog behavior;
 - subagent/thread runtime architecture;
 - ChatGPT/Codex Desktop plugin host behavior;
 - Codex CLI plugin host behavior;
@@ -256,4 +289,4 @@ Retest when any of these materially changes:
 
 ## Stop condition
 
-Stop once P1/P2/P3/P4 and the cleanup/cross-project dimensions are supported by sanitized evidence. Do not turn this experiment into the shared-core implementation.
+Stop once P1/P2/P3/P4, cleanup/cross-project dimensions, and TP5 inactive-project footprint are supported by sanitized evidence. Do not turn this experiment into the shared-core implementation.
