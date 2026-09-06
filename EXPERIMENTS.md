@@ -33,6 +33,8 @@ The purpose is to preserve **what was tested, how it was tested, what failed or 
 | 004 | Plugin-bundled NativeAOT companion | Passed (PF1-C) | Installed payload, relative launch, current-user execution and versioned refresh work; `%LOCALAPPDATA%` durable state required approval on both tested commands | plugin trust, sandbox writable roots, approval persistence or package cache changes |
 | 005 | Plugin-bundled NativeAOT stdio MCP runtime | Partial (PF2-B, M2) | Plugin-managed NativeAOT stdio MCP, structured tools, persisted reads and concurrent independent MCP children work without recurring approval; Roots/plugin data are absent and cross-project attribution still needs explicit context | Roots/plugin data support or MCP caller/workspace metadata changes |
 | 006 | Caller-to-mission correlation | Pending | Test whether per-call `x-codex-turn-metadata.thread_id` maps exactly to persisted rollout/session identity, including multiple real persisted contexts | execute current experiment |
+| 007 | Plugin MCP process topology | Pending | Determine whether native subagents/roots/projects share or isolate the plugin MCP process and verify child-process cleanup | execute after 006; plugin/subagent lifecycle changes |
+| 008 | State database mission locator | Pending | Test whether latest compatible `state_N.sqlite` is a safe optional exact `thread_id → rollout_path` fast-path with bounded fallback | execute after 006/007 if still useful; state DB schema changes |
 
 ## Required experiment folder contract
 
@@ -66,16 +68,18 @@ Reusable experiment code should place generated build/publish output under a rep
 ```text
 artifacts/
   experiments/
-    006-caller-mission-correlation/
+    007-plugin-mcp-topology/
 ```
 
 Build output is not experiment evidence and must not be committed.
 
-## Current decision gate
+## Experiment order
+
+### Current: Experiment 006 — caller-to-mission correlation
 
 Experiment 005 established **PF2-B** with multi-project result **M2**: the plugin's bundled NativeAOT executable works as an approval-free stdio MCP backend, and every tested tool call carries an exact caller `thread_id`, but automatic project-to-persisted-rollout attribution was not yet proven.
 
-The current mission is **Experiment 006**, described in `CALLER_MISSION_CORRELATION_SPIKE.md`. It must determine whether caller `thread_id` is itself the stable exact key for persisted mission lookup, with cwd/project hints relegated to fallback metadata.
+Experiment 006, described in `CALLER_MISSION_CORRELATION_SPIKE.md`, must determine whether caller `thread_id` is itself the stable exact key for persisted mission lookup, with cwd/project hints relegated to fallback metadata.
 
 Finish Experiment 006 with exactly one classification:
 
@@ -85,3 +89,34 @@ Finish Experiment 006 with exactly one classification:
 - **C4 — Insufficient**
 
 If C1 or C2 is proven, the local runtime/identity spike phase should be considered complete unless a new blocker appears. Production implementation remains a separate task.
+
+### Next: Experiment 007 — plugin MCP process topology
+
+`PLUGIN_MCP_TOPOLOGY_SPIKE.md` measures an assumption Experiment 005 did not answer: whether Codex starts plugin MCP processes per project, per root tree, or per native subagent/thread.
+
+Unlike Experiment 006, Experiment 007 deliberately creates a tiny authentic named-agent fan-out using Face, B.A. and Reviewer because native fan-out is the subject under test.
+
+Finish with one classification:
+
+- **P1 — project-shared**
+- **P2 — root-tree shared**
+- **P3 — per-thread/per-agent**
+- **P4 — host-dependent/unclear**
+
+Also report same-project root sharing, cross-project isolation, normal cleanup and abrupt-exit cleanup separately.
+
+A shared C-Team core remains deferred. If one is ever introduced, zombie prevention and demand-started/idle-stopped lifecycle are hard requirements; see `docs/runtime-topology.md`.
+
+### Later optional: Experiment 008 — state database mission locator
+
+`STATE_DB_LOCATOR_SPIKE.md` tests whether current Codex `state_N.sqlite` can be an exact and cheap optional locator from known caller thread id to rollout path.
+
+This is an optimization, not a product blocker. Rollout JSONL remains execution evidence and a filesystem/session-index fallback remains required.
+
+Finish with:
+
+- **S1 — Exact fast-path**
+- **S2 — Useful metadata only**
+- **S3 — Too brittle**
+
+Do not run Experiment 008 before 006/007 merely because it is prepared.
