@@ -31,7 +31,7 @@ public static class McpServer
                 if (method == "initialize")
                 {
                     evidence.Write("initialize", request);
-                    await SendAsync(output, evidence, Response(id, new JsonObject { ["protocolVersion"] = ProtocolVersion, ["capabilities"] = new JsonObject { ["tools"] = new JsonObject() }, ["serverInfo"] = new JsonObject { ["name"] = "cteam", ["version"] = "0.1.0-experiment-005" } }));
+                    await SendAsync(output, evidence, Response(id, new JsonObject { ["protocolVersion"] = ProtocolVersion, ["capabilities"] = new JsonObject { ["tools"] = new JsonObject() }, ["serverInfo"] = new JsonObject { ["name"] = "cteam", ["version"] = "0.1.0-experiment-006" } }));
                     rootsDeclared = parameters?["capabilities"]?["roots"] is not null;
                     continue;
                 }
@@ -55,7 +55,7 @@ public static class McpServer
                         var argumentNode = parameters?["arguments"];
                         if (argumentNode is not null && argumentNode is not JsonObject) throw new ArgumentException("Tool arguments must be an object.");
                         var arguments = argumentNode as JsonObject;
-                        result = await CallToolAsync(name, arguments, cancellationToken);
+                        result = await CallToolAsync(name, arguments, CallerContext.FromToolParameters(parameters), cancellationToken);
                     }
                     catch (Exception exception) when (exception is ArgumentException or InvalidOperationException or JsonException or IOException or UnauthorizedAccessException)
                     {
@@ -81,7 +81,7 @@ public static class McpServer
         finally { evidence.Write("process-stop", RuntimeInfo()); evidence.Dispose(); }
     }
 
-    static async Task<JsonObject> CallToolAsync(string name, JsonObject? arguments, CancellationToken cancellationToken)
+    static async Task<JsonObject> CallToolAsync(string name, JsonObject? arguments, CallerContext caller, CancellationToken cancellationToken)
     {
         if (name == "cteam_ping")
         {
@@ -91,7 +91,7 @@ public static class McpServer
         }
         if (name == "cteam_runtime_info") return RuntimeInfo();
         if (name == "cteam_test_plugin_data") return TestPluginData();
-        var snapshot = MissionProbe.Probe(arguments?["project_hint"]?.GetValue<string>(), arguments?["mission_id"]?.GetValue<string>());
+        var snapshot = CallerMissionProbe.Probe(caller, arguments?["project_hint"]?.GetValue<string>(), arguments?["mission_id"]?.GetValue<string>());
         return MissionResult(snapshot, name);
     }
 
@@ -127,7 +127,11 @@ public static class McpServer
     static JsonObject MissionResult(MissionSnapshot snapshot, string tool) => new() { ["tool"] = tool, ["mission_key"] = snapshot.MissionKey, ["candidate_count"] = snapshot.CandidateCount,
         ["confidence"] = snapshot.Confidence, ["selection_signal"] = snapshot.SelectionSignal, ["status"] = snapshot.Status, ["agent_count"] = snapshot.AgentCount,
         ["configured_model"] = snapshot.ConfiguredModel, ["effort"] = snapshot.Effort, ["total_tokens"] = snapshot.TotalTokens,
-        ["scanned_files"] = snapshot.ScannedFiles, ["scan_truncated"] = snapshot.ScanTruncated };
+        ["scanned_files"] = snapshot.ScannedFiles, ["scan_truncated"] = snapshot.ScanTruncated, ["correlation_outcome"] = snapshot.CorrelationOutcome,
+        ["correlation_selection"] = snapshot.CorrelationSelection, ["root_mission_key"] = snapshot.RootMissionKey, ["caller_kind"] = snapshot.CallerKind,
+        ["correlation_directories_examined"] = snapshot.CorrelationDirectoriesExamined,
+        ["correlation_directory_entries_examined"] = snapshot.CorrelationDirectoryEntriesExamined, ["correlation_bytes_read"] = snapshot.CorrelationBytesRead,
+        ["correlation_scan_truncated"] = snapshot.CorrelationScanTruncated };
 
     static JsonArray ToolList()
     {
@@ -169,9 +173,17 @@ public static class McpServer
             ["effort"] = Nullable("string"),
             ["total_tokens"] = new JsonObject { ["type"] = new JsonArray("integer", "null"), ["minimum"] = 0 },
             ["scanned_files"] = new JsonObject { ["type"] = "integer", ["minimum"] = 0 },
-            ["scan_truncated"] = new JsonObject { ["type"] = "boolean" }
+            ["scan_truncated"] = new JsonObject { ["type"] = "boolean" },
+            ["correlation_outcome"] = Nullable("string"),
+            ["correlation_selection"] = Nullable("string"),
+            ["root_mission_key"] = Nullable("string"),
+            ["caller_kind"] = Nullable("string"),
+            ["correlation_directories_examined"] = new JsonObject { ["type"] = "integer", ["minimum"] = 0 },
+            ["correlation_directory_entries_examined"] = new JsonObject { ["type"] = "integer", ["minimum"] = 0 },
+            ["correlation_bytes_read"] = new JsonObject { ["type"] = "integer", ["minimum"] = 0 },
+            ["correlation_scan_truncated"] = new JsonObject { ["type"] = "boolean" }
         },
-        ["required"] = new JsonArray("tool", "mission_key", "candidate_count", "confidence", "selection_signal", "status", "agent_count", "configured_model", "effort", "total_tokens", "scanned_files", "scan_truncated")
+        ["required"] = new JsonArray("tool", "mission_key", "candidate_count", "confidence", "selection_signal", "status", "agent_count", "configured_model", "effort", "total_tokens", "scanned_files", "scan_truncated", "correlation_outcome", "correlation_selection", "root_mission_key", "caller_kind", "correlation_directories_examined", "correlation_directory_entries_examined", "correlation_bytes_read", "correlation_scan_truncated")
     };
     static JsonObject Nullable(string type) => new() { ["type"] = new JsonArray(type, "null") };
     static JsonObject ToolResult(JsonObject value, bool isError = false) => new() { ["content"] = new JsonArray { (JsonNode)new JsonObject { ["type"] = "text", ["text"] = value.ToJsonString() } }, ["structuredContent"] = value.DeepClone(), ["isError"] = isError };

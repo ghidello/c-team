@@ -6,7 +6,9 @@ using System.Text.Json.Nodes;
 namespace CTeam.Experiments;
 
 public sealed record MissionSnapshot(string? MissionKey, int CandidateCount, string Confidence, string SelectionSignal, string? Status,
-    int AgentCount, string? ConfiguredModel, string? Effort, long? TotalTokens, int ScannedFiles, bool ScanTruncated);
+    int AgentCount, string? ConfiguredModel, string? Effort, long? TotalTokens, int ScannedFiles, bool ScanTruncated,
+    string? CorrelationOutcome = null, string? CorrelationSelection = null, string? RootMissionKey = null, string? CallerKind = null,
+    int CorrelationDirectoriesExamined = 0, int CorrelationDirectoryEntriesExamined = 0, long CorrelationBytesRead = 0, bool CorrelationScanTruncated = false);
 
 public static class MissionProbe
 {

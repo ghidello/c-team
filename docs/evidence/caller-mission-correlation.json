@@ -1,0 +1,147 @@
+{
+  "environment": {
+    "date": "2026-09-06",
+    "platform": "Windows 10.0.26220",
+    "dotnetSdk": "10.0.400",
+    "codexCli": "0.153.4",
+    "plugin": "c-team@personal",
+    "livePluginVersion": "0.1.0+codex.20260906190026",
+    "finalInstalledPluginVersion": "0.1.0+codex.20260906191756",
+    "mcpServerVersion": "0.1.0-experiment-006",
+    "nativeAot": true,
+    "publishedAndInstalledSha256Equal": true,
+    "sha256": "67DA3EF5824CF7513EA82CA91FEC465FD2D3B5BB337AE1E999841864CA306F25",
+    "executableBytes": 2761728,
+    "finalPostLiveRefinement": "Directory entries and first-record reads are strictly capped, truncated or unreadable candidate sets cannot claim exact, and conflicting child root fields leave the root unresolved. Covered by deterministic tests and final package hash verification without another model invocation."
+  },
+  "establishedInputs": {
+    "experiment003PersistedRolloutsNearLive": true,
+    "experiment005PerCallMetadataPresent": true,
+    "experiment005ThreadAndSessionMatchedCaller": true,
+    "experiment005ConcurrentMcpChildrenSafe": true,
+    "paidWorkloadsRepeated": false
+  },
+  "identityContract": {
+    "callerField": "params._meta.x-codex-turn-metadata.thread_id",
+    "rootPersistedField": "session_meta.payload.id",
+    "rootInvariant": "payload.id equals payload.session_id and parent_thread_id is absent",
+    "childPersistedField": "session_meta.payload.id",
+    "childRootFields": [
+      "session_meta.payload.session_id",
+      "session_meta.payload.parent_thread_id"
+    ],
+    "filenameUsedAsLocatorOnly": true,
+    "sessionMetaIdVerified": true,
+    "projectOrCwdRequired": false,
+    "recencyUsedAsIdentity": false
+  },
+  "cm1": {
+    "activeDesktopRootOutcome": "exact",
+    "candidateCount": 1,
+    "candidateFilesRead": 1,
+    "directoryLocationsExamined": 32,
+    "bytesRead": 22176,
+    "truncated": false,
+    "rawIdentifiersCommitted": false
+  },
+  "cm2": {
+    "freshClientEndToEnd": true,
+    "realPerCallThreadIdPresent": true,
+    "realPerCallSessionIdPresent": true,
+    "threadEqualsSession": true,
+    "threadEqualsThreadStarted": true,
+    "toolCalls": 1,
+    "activeWriterResolution": "exact",
+    "selection": "caller-thread-id",
+    "candidateCount": 1,
+    "candidateFilesRead": 1,
+    "directoryLocationsExamined": 32,
+    "bytesRead": 18639,
+    "truncated": false,
+    "processesStarted": 1,
+    "processErrors": 0,
+    "desktopUpdatedPayloadHotLoaded": false,
+    "updatedDesktopHostCallDirectlyConfirmed": false,
+    "updatedDesktopHostCorrelationInferredFromEstablishedMetadataAndExactDesktopResolution": true,
+    "desktopObservedPayloadVersion": "0.1.0+codex.20260905220449",
+    "desktopResumeFromSecondWriterRejected": true
+  },
+  "cm3": {
+    "realPersistedDesktopRoots": 2,
+    "distinctCallerIds": true,
+    "distinctMissionKeys": true,
+    "allExact": true,
+    "allSingleCandidate": true,
+    "crossMatchObserved": false,
+    "callsWereSequential": true,
+    "simultaneousTopologyReusedFromExperiment005": true,
+    "secondDesktopRoot": {
+      "candidateFilesRead": 1,
+      "directoryLocationsExamined": 32,
+      "bytesRead": 22119,
+      "truncated": false
+    }
+  },
+  "cm4": {
+    "naturalChildrenDiscovered": 3,
+    "naturalChildrenTested": 2,
+    "allTestedChildrenExact": true,
+    "allTestedChildrenDistinctFromRoot": true,
+    "allTestedChildrenDerivedSameExpectedRoot": true,
+    "candidateFilesReadPerChild": [
+      1,
+      1
+    ],
+    "bytesReadPerChild": [
+      22638,
+      22634
+    ],
+    "separateReviewRolloutLiveTested": false,
+    "childToRootDeterministicForObservedShape": true
+  },
+  "cm5": {
+    "fallbackOrder": [
+      "exact caller thread id",
+      "explicit mission id",
+      "explicit project hint as context-assisted",
+      "unresolved"
+    ],
+    "notFoundCallerFallsThroughToHint": false,
+    "projectHintEverReportedExact": false,
+    "missingMetadataDeterministicallyTested": true
+  },
+  "cm6": {
+    "sessionsRootPlusUtcDateDirectories": 31,
+    "maximumDirectoryLocations": 32,
+    "maximumDirectoryEntries": 4096,
+    "maximumCandidateFiles": 8,
+    "maximumIdentityBytesPerCandidate": 65536,
+    "realCandidateFilesPerSuccessfulLookup": 1,
+    "observedBytesReadRange": [
+      18639,
+      22638
+    ],
+    "fileLimitTruncationTested": true,
+    "productionIndexBuilt": false
+  },
+  "tests": {
+    "experimentTestsPassed": 30,
+    "existingSpikeTestsPassed": 16,
+    "failures": 0
+  },
+  "failedApproaches": [
+    {
+      "approach": "Use a new Desktop task immediately after plugin reinstall to exercise the updated resolver.",
+      "result": "The running Desktop host retained the earlier plugin cache payload, so the task returned the pre-006 schema."
+    },
+    {
+      "approach": "Resume the Desktop-owned task through a fresh Codex CLI process.",
+      "result": "Codex rejected a second writer while Desktop owned the persisted context."
+    }
+  ],
+  "classification": "C2 — Exact with bounded adapter",
+  "childToRootBehavior": "Deterministic for the observed child/subagent persisted shape.",
+    "localRuntimeIdentitySpikePhaseComplete": false,
+    "remainingGate": "One updated no-argument MCP correlation call directly from ChatGPT Desktop after its plugin restart or reload boundary.",
+  "privacy": "Allowlisted aggregate facts only. Raw ids, paths, prompts, commands, rollout data, MCP envelopes and client output remain under ignored .cteam/experiment-006/."
+}
