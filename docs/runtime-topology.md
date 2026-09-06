@@ -44,6 +44,8 @@ If Codex starts many processes, each may eventually duplicate:
 
 This cost may be negligible if Codex scopes one MCP to a project or root mission. It may become wasteful if Codex starts one per native subagent.
 
+A globally installed direct MCP must still be **lazy**. Outside an activated `.cteam` project it should do no rollout scans, watchers, indexing or analytics before an explicit call, and an inactive-project call should terminate quickly with a small disabled result.
+
 ## Option B — thin MCP facade + demand-started shared per-user core
 
 ```text
@@ -64,6 +66,7 @@ The facade should remain intentionally small:
 ```text
 MCP framing
 caller/session metadata capture
+project-activation resolution
 local-core discovery/start
 request forwarding
 response translation
@@ -81,6 +84,8 @@ cteam.exe core     # shared ordinary per-user process
 ```
 
 Do not create separate installed services/executables unless evidence later requires it.
+
+Critically, the facade must resolve project activation **before** starting the core. A globally installed C-Team plugin in an unrelated project must not create a background core merely because Codex launched the stdio MCP process.
 
 ## Option C — independent MCP processes sharing only SQLite
 
@@ -122,7 +127,7 @@ The core is an **ordinary demand-started per-user process**, never a Windows Ser
 Expected lifecycle:
 
 ```text
-first facade
+activated C-Team project makes first real request
     │
     ├─ core available → connect
     │
@@ -147,6 +152,7 @@ A future lifecycle experiment must prove all of these:
 8. Abrupt Codex/Desktop/CLI termination does not leave a core indefinitely alive.
 9. Stale mutex/pipe ownership recovers automatically after crashes.
 10. Normal operation needs no administrator privilege, Scheduled Task, login startup entry or service registration.
+11. Opening or using a project without `.cteam` does not start the shared core.
 
 Potential Windows primitives:
 
@@ -174,9 +180,9 @@ A shared core must never infer the current project solely from whichever MCP fac
 
 ## Project versus plugin scope
 
-Plugin installation and project policy are separate concerns. A user may install C-Team personally while each project supplies its own team/routing policy.
+Plugin installation and project activation are separate concerns. A user may install C-Team personally while each project explicitly opts in with `.cteam` and supplies its own team/routing policy.
 
-See `plugin-onboarding.md` for the desired local/global onboarding model.
+See `plugin-onboarding.md` and `host-presentation-and-context-footprint.md` for the desired local/global onboarding and dormant-plugin model.
 
 ## Implemented references
 
@@ -191,3 +197,7 @@ C-Team should borrow the topology, not blindly copy any particular transport or 
 ## Production principle
 
 > Keep the current direct stdio architecture simple, but place parsing, normalization, history and analytics behind boundaries that can move into a shared core later without changing MCP tool semantics or the UI.
+
+And:
+
+> Global installation must not imply global activity: projects without `.cteam` remain dormant, and a future shared core must never be started for them.
