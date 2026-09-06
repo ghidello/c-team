@@ -16,12 +16,12 @@
 - [`near-live-observation.md`](near-live-observation.md) — measured near-live persistence behavior and watcher strategy.
 - [`codex-protocol.md`](codex-protocol.md) — protocol observations and schemas used by the experiments.
 - [`plugin-validation.md`](plugin-validation.md) — plugin packaging/runtime validation notes.
+- [`../experiments/009b-agent-onboarding/README.md`](../experiments/009b-agent-onboarding/README.md) — real agent-first onboarding validation and Desktop plugin-refresh finding.
 - [`cteam-scratch-audit.md`](cteam-scratch-audit.md) — audit of private experiment scratch and durable evidence.
 - [`evidence/`](evidence/) — sanitized evidence artifacts supporting experiment conclusions.
 
 ## Planned follow-ups
 
-- [`../AGENT_ONBOARDING_VALIDATION_SPIKE.md`](../AGENT_ONBOARDING_VALIDATION_SPIKE.md) — **Experiment 009B (current):** validate real installed-skill discovery, approval, bundled initializer execution, immediate MCP activation, and post-init session guidance.
 - [`../STATE_DB_LOCATOR_SPIKE.md`](../STATE_DB_LOCATOR_SPIKE.md) — Experiment 010: broader optional `state_N.sqlite` mission-location optimization; run only if later profiling or compatibility evidence justifies it.
 
 Completed experiment plans remain at the repository root and their durable results live under `experiments/`.

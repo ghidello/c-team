@@ -1,0 +1,64 @@
+{
+  "environment": {
+    "date": "2026-09-07",
+    "host": "ChatGPT Desktop",
+    "codexCli": "0.153.4",
+    "configuredModel": "gpt-5.6-sol",
+    "configuredReasoning": "high",
+    "freshTaskCount": 1,
+    "realTaskTurns": 3,
+    "namedAgentsUsed": 0
+  },
+  "precondition": {
+    "plugin": "c-team@personal",
+    "installedVersion": "0.1.0+codex.20260906220726",
+    "desktopLoadedVersion": "0.1.0+codex.20260906191756",
+    "installedExecutableMatchedPublished": true,
+    "disposableProjectInitiallyEnabled": false
+  },
+  "catalog": {
+    "standaloneAppServerOrdinaryDiscovery": true,
+    "desktopFreshTaskOrdinaryDiscovery": false,
+    "desktopFallbackWasManualCacheDiscovery": true,
+    "cteamSkillCount": 1,
+    "skillName": "c-team:initialize-c-team",
+    "nameDescriptionCatalogChars": 129,
+    "nameDescriptionCatalogUtf8Bytes": 129,
+    "skillFileBytes": 1450,
+    "descriptionChars": 104,
+    "descriptionUtf8Bytes": 104
+  },
+  "flow": {
+    "naturalRequestUsed": true,
+    "canonicalFilesExplainedBeforeMutation": true,
+    "explicitApprovalRequested": true,
+    "approvalCount": 1,
+    "bundledCanonicalInitializerInvoked": true,
+    "generationLogicReimplementedByAgent": false,
+    "firstStatus": "initialized",
+    "canonicalConfigMatched": true,
+    "canonicalAgentsMatched": true,
+    "repositoryMarketplaceCreated": false,
+    "pluginConfigurationChangedByInitializer": false,
+    "hostAddedDisposableProjectTrustEntry": true,
+    "repeatNaturalRequestSent": true,
+    "repeatStatus": "already_initialized",
+    "repeatFileHashesUnchanged": true
+  },
+  "activation": {
+    "sameDesktopMcpLifetimeProjectEnabled": false,
+    "reason": "The fresh task inherited the running Desktop host's older C-Team plugin and MCP catalog.",
+    "experiment008bImmediateActivationRepeated": false,
+    "guidanceAndBackendRestartAdviceCleanlySeparated": false
+  },
+  "tooling": {
+    "pluginValidatorStarted": false,
+    "skillValidatorStarted": false,
+    "validatorFailure": "Bundled Python lacked PyYAML.",
+    "realPluginInstallSucceeded": true,
+    "realSkillsListSucceeded": true
+  },
+  "classification": "O4 — More evidence needed",
+  "rawEvidenceLocation": ".cteam/experiment-009b/",
+  "sanitization": "Only the fixed experiment prompt phrase and aggregate outcomes are committed; task ids, user-specific paths, full transcripts, command lines, configuration contents, and protocol payloads remain private."
+}

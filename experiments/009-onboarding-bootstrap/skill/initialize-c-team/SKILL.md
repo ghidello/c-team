@@ -7,7 +7,7 @@ description: Initialize C-Team project files after its MCP status reports that t
 
 Use this skill only when the user asks to initialize C-Team or agrees after the `cteam` MCP tool returns `project_not_enabled`.
 
-Before changing the repository, identify its exact root and tell the user that initialization creates `.cteam/config.json` and creates or merges a managed C-Team section in the root `AGENTS.md`. It does not install or enable a plugin, change a repository marketplace, or write outside the repository. Ask for approval immediately before making those changes unless the current request already explicitly authorizes initialization.
+Before changing the repository, identify its exact root and tell the user that initialization creates `.cteam/config.json` and creates or merges a managed C-Team section in the root `AGENTS.md`. It does not install or enable a plugin, change a repository marketplace, or write outside the repository. After this concrete explanation, always pause for explicit approval immediately before making those changes; treat the initial request as intent to begin the flow rather than approval of the file mutation.
 
 Resolve the plugin root from this `SKILL.md` path, then run its bundled `bin/win-x64/cteam.exe` with:
 
