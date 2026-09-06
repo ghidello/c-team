@@ -1,0 +1,18 @@
+{
+  "name": "cteam-init-experiment",
+  "version": "0.0.0-experiment",
+  "description": "Local-only Experiment 009 package for deterministic C-Team project initialization.",
+  "type": "module",
+  "bin": {
+    "cteam-init": "bin/cteam-init.mjs"
+  },
+  "files": [
+    "bin/cteam-init.mjs",
+    "native/win-x64/cteam.exe"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "license": "MIT",
+  "private": true
+}

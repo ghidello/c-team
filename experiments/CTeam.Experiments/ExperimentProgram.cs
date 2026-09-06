@@ -6,7 +6,7 @@ public static class ExperimentProgram
     {
         if (args.Length == 0)
         {
-            await error.WriteLineAsync("Usage: cteam <plugin-native-companion|resolve-companion|validate-plugin-layout|invoke-plugin-companion|stage-plugin|inspect-state-db|inspect-state-thread|mcp-server|context-activation-server> [options]");
+            await error.WriteLineAsync("Usage: cteam <plugin-native-companion|resolve-companion|validate-plugin-layout|invoke-plugin-companion|stage-plugin|pack-npm-bootstrap|inspect-state-db|inspect-state-thread|init|mcp-server|context-activation-server> [options]");
             return 2;
         }
 
@@ -19,8 +19,10 @@ public static class ExperimentProgram
                 "validate-plugin-layout" => await ValidateAsync(args[1..], output, error),
                 "invoke-plugin-companion" => await InvokeAsync(args[1..], output, error, cancellationToken),
                 "stage-plugin" => await StageAsync(args[1..], output),
+                "pack-npm-bootstrap" => await PackNpmBootstrapAsync(args[1..], output),
                 "inspect-state-db" => await InspectStateDatabaseAsync(args[1..], output),
                 "inspect-state-thread" => await InspectStateThreadAsync(args[1..], output),
+                "init" => await InitializeProjectAsync(args[1..], output),
                 "mcp-server" => await McpServer.RunAsync(Console.In, output, error, cancellationToken),
                 "context-activation-server" => await ActivationMcpServer.RunAsync(Console.In, output, error, cancellationToken),
                 _ => throw new ArgumentException($"Unknown experiment command: {args[0]}")
@@ -75,6 +77,14 @@ public static class ExperimentProgram
         return 0;
     }
 
+    static async Task<int> PackNpmBootstrapAsync(string[] args, TextWriter output)
+    {
+        var destination = RequiredOption(args, "--output");
+        NpmPackageArchive.Create(RequiredOption(args, "--source"), destination);
+        await output.WriteLineAsync($"npm-package={Path.GetFullPath(destination)}");
+        return 0;
+    }
+
     static async Task<int> InspectStateThreadAsync(string[] args, TextWriter output)
     {
         var result = CodexStateThreadLocator.Lookup(RequiredOption(args, "--thread-id"), databasePath: RequiredOption(args, "--db"));
@@ -93,6 +103,14 @@ public static class ExperimentProgram
         };
         await output.WriteLineAsync(json.ToJsonString(new() { WriteIndented = true }));
         return result.Outcome == "exact" ? 0 : 1;
+    }
+
+    static async Task<int> InitializeProjectAsync(string[] args, TextWriter output)
+    {
+        var report = ProjectInitializer.Initialize(new ProjectInitializationOptions(RequiredOption(args, "--target"),
+            args.Contains("--dry-run", StringComparer.Ordinal)));
+        await output.WriteLineAsync(report.ToJson());
+        return report.Status == "rejected" ? 1 : 0;
     }
 
     static string RequiredOption(string[] args, string name) => OptionalOption(args, name) ?? throw new ArgumentException($"Missing required option {name}.");

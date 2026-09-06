@@ -1,0 +1,34 @@
+{
+  "fresh": {
+    "status": "initialized",
+    "changedFiles": [".cteam/config.json", "AGENTS.md"]
+  },
+  "existingAgentsAndMarketplace": {
+    "status": "initialized",
+    "existingAgentsContentPreserved": true,
+    "marketplaceBytesPreserved": true
+  },
+  "repeat": {
+    "status": "already_initialized",
+    "changedFiles": []
+  },
+  "partialConfigOnly": {
+    "status": "initialized",
+    "changedFiles": ["AGENTS.md"]
+  },
+  "schemaZeroWithoutUpgrade": {
+    "status": "upgrade_required",
+    "plannedFiles": [".cteam/config.json", "AGENTS.md"],
+    "filesChanged": false
+  },
+  "malformedOrFutureSchema": {
+    "status": "rejected",
+    "partialWrites": false
+  },
+  "fixturePayloadEquality": {
+    "skillResolvedPayload": true,
+    "npmPayload": true,
+    "dotnetDnx": true,
+    "bundledNative": true
+  }
+}

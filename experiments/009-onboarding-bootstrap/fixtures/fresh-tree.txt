@@ -1,0 +1,4 @@
+.
+|-- .cteam/
+|   `-- config.json
+`-- AGENTS.md

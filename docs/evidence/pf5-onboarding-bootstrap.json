@@ -1,0 +1,116 @@
+{
+  "environment": {
+    "date": "2026-09-06",
+    "platform": "Windows 10.0.26220",
+    "dotnetSdk": "10.0.400",
+    "dnxAvailable": true,
+    "node": "24.19.0",
+    "npmOnPath": false,
+    "npxOnPath": false,
+    "pnpm": "11.19.0"
+  },
+  "reuse": {
+    "experiment008bActivation": "D1",
+    "paidWorkloadsRepeated": false,
+    "newCodexInferenceRuns": 0
+  },
+  "canonicalFootprint": {
+    "files": [".cteam/config.json", "AGENTS.md"],
+    "schemaVersion": 1,
+    "utf8Bom": false,
+    "lineEndings": "LF",
+    "managedGuidanceMarkers": true,
+    "repositoryMarketplaceCreated": false,
+    "pluginInstallationSeparate": true
+  },
+  "requiredScenarios": {
+    "fresh": "initialized",
+    "existingAgents": "preserved-and-merged",
+    "existingMarketplace": "byte-preserved",
+    "repeat": "already_initialized",
+    "partial": "repaired",
+    "dryRun": "no-writes",
+    "schemaZero": "upgrade_required-without-writes",
+    "schemaUpgradeApplication": "not-implemented-by-design",
+    "malformedOrFutureSchema": "rejected-without-partial-writes",
+    "duplicateOrMisalignedGuidance": "rejected-without-writes",
+    "descendantReparsePoint": "rejected",
+    "failedSecondWrite": "prior-state-restored-and-empty-marker-removed"
+  },
+  "entryPoints": {
+    "skillResolvedPayload": {
+      "skillBytes": 1374,
+      "discoveryDescriptionChars": 104,
+      "discoveryDescriptionUtf8Bytes": 104,
+      "fixturePluginRootResolution": true,
+      "bundledInitializerInvoked": true,
+      "goldenFilesMatched": true,
+      "installedGloballyForTest": false
+    },
+    "npm": {
+      "packageName": "cteam-init-experiment",
+      "publiclyPublished": false,
+      "dependencyCount": 0,
+      "committedPackageSourceBytes": 1093,
+      "launcherBytes": 691,
+      "packageFiles": 3,
+      "tarballBytes": 1445241,
+      "pnpmPackDryRunValidated": true,
+      "archiveCreatedByCompiledHarness": true,
+      "stagedPayloadInvokedWithNode": true,
+      "npxInvoked": false,
+      "firstStatus": "initialized",
+      "secondStatus": "already_initialized",
+      "goldenFilesMatched": true,
+      "networkUsed": false
+    },
+    "dotnet": {
+      "packageId": "CTeam.Init.Experiment",
+      "version": "0.0.0-experiment",
+      "publiclyPublished": false,
+      "externalPackageDependencies": 0,
+      "nupkgBytes": 26886,
+      "dnxInvoked": true,
+      "permanentToolInstall": false,
+      "pathModificationRequired": false,
+      "firstStatus": "initialized",
+      "secondStatus": "already_initialized",
+      "goldenFilesMatched": true,
+      "localFeedOnly": true,
+      "networkUsed": false,
+      "controlledCacheLocation": ".cteam/experiment-009/"
+    },
+    "bundledNative": {
+      "nativeAot": true,
+      "runtime": "win-x64",
+      "executableBytes": 3189248,
+      "directInitSucceeded": true,
+      "goldenFilesMatched": true,
+      "stableTerminalPathAvailable": false
+    }
+  },
+  "fixturePayloadEquality": {
+    "skillResolvedPayload": true,
+    "npmPayload": true,
+    "dotnetDnx": true,
+    "bundledNative": true
+  },
+  "verification": {
+    "spikeTestsPassed": 16,
+    "experimentTestsPassed": 60,
+    "nativeAotPublishPassed": true,
+    "npmArchiveLayoutTested": true,
+    "npmArchiveByteReproducible": true,
+    "globalPluginConfigurationChanged": false,
+    "publicPackagesPublished": false
+  },
+  "failedApproaches": [
+    "Fresh isolated dnx home triggered first-use output and reported ASP.NET certificate setup before a sandboxed NuGet-config read failure; the controlled local-only rerun disabled certificate generation and telemetry.",
+    "Sandbox policy blocked pnpm and Windows tar from creating the npm archive; a compiled C# tar writer created it instead.",
+    "The installed Node distribution had no npm/npx command, so exact npx invocation was not claimed.",
+    "The installed skill validator could not import PyYAML; structure and frontmatter were inspected directly."
+  ],
+  "classification": "O4 — More evidence needed",
+  "rawEvidenceLocation": ".cteam/experiment-009/",
+  "sanitization": "Only aggregate sizes, versions, statuses, fixture-relative paths, and generated fixture diffs are committed."
+}

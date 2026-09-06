@@ -1,9 +1,13 @@
 # C-Team spike recordings may contain sensitive Codex/session data
 .cteam/
+!tests/fixtures/onboarding/fresh/.cteam/
+!tests/fixtures/onboarding/fresh/.cteam/config.json
 artifacts/
 
 # .NET
 bin/
+!experiments/009-onboarding-bootstrap/npm/bin/
+!experiments/009-onboarding-bootstrap/npm/bin/cteam-init.mjs
 obj/
 
 # editor/user files

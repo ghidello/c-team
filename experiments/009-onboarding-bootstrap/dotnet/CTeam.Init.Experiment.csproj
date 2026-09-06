@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <PackAsTool>true</PackAsTool>
+    <ToolCommandName>cteam-init</ToolCommandName>
+    <PackageId>CTeam.Init.Experiment</PackageId>
+    <Version>0.0.0-experiment</Version>
+    <Authors>C-Team experiment</Authors>
+    <Description>Local-only Experiment 009 package for deterministic C-Team project initialization.</Description>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="../../CTeam.Experiments/ProjectInitializer.cs" Link="ProjectInitializer.cs" />
+  </ItemGroup>
+</Project>
