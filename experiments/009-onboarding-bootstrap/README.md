@@ -6,7 +6,7 @@ Determine the smallest safe and obvious way to initialize C-Team in an existing 
 
 ## Original environment
 
-Executed 2026-09-06 on Windows 10.0.26220 with .NET SDK 10.0.400, `dnx`/`dotnet tool exec`, Node 24.19.0, and pnpm 11.19.0. npm and npx were not present on PATH. No public npm or NuGet package was published, no C-Team plugin was installed or changed, and no Codex inference was needed for the fixture runs.
+Executed 2026-09-06 on Windows 10.0.26220 with .NET SDK 10.0.400, `dnx`/`dotnet tool exec`, bundled Node 24.19.0, NVM-managed Node 24.14.0 with npm/npx 11.9.0, and pnpm 11.19.0. The Codex process PATH exposed its bundled Node without npm/npx; CMD could invoke the NVM-managed `%NVM_SYMLINK%\npx.cmd` directly. No public npm or NuGet package was published, no C-Team plugin was installed or changed, and no Codex inference was needed for the fixture runs.
 
 Experiment 008B's D1 result was authoritative: after `.cteam/` appears, the existing MCP can recognize project activation immediately. This experiment did not repeat that paid workload.
 
@@ -77,7 +77,7 @@ The output always states that plugin installation is separate and recommends a f
 | Entry point | Actual experiment | Payload | Result | Friction and maintenance |
 | --- | --- | ---: | --- | --- |
 | Agent/plugin skill | A plugin-shaped fixture applied the skill's relative-path convention and invoked the bundled NativeAOT initializer directly. | skill plus existing native payload | Canonical fresh bytes | Leading in-agent candidate; real installed-skill discovery, approval, and agent execution remain untested. |
-| npm/npx | A zero-dependency, three-file package carries a 691-byte Node launcher and the `win-x64` native initializer. pnpm validated the file list; the compiled harness created the local tarball; the staged package launcher initialized and repeated successfully without network. | 1,445,241-byte `.tgz`; 1,093 bytes committed package source | Canonical fresh bytes; repeat idempotent | npm/npx was absent on this host, so the exact npx transport was not executed. Carrying native payloads preserves one implementation but requires per-platform packages; a pure-JS rewrite would be smaller but duplicate logic. |
+| npm/npx | A zero-dependency, three-file package carries a 691-byte Node launcher and the `win-x64` native initializer. The compiled harness created the local tarball; CMD invoked it through NVM-managed npx with `--offline`. | 1,445,241-byte `.tgz`; 1,093 bytes committed package source | First run `initialized`; repeat `already_initialized`; canonical bytes | The host process did not inherit NVM's npm/npx path, so the experiment used `%NVM_SYMLINK%\npx.cmd` explicitly. Carrying native payloads preserves one implementation but requires per-platform packages. |
 | .NET `dnx` | A local-only `PackAsTool` package compiles the canonical C# source directly. `dnx` consumed only the local feed and used workspace-local caches. First and second runs returned `initialized` and `already_initialized`. | 26,886-byte `.nupkg`; zero external package dependencies | Canonical fresh bytes; repeat idempotent | Clean one-shot command with no global tool/PATH install, but requires the .NET 10 SDK and writes ordinary package-cache data. |
 | Bundled `cteam init` | The 3,189,248-byte `win-x64` NativeAOT experiment executable ran directly and initialized the fixture. | already present in plugin package | Canonical fresh bytes | Exact implementation and no extra runtime, but Experiment 005 found no supported stable PATH or plugin-root environment for a developer terminal. Exposing it directly would reintroduce path or installer work. |
 
@@ -93,11 +93,11 @@ Four separately invoked fresh targets—the staged skill payload, npm payload, l
 
 The successful `dnx` run redirected its CLI home, NuGet packages, HTTP cache, APPDATA, and LOCALAPPDATA into ignored experiment scratch and used a local feed with no HTTP source. An earlier discarded isolation attempt omitted the certificate-generation guard; before the initializer ran, the .NET CLI reported its first-use ASP.NET development-certificate action and then failed on sandboxed user NuGet configuration access. The controlled rerun disabled certificate generation and telemetry and completed locally. This is package-host setup behavior, not initializer behavior, and is retained as a reproduction warning.
 
-The npm/pnpm dry-run reported the intended three package files. Sandbox policy prevented pnpm and Windows tar from creating the `.tgz`, so the compiled C# harness created the equivalent npm archive and a deterministic tar-layout test verifies its `package/` prefix and entries. The staged archived payload was then invoked with the available Node runtime. Since npm/npx itself was absent, no exact `npx` success is claimed.
+The npm/pnpm dry-run reported the intended three package files. Sandbox policy prevented pnpm and Windows tar from creating the `.tgz`, so the compiled C# harness created the equivalent npm archive and a deterministic tar-layout test verifies its `package/` prefix and entries. A follow-up invoked that local archive through CMD and NVM-managed npx 11.9.0 with `--offline`. Its cache stayed under ignored experiment scratch; the first and repeat results matched the golden fixture.
 
 ## Current status
 
-**O4 — More evidence needed.** The canonical initializer, direct native path, local `dnx` package, and Node wrapper all produced equivalent deterministic files. The agent-first route remains the leading product hypothesis, but this run did not install and discover the skill in a real agent session or execute the exact npx transport. Those missing observations are material to choosing O1 over the package alternatives.
+**O4 — More evidence needed.** The canonical initializer, direct native path, local `dnx` package, and exact offline npx transport all produced equivalent deterministic files. The agent-first route remains the leading product hypothesis, but this run did not install, discover, and execute the skill in a real agent session. That missing observation is material to choosing the agent route over the package alternatives.
 
 The recommended product boundary is:
 
@@ -121,7 +121,7 @@ install or enable plugin for user
 
 ## Known limitations
 
-The experiment did not publish packages, run npm/npx, install the skill globally, or use a paid model call to exercise its prose. It validates the skill's path and command mechanics in an isolated plugin-shaped fixture. The skill validator bundled with this Codex installation could not start because its Python environment lacked PyYAML; the skill's frontmatter and structure were inspected directly.
+The experiment did not publish packages, install the skill globally, or use a paid model call to exercise its prose. It validates the skill's path and command mechanics in an isolated plugin-shaped fixture. The skill validator bundled with this Codex installation could not start because its Python environment lacked PyYAML; the skill's frontmatter and structure were inspected directly.
 
 The initializer rechecks planned files immediately before each write and refuses to overwrite a changed file. Together with reparse-point preflight, this reduces ordinary concurrent-edit risk, but it is not a security boundary against a hostile process swapping a directory junction between a check and an OS write. A production-grade adversarial guarantee would require handle-based no-follow filesystem operations. This experiment makes no such guarantee.
 

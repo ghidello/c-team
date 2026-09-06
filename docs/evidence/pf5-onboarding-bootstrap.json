@@ -4,9 +4,11 @@
     "platform": "Windows 10.0.26220",
     "dotnetSdk": "10.0.400",
     "dnxAvailable": true,
-    "node": "24.19.0",
+    "bundledNode": "24.19.0",
+    "nvmNode": "24.14.0",
     "npmOnPath": false,
     "npxOnPath": false,
+    "npxViaNvmCmd": "11.9.0",
     "pnpm": "11.19.0"
   },
   "reuse": {
@@ -58,7 +60,10 @@
       "pnpmPackDryRunValidated": true,
       "archiveCreatedByCompiledHarness": true,
       "stagedPayloadInvokedWithNode": true,
-      "npxInvoked": false,
+      "npxInvoked": true,
+      "npxShell": "cmd.exe",
+      "npxOffline": true,
+      "npxResolvedVia": "NVM_SYMLINK",
       "firstStatus": "initialized",
       "secondStatus": "already_initialized",
       "goldenFilesMatched": true,
@@ -107,7 +112,7 @@
   "failedApproaches": [
     "Fresh isolated dnx home triggered first-use output and reported ASP.NET certificate setup before a sandboxed NuGet-config read failure; the controlled local-only rerun disabled certificate generation and telemetry.",
     "Sandbox policy blocked pnpm and Windows tar from creating the npm archive; a compiled C# tar writer created it instead.",
-    "The installed Node distribution had no npm/npx command, so exact npx invocation was not claimed.",
+    "The Codex process PATH exposed bundled Node without npm/npx; CMD successfully invoked npx through the existing NVM_SYMLINK instead.",
     "The installed skill validator could not import PyYAML; structure and frontmatter were inspected directly."
   ],
   "classification": "O4 — More evidence needed",

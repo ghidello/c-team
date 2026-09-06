@@ -36,7 +36,7 @@ The purpose is to preserve **what was tested, how it was tested, what failed or 
 | 007 | Plugin MCP process topology | Passed (P3) | Native subagents and independent roots each used distinct MCP processes; same-project and cross-context roots were isolated, with clean normal and abrupt-owner cleanup | plugin/subagent process reuse or lifecycle changes |
 | 008 | Project activation and MCP context footprint | Partial (A4) | One 292-byte tool and zero global C-Team skills keep context small; MCP startup is eager but dormant, while missing CLI workspace/Roots data prevents reliable marker activation | repository-scoped activation, Roots/caller workspace metadata, tool refresh, skill injection, or Desktop/CLI discovery changes |
 | 008B | Exact caller project resolution via Codex state DB | Passed (D1) | Installed Codex 0.153.4 maps exact caller ids to unique cwd-bearing rows; a live inactive project transitioned to enabled on the same MCP process with zero rollout reads | state DB schema, caller identity, cwd/project semantics, or DB sharing changes |
-| 009 | C-Team project bootstrap and onboarding | Partial (O4) | One canonical initializer produces two deterministic project files through direct native, local `dnx`, and a Node wrapper; real installed-skill discovery/agent execution and exact npx transport remain unmeasured | project schema, package runners, repository-scoped plugin activation, or stable plugin executable paths change |
+| 009 | C-Team project bootstrap and onboarding | Partial (O4) | One canonical initializer produces two deterministic project files through direct native, local `dnx`, and offline NVM-managed npx; real installed-skill discovery and agent execution remain unmeasured | project schema, package runners, repository-scoped plugin activation, or stable plugin executable paths change |
 | 010 | State database mission locator | Pending | Broader optional evaluation of `state_N.sqlite` as exact `thread_id → rollout_path` fast-path beyond activation | execute only if still useful after 008B; state DB schema changes |
 
 ## Required experiment folder contract
@@ -99,9 +99,9 @@ Experiment 009 compared four entry points:
 
 The canonical initializer creates `.cteam/config.json` and creates or merges one managed C-Team section in root `AGENTS.md`. It does not create or modify repository marketplace metadata and never installs or enables the user-level plugin. Fresh, existing-file, repeated, partial, dry-run, schema-upgrade, malformed-state, rollback, and path-safety fixtures passed.
 
-The skill-resolved payload, staged npm payload, local `dnx` package, and direct NativeAOT command all produced the same golden files byte-for-byte. The npm carrier was 1,445,241 bytes and the zero-dependency .NET tool package was 26,886 bytes; npm/npx was unavailable on the tested host, while `dnx` ran successfully from a local feed with no permanent installation.
+The skill-resolved payload, offline NVM-managed npx package, local `dnx` package, and direct NativeAOT command all produced the same golden files byte-for-byte. The npm carrier was 1,445,241 bytes and the zero-dependency .NET tool package was 26,886 bytes. Both package runners completed without permanent installation; npx required explicit resolution through `NVM_SYMLINK` because the Codex process PATH exposed only its bundled Node runtime.
 
-The result is **O4 — More evidence needed**; see `experiments/009-onboarding-bootstrap/`. The agent-first route remains the leading hypothesis, but this run did not exercise installed-skill discovery or exact npx transport.
+The result is **O4 — More evidence needed**; see `experiments/009-onboarding-bootstrap/`. The agent-first route remains the leading hypothesis, but this run did not exercise installed-skill discovery and agent execution.
 
 ### Later optional: Experiment 010 — broader state database mission locator
 
