@@ -1,4 +1,4 @@
-# Experiment 008 — State database mission locator
+# Experiment 010 — State database mission locator
 
 ## Purpose
 
@@ -6,7 +6,7 @@ Validate whether Codex's current versioned state SQLite can serve as a cheap opt
 
 This is an optimization experiment, not a product blocker and not a replacement for rollout JSONL as execution evidence.
 
-Run only after Experiment 006 has established an exact or bounded caller identity path and after Experiment 007 has answered plugin MCP process topology.
+Run only after Experiment 006 has established an exact or bounded caller identity path and after the more product-defining Experiments 007–009 have answered process topology, project activation/context footprint, and onboarding/bootstrap.
 
 ## Hypothesis
 
@@ -28,7 +28,7 @@ validate path/session identity
 
 ## Requirements
 
-Record the current state DB filename/schema shape at execution time. Do not hardcode `state_5.sqlite` as a permanent product contract.
+Record the current state DB filename/schema shape at execution time. Do not hardcode one schema version as a permanent product contract.
 
 Test at least:
 
@@ -50,12 +50,7 @@ Classify the state DB locator as:
 - **S2 — Useful metadata only**: DB helps narrow/enrich candidates but cannot safely act as exact locator.
 - **S3 — Too brittle**: schema/access/staleness make the dependency not worth using.
 
-Even for S1:
-
-- rollout JSONL remains canonical execution evidence;
-- the DB adapter remains optional and version-sensitive;
-- identity/path returned by SQLite must be validated before use;
-- production code must retain a non-SQLite fallback.
+Even for S1, rollout JSONL remains canonical execution evidence, the DB adapter remains optional/version-sensitive, returned paths must be validated, and production code must retain a non-SQLite fallback.
 
 ## Implementation constraints
 
@@ -70,8 +65,8 @@ Even for S1:
 Publish sanitized evidence under:
 
 ```text
-docs/evidence/pf4-state-db-locator.json
-experiments/008-state-db-locator/README.md
+docs/evidence/pf6-state-db-locator.json
+experiments/010-state-db-locator/README.md
 ```
 
 ## Retest triggers
