@@ -37,7 +37,8 @@ The purpose is to preserve **what was tested, how it was tested, what failed or 
 | 008 | Project activation and MCP context footprint | Partial (A4) | One 292-byte tool and zero global C-Team skills keep context small; MCP startup is eager but dormant, while missing CLI workspace/Roots data prevents reliable marker activation | repository-scoped activation, Roots/caller workspace metadata, tool refresh, skill injection, or Desktop/CLI discovery changes |
 | 008B | Exact caller project resolution via Codex state DB | Passed (D1) | Installed Codex 0.153.4 maps exact caller ids to unique cwd-bearing rows; a live inactive project transitioned to enabled on the same MCP process with zero rollout reads | state DB schema, caller identity, cwd/project semantics, or DB sharing changes |
 | 009 | C-Team project bootstrap and onboarding | Partial (O4) | One canonical initializer produces two deterministic project files through direct native, local `dnx`, and offline NVM-managed npx; real installed-skill discovery and agent execution remain unmeasured | project schema, package runners, repository-scoped plugin activation, or stable plugin executable paths change |
-| 010 | State database mission locator | Pending | Broader optional evaluation of `state_N.sqlite` as exact `thread_id → rollout_path` fast-path beyond activation | execute only if still useful after 008B; state DB schema changes |
+| 009B | Real agent-first onboarding validation | Pending | Validate installed-skill discovery, approval, bundled initializer invocation, immediate MCP activation, repeat safety, and fresh-session guidance | execute current experiment; plugin skill discovery/loading changes |
+| 010 | State database mission locator | Pending | Broader optional evaluation of `state_N.sqlite` as exact `thread_id → rollout_path` fast-path beyond activation | execute only if later profiling/compatibility work justifies it; state DB schema changes |
 
 ## Required experiment folder contract
 
@@ -86,7 +87,7 @@ bounded project-root normalization if needed
 
 One bounded live inactive-project run returned `project_not_enabled`, then `project_enabled` after `.cteam/` appeared on the same MCP process. Both calls selected one exact DB row and read zero rollout files. Deterministic fixtures preserve Experiment 006's exact rollout adapter as the safe fallback for absent, incompatible, locked, missing-row, blank-cwd, and stale-cwd cases; unresolved outcomes never guess.
 
-The result is **D1 — Exact DB activation**; see `experiments/008b-context-activation-db/`. Experiment 009 onboarding is unblocked.
+The result is **D1 — Exact DB activation**; see `experiments/008b-context-activation-db/`.
 
 ### Completed: Experiment 009 — project bootstrap and onboarding
 
@@ -101,10 +102,34 @@ The canonical initializer creates `.cteam/config.json` and creates or merges one
 
 The skill-resolved payload, offline NVM-managed npx package, local `dnx` package, and direct NativeAOT command all produced the same golden files byte-for-byte. The npm carrier was 1,445,241 bytes and the zero-dependency .NET tool package was 26,886 bytes. Both package runners completed without permanent installation; npx required explicit resolution through `NVM_SYMLINK` because the Codex process PATH exposed only its bundled Node runtime.
 
-The result is **O4 — More evidence needed**; see `experiments/009-onboarding-bootstrap/`. The agent-first route remains the leading hypothesis, but this run did not exercise installed-skill discovery and agent execution.
+The result is **O4 — More evidence needed**; see `experiments/009-onboarding-bootstrap/`. The sole material remaining gap is real installed-skill discovery and agent execution.
+
+### Current: Experiment 009B — real agent-first onboarding validation
+
+`AGENT_ONBOARDING_VALIDATION_SPIKE.md` validates the last onboarding surface rather than reopening the initializer/package design.
+
+It must prove one real Codex flow:
+
+```text
+user asks to initialize C-Team
+        ↓
+installed onboarding skill is discovered/used
+        ↓
+explicit approval before mutation
+        ↓
+bundled canonical initializer
+        ↓
+.cteam/config.json + managed AGENTS.md block
+        ↓
+same MCP reports project_enabled immediately
+        ↓
+fresh session recommended only for newly written project guidance
+```
+
+Finish with O1/O2/O3/O4. If O1 is proven, close foundational onboarding validation and move to production/MVP architecture and implementation planning.
 
 ### Later optional: Experiment 010 — broader state database mission locator
 
 `STATE_DB_LOCATOR_SPIKE.md` remains a broader optional optimization experiment for exact `thread_id → rollout_path` lookup, schema compatibility and fallback behavior outside the activation use case.
 
-Experiment 008B may partially or completely subsume it. Re-evaluate 010 after 008B rather than running it automatically.
+Experiment 008B already proves the DB path needed for activation. Do **not** run 010 automatically; revisit it only when profiling or compatibility evidence shows a concrete need.
